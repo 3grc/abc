@@ -1,0 +1,3305 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#172522">
+  <meta name="description" content="错题拾遗·云端版：考研错题按科目、模块和错因整理，手机和电脑云端同步。">
+  <title>错题拾遗 · 云端版</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="错题拾遗">
+  <style>
+/* ============================================================
+   错题拾遗 · Mistake Archive
+   Warm paper, ink, vermilion, teal.
+   ============================================================ */
+:root {
+  --ink: #1e2b2a;
+  --ink-soft: #40504d;
+  --muted: #7a8783;
+  --muted-2: #9aa39f;
+  --paper: #f5f0e6;
+  --paper-deep: #eee6d7;
+  --card: #fffdf8;
+  --card-soft: #fbf7ef;
+  --line: #e3d9c9;
+  --line-strong: #d4c6b2;
+  --accent: #d45a3e;
+  --accent-dark: #b7472e;
+  --accent-soft: #f7e3dc;
+  --teal: #2f6d62;
+  --teal-soft: #e2eeea;
+  --gold: #b98a3f;
+  --gold-soft: #f4ead4;
+  --blue: #466b83;
+  --sidebar: #172522;
+  --sidebar-2: #1d302c;
+  --cream: #f7f1e5;
+  --cream-muted: #aebbb5;
+  --danger: #b33a32;
+  --danger-soft: #f8e4e1;
+  --shadow-sm: 0 1px 2px rgba(35, 42, 36, .04), 0 6px 18px rgba(35, 42, 36, .04);
+  --shadow-md: 0 12px 38px rgba(35, 42, 36, .09);
+  --shadow-lg: 0 28px 80px rgba(17, 27, 24, .22);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", sans-serif;
+  --font-serif: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  --font-mono: "SFMono-Regular", "Cascadia Code", "Consolas", monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  background:
+    radial-gradient(circle at 12% -10%, rgba(255, 250, 238, .95) 0, transparent 38%),
+    radial-gradient(circle at 95% 0%, rgba(226, 238, 234, .55) 0, transparent 32%),
+    var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body.modal-open { overflow: hidden; }
+::selection { background: rgba(212, 90, 62, .2); }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+svg { display: block; }
+[hidden] { display: none !important; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon-sm { width: 15px; height: 15px; }
+.icon-lg { width: 22px; height: 22px; }
+.star-fill { fill: currentColor; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- shell ---------- */
+.app-shell { min-height: 100vh; }
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 30;
+  width: 244px;
+  padding: 26px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(72, 115, 98, .24) 0, transparent 38%),
+    linear-gradient(180deg, var(--sidebar), #14211f 100%);
+  border-right: 1px solid rgba(255, 255, 255, .04);
+}
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .3;
+  background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 100% 5px;
+}
+.brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 9px 24px;
+}
+.brand-seal {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: #fff7ec;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--accent);
+  border-radius: 9px 7px 10px 8px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(212, 90, 62, .28);
+}
+.brand-copy { display: flex; flex-direction: column; }
+.brand-copy strong {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  letter-spacing: .08em;
+  line-height: 1.2;
+}
+.brand-copy small {
+  margin-top: 4px;
+  color: var(--cream-muted);
+  font-size: 7.5px;
+  letter-spacing: .22em;
+}
+.nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.nav-item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  color: var(--cream-muted);
+  font-size: 13.5px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.nav-item .icon { opacity: .9; }
+.nav-item:hover { color: var(--cream); background: rgba(255, 255, 255, .055); }
+.nav-item.active {
+  color: var(--cream);
+  background: rgba(212, 90, 62, .16);
+}
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+.nav-count {
+  margin-left: auto;
+  min-width: 21px;
+  height: 20px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  color: var(--cream);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  background: rgba(255, 255, 255, .1);
+  border-radius: 20px;
+}
+.nav-dot {
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(212, 90, 62, .14);
+}
+.sidebar-foot {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding: 18px 10px 2px;
+}
+.sidebar-quote {
+  padding: 15px 14px 13px;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+.quote-mark {
+  display: block;
+  height: 12px;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1;
+}
+.sidebar-quote p {
+  margin: 2px 0 0;
+  color: #c7d0cb;
+  font-family: var(--font-serif);
+  font-size: 12.5px;
+  line-height: 1.75;
+  letter-spacing: .02em;
+}
+.sidebar-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  color: #7f9189;
+  font-size: 9.5px;
+  letter-spacing: .06em;
+}
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #74a796;
+  box-shadow: 0 0 0 4px rgba(116, 167, 150, .08);
+}
+
+.main {
+  min-height: 100vh;
+  margin-left: 244px;
+  padding: 28px 38px 70px;
+  min-width: 0;
+}
+.topbar {
+  max-width: 1240px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-width: 0;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.eyebrow {
+  color: var(--accent);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .19em;
+  line-height: 1.2;
+}
+.page-title {
+  margin: 5px 0 0;
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  line-height: 1.15;
+}
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.today-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 12px;
+  color: var(--muted);
+  font-size: 11.5px;
+  background: rgba(255, 253, 248, .55);
+  border: 1px solid rgba(227, 217, 201, .8);
+  border-radius: 9px;
+}
+.today-chip .icon { color: var(--gold); }
+.mobile-menu { display: none; }
+.icon-btn.mobile-menu { display: none; }
+.view { max-width: 1240px; margin: 0 auto; }
+
+/* ---------- generic ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  color: #fffaf3;
+  background: var(--accent);
+  box-shadow: 0 8px 18px rgba(212, 90, 62, .18);
+}
+.btn-primary:hover { background: var(--accent-dark); box-shadow: 0 10px 22px rgba(212, 90, 62, .24); }
+.btn-ghost {
+  color: var(--ink-soft);
+  background: var(--card);
+  border-color: var(--line);
+}
+.btn-ghost:hover { border-color: var(--line-strong); background: #fffefb; }
+.btn-dark {
+  color: var(--cream);
+  background: var(--sidebar);
+}
+.btn-dark:hover { background: #203631; }
+.btn-danger { color: var(--danger); background: var(--danger-soft); border-color: #efc8c2; }
+.btn-danger:hover { background: #f4d7d2; }
+.btn-sm { height: 33px; padding: 0 11px; font-size: 11.5px; border-radius: 8px; }
+.btn-block { width: 100%; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.btn.is-on { color: var(--gold); background: var(--gold-soft); border-color: #e5d2a8; }
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  transition: .18s ease;
+}
+.icon-btn:hover { color: var(--ink); background: rgba(30, 43, 42, .055); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+}
+.card-pad { padding: 22px; min-width: 0; }
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  min-width: 0;
+}
+.card-head > div { min-width: 0; }
+.card-head .btn { flex-shrink: 0; }
+.card-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.card-sub { margin: 3px 0 0; color: var(--muted); font-size: 11.5px; }
+.muted { color: var(--muted); }
+.serif { font-family: var(--font-serif); }
+.mono { font-family: var(--font-mono); }
+.text-accent { color: var(--accent); }
+.text-teal { color: var(--teal); }
+.nowrap { white-space: nowrap; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- dashboard ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, .75fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.hero-main {
+  position: relative;
+  overflow: hidden;
+  min-height: 238px;
+  padding: 30px 34px;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 92% 10%, rgba(212, 90, 62, .19) 0, transparent 38%),
+    linear-gradient(125deg, #172522 0%, #203a34 100%);
+  border: 0;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+}
+.hero-main::before {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -150px;
+  width: 390px;
+  height: 390px;
+  border: 1px solid rgba(247, 241, 229, .12);
+  border-radius: 50%;
+}
+.hero-main::after {
+  content: "";
+  position: absolute;
+  right: 56px;
+  top: 38px;
+  width: 94px;
+  height: 94px;
+  border: 1px solid rgba(247, 241, 229, .14);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px rgba(247, 241, 229, .02);
+}
+.hero-kicker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #c4d3cb;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.hero-kicker::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 18px 0 12px;
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .01em;
+}
+.hero-title em { color: #edb49f; font-style: normal; }
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  margin: 0;
+  color: #b9c8c1;
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+.hero-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.hero-actions .btn-ghost {
+  color: var(--cream);
+  background: rgba(255, 255, 255, .06);
+  border-color: rgba(255, 255, 255, .13);
+}
+.hero-actions .btn-ghost:hover { background: rgba(255, 255, 255, .1); }
+
+.review-teaser {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 20px;
+  background: linear-gradient(160deg, #fffdf8 0%, #f8efe1 100%);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.review-teaser::after {
+  content: "";
+  position: absolute;
+  right: -44px;
+  top: -52px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(212, 90, 62, .16);
+  border-radius: 50%;
+}
+.teaser-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.teaser-label { color: var(--muted); font-size: 10.5px; letter-spacing: .12em; font-weight: 700; }
+.teaser-badge {
+  padding: 4px 8px;
+  color: var(--teal);
+  font-size: 9.5px;
+  font-weight: 700;
+  background: var(--teal-soft);
+  border-radius: 20px;
+}
+.teaser-number {
+  margin: 7px 0 -2px;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 70px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+.teaser-number span { margin-left: 6px; color: var(--muted); font-family: var(--font-sans); font-size: 12px; font-weight: 500; letter-spacing: 0; }
+.teaser-copy { margin: 9px 0 18px; color: var(--ink-soft); font-size: 12px; line-height: 1.65; }
+.teaser-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 24px;
+  margin-bottom: 18px;
+}
+.mini-subject {
+  padding: 4px 8px;
+  color: var(--ink-soft);
+  font-size: 10px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+.teaser-foot { margin-top: auto; display: flex; align-items: center; gap: 10px; }
+.teaser-foot .btn { flex: 1; }
+.teaser-foot .icon-btn { border-color: var(--line); background: var(--card); }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 18px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-card::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  opacity: .7;
+}
+.stat-label { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10.5px; font-weight: 600; letter-spacing: .06em; }
+.stat-label .icon { color: var(--gold); }
+.stat-value {
+  margin-top: 8px;
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.stat-value small { margin-left: 3px; color: var(--muted); font-family: var(--font-sans); font-size: 11px; font-weight: 500; }
+.stat-foot { margin-top: 9px; color: var(--muted); font-size: 10.5px; }
+.stat-foot strong { color: var(--teal); font-weight: 600; }
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.due-list { display: flex; flex-direction: column; gap: 2px; }
+.due-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 4px;
+  border-bottom: 1px solid rgba(227, 217, 201, .65);
+  cursor: pointer;
+  transition: background .16s ease;
+}
+.due-item:last-child { border-bottom: 0; }
+.due-item:hover { background: rgba(247, 241, 229, .55); }
+.due-index {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+.due-main { min-width: 0; flex: 1; }
+.due-title {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.due-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; color: var(--muted); font-size: 9.5px; }
+.due-meta .dot { width: 2px; height: 2px; background: var(--muted-2); border-radius: 50%; }
+.due-item .icon { color: var(--muted-2); }
+.empty-mini { padding: 18px 0 10px; color: var(--muted); text-align: center; font-size: 12px; }
+
+.subject-bars { display: flex; flex-direction: column; gap: 13px; }
+.subject-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) 24px; align-items: center; gap: 10px; }
+.subject-name { color: var(--ink-soft); font-size: 11px; }
+.subject-track { display: block; height: 7px; overflow: hidden; background: var(--paper-deep); border-radius: 10px; }
+.subject-fill { display: block; height: 100%; border-radius: inherit; background: var(--teal); transition: width .5s ease; }
+.subject-row:nth-child(2n) .subject-fill { background: var(--gold); }
+.subject-row:nth-child(3n) .subject-fill { background: var(--accent); }
+.subject-num { color: var(--muted); font-family: var(--font-mono); font-size: 9.5px; text-align: right; }
+
+.recent-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 14px; }
+.q-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.q-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 190px;
+  padding: 18px 18px 15px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.q-card:hover { transform: translateY(-2px); border-color: var(--line-strong); box-shadow: var(--shadow-md); }
+.q-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.q-subject {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  color: var(--teal);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  background: var(--teal-soft);
+  border-radius: 5px;
+}
+.q-status { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 9.5px; white-space: nowrap; }
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted-2); }
+.status-dot.review { background: var(--gold); }
+.status-dot.mastered { background: var(--teal); }
+.status-dot.new { background: var(--accent); }
+.q-title {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 12px 0 5px;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.55;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.q-excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.q-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
+.q-tag { padding: 3px 7px; color: var(--muted); font-size: 9px; background: var(--card-soft); border: 1px solid rgba(227, 217, 201, .75); border-radius: 20px; }
+.q-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 13px;
+  color: var(--muted-2);
+  font-size: 9.5px;
+}
+.q-foot span { display: inline-flex; align-items: center; gap: 4px; }
+.q-foot .q-star { margin-left: auto; color: var(--muted-2); }
+.q-foot .q-star.on { color: var(--gold); }
+.q-foot .q-star.on .icon { fill: currentColor; }
+.q-image-badge { color: var(--blue); }
+
+/* ---------- page headers & toolbar ---------- */
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin: 2px 0 18px; }
+.page-head h2 { margin: 0; font-family: var(--font-serif); font-size: 22px; line-height: 1.3; }
+.page-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+  background: rgba(255, 253, 248, .8);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(6px);
+}
+.search-box {
+  position: relative;
+  flex: 1 1 240px;
+  min-width: 180px;
+}
+.search-box .icon { position: absolute; left: 12px; top: 50%; width: 16px; height: 16px; color: var(--muted); transform: translateY(-50%); }
+.search-box input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px 0 36px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  outline: 0;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212, 90, 62, .1); }
+.search-box input::placeholder { color: var(--muted-2); }
+.select {
+  height: 38px;
+  padding: 0 32px 0 11px;
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  background: var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a8783' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  appearance: none;
+  outline: 0;
+}
+.select:focus { border-color: var(--accent); }
+.toolbar-divider { width: 1px; height: 22px; background: var(--line); }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.chip {
+  height: 31px;
+  padding: 0 11px;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  transition: .16s ease;
+}
+.chip:hover { color: var(--ink); background: rgba(30, 43, 42, .04); }
+.chip.active { color: var(--accent-dark); background: var(--accent-soft); border-color: #efc9bf; }
+.chip .count { margin-left: 5px; opacity: .65; font-family: var(--font-mono); font-size: 9px; }
+.results-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 2px 13px; color: var(--muted); font-size: 10.5px; }
+.results-meta strong { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- empty ---------- */
+.empty {
+  padding: 64px 24px;
+  text-align: center;
+  background: rgba(255, 253, 248, .55);
+  border: 1px dashed var(--line-strong);
+  border-radius: 18px;
+}
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 14px;
+  color: var(--gold);
+  background: var(--gold-soft);
+  border-radius: 50%;
+}
+.empty h3 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 19px; }
+.empty p { max-width: 420px; margin: 0 auto 18px; color: var(--muted); font-size: 12px; line-height: 1.75; }
+
+/* ---------- review page ---------- */
+.review-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.review-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 28px 30px;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 85% 20%, rgba(185, 138, 63, .18) 0, transparent 42%),
+    linear-gradient(130deg, #1b2c28, #263d37);
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+}
+.review-panel h2 { margin: 8px 0 8px; font-family: var(--font-serif); font-size: 30px; line-height: 1.3; }
+.review-panel p { max-width: 460px; margin: 0 0 20px; color: #b9c8c1; font-size: 12.5px; line-height: 1.8; }
+.review-metrics { display: flex; gap: 24px; margin: 18px 0 22px; }
+.review-metric strong { display: block; font-family: var(--font-serif); font-size: 25px; line-height: 1.2; }
+.review-metric span { color: #91a59b; font-size: 9.5px; letter-spacing: .06em; }
+.review-side { display: flex; flex-direction: column; gap: 12px; }
+.mini-card {
+  padding: 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  box-shadow: var(--shadow-sm);
+}
+.mini-card h3 { margin: 0 0 9px; font-family: var(--font-serif); font-size: 15px; }
+.mini-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.mini-card .btn { margin-top: 12px; }
+.due-table { display: flex; flex-direction: column; }
+.due-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 100px 78px;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 4px;
+  border-bottom: 1px solid rgba(227, 217, 201, .65);
+  cursor: pointer;
+}
+.due-row:last-child { border-bottom: 0; }
+.due-row:hover { background: rgba(247, 241, 229, .5); }
+.due-subject { color: var(--teal); font-size: 10px; font-weight: 700; }
+.due-row-title { overflow: hidden; font-size: 12.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.due-row-meta { color: var(--muted); font-size: 9.5px; text-align: right; }
+
+/* ---------- stats ---------- */
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+.chart-grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 18px; margin-bottom: 18px; }
+.donut-wrap { display: flex; align-items: center; gap: 24px; padding: 8px 0 2px; }
+.donut {
+  position: relative;
+  width: 164px;
+  height: 164px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: conic-gradient(var(--teal) 0 20%, var(--gold) 20% 55%, #e8dfd1 55% 100%);
+}
+.donut::after {
+  content: "";
+  position: absolute;
+  inset: 20px;
+  background: var(--card);
+  border-radius: 50%;
+}
+.donut-center { position: absolute; inset: 20px; z-index: 1; display: grid; place-content: center; text-align: center; }
+.donut-center strong { font-family: var(--font-serif); font-size: 30px; line-height: 1; }
+.donut-center span { margin-top: 5px; color: var(--muted); font-size: 9px; letter-spacing: .06em; }
+.legend { display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.legend-item { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10.5px; }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+.legend-item strong { margin-left: auto; color: var(--ink); font-family: var(--font-mono); font-size: 10px; }
+.reason-list { display: flex; flex-direction: column; gap: 13px; }
+.reason-row { display: grid; grid-template-columns: 68px minmax(0, 1fr) 26px; align-items: center; gap: 10px; }
+.reason-name { color: var(--ink-soft); font-size: 10.5px; }
+.reason-track { display: block; height: 8px; overflow: hidden; background: var(--paper-deep); border-radius: 20px; }
+.reason-fill { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.reason-row:nth-child(2n) .reason-fill { background: var(--gold); }
+.reason-row:nth-child(3n) .reason-fill { background: var(--teal); }
+.reason-num { color: var(--muted); font-family: var(--font-mono); font-size: 9.5px; text-align: right; }
+.activity {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 150px;
+  padding: 12px 4px 0;
+}
+.day-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 7px; height: 100%; }
+.day-bar .bar-wrap { width: 100%; max-width: 34px; height: 100%; display: flex; align-items: flex-end; background: rgba(227, 217, 201, .35); border-radius: 6px; overflow: hidden; }
+.day-bar .bar { width: 100%; min-height: 3px; background: var(--teal); border-radius: 6px 6px 0 0; transition: height .5s ease; }
+.day-bar:nth-child(3n) .bar { background: var(--gold); }
+.day-bar:nth-child(4n) .bar { background: var(--accent); }
+.day-bar span { color: var(--muted); font-size: 8.5px; }
+.day-bar strong { color: var(--ink-soft); font-family: var(--font-mono); font-size: 9px; font-weight: 500; }
+.attention-list { display: flex; flex-direction: column; gap: 2px; }
+.attention-item { display: flex; align-items: center; gap: 11px; padding: 11px 4px; border-bottom: 1px solid rgba(227, 217, 201, .6); cursor: pointer; }
+.attention-item:last-child { border-bottom: 0; }
+.attention-item:hover { background: rgba(247, 241, 229, .5); }
+.attention-rank { width: 22px; color: var(--accent); font-family: var(--font-serif); font-size: 15px; font-weight: 700; }
+.attention-main { min-width: 0; flex: 1; }
+.attention-title { overflow: hidden; font-size: 11.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.attention-meta { margin-top: 2px; color: var(--muted); font-size: 9px; }
+.attention-score { color: var(--accent); font-family: var(--font-mono); font-size: 10px; }
+
+/* ---------- settings ---------- */
+.settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.settings-card { padding: 24px; }
+.settings-card h3 { display: flex; align-items: center; gap: 9px; margin: 0 0 7px; font-family: var(--font-serif); font-size: 17px; }
+.settings-card h3 .icon { color: var(--gold); }
+.settings-card > p { margin: 0 0 18px; color: var(--muted); font-size: 11.5px; line-height: 1.75; }
+.setting-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.storage-box { margin-top: 16px; padding: 13px 14px; background: var(--card-soft); border: 1px solid var(--line); border-radius: 10px; }
+.storage-top { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 9.5px; }
+.storage-top strong { color: var(--ink-soft); font-family: var(--font-mono); font-size: 9.5px; }
+.storage-track { height: 6px; margin-top: 8px; overflow: hidden; background: var(--paper-deep); border-radius: 10px; }
+.storage-fill { height: 100%; width: 6%; background: var(--teal); border-radius: inherit; }
+.kbd-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.kbd-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(227, 217, 201, .6); color: var(--ink-soft); font-size: 11px; }
+.kbd-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 25px;
+  height: 23px;
+  padding: 0 6px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  background: var(--card);
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+}
+.about-note { padding: 15px 16px; color: var(--muted); font-size: 10.5px; line-height: 1.8; background: var(--gold-soft); border: 1px solid #e9d9b8; border-radius: 10px; }
+.about-note strong { color: var(--ink-soft); }
+
+/* ---------- modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 24, 22, .56);
+  backdrop-filter: blur(5px);
+  animation: fadeIn .18s ease both;
+}
+.modal {
+  width: min(940px, 100%);
+  max-height: min(88vh, 900px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn .22s cubic-bezier(.2, .8, .2, 1) both;
+}
+.modal.modal-sm { width: min(560px, 100%); }
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 26px 17px;
+  border-bottom: 1px solid var(--line);
+}
+.modal-kicker { color: var(--accent); font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.modal-title { margin: 4px 0 0; font-family: var(--font-serif); font-size: 23px; line-height: 1.3; }
+.modal-sub { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+.modal-body { padding: 22px 26px; overflow-y: auto; overscroll-behavior: contain; }
+.modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 26px;
+  background: var(--card-soft);
+  border-top: 1px solid var(--line);
+}
+.modal-foot .foot-right { display: flex; gap: 9px; }
+.form-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .8fr); gap: 24px; }
+.form-col { display: flex; flex-direction: column; gap: 15px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > label { display: flex; align-items: center; gap: 6px; color: var(--ink-soft); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; }
+.field > label .req { color: var(--accent); }
+.field .hint { color: var(--muted); font-size: 9.5px; font-weight: 400; letter-spacing: 0; }
+.input, .textarea {
+  width: 100%;
+  color: var(--ink);
+  background: #fffefa;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  outline: 0;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.input { height: 39px; padding: 0 11px; }
+.textarea { min-height: 92px; padding: 10px 11px; line-height: 1.7; resize: vertical; }
+.input:focus, .textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212, 90, 62, .09); }
+.textarea.textarea-lg { min-height: 118px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.segmented { display: flex; flex-wrap: wrap; gap: 5px; }
+.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented label {
+  min-width: 42px;
+  padding: 7px 10px;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: center;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: .16s ease;
+}
+.segmented label:hover { border-color: var(--line-strong); color: var(--ink-soft); }
+.segmented input:checked + label { color: var(--accent-dark); background: var(--accent-soft); border-color: #efc9bf; font-weight: 700; }
+.segmented input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.star-picker { display: flex; gap: 4px; }
+.star-picker button { width: 26px; height: 26px; display: grid; place-items: center; padding: 0; color: var(--line-strong); background: transparent; border: 0; }
+.star-picker button.on { color: var(--gold); }
+.star-picker button.on .icon { fill: currentColor; }
+.dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 92px;
+  padding: 16px;
+  color: var(--muted);
+  text-align: center;
+  background: #fffefa;
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .18s ease;
+}
+.dropzone:hover, .dropzone.drag { color: var(--accent); background: #fff8f3; border-color: var(--accent); }
+.dropzone strong { color: var(--ink-soft); font-size: 11px; font-weight: 600; }
+.dropzone span { font-size: 9.5px; }
+.dropzone .icon { color: var(--gold); }
+.image-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+.image-thumb { position: relative; width: 74px; height: 74px; overflow: hidden; background: var(--card-soft); border: 1px solid var(--line); border-radius: 8px; }
+.image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.image-remove { position: absolute; top: 3px; right: 3px; width: 19px; height: 19px; display: grid; place-items: center; padding: 0; color: #fff; background: rgba(23, 37, 34, .78); border: 0; border-radius: 50%; }
+.image-remove .icon { width: 11px; height: 11px; }
+.form-note { padding: 10px 12px; color: var(--muted); font-size: 9.5px; line-height: 1.65; background: var(--gold-soft); border-radius: 8px; }
+.form-error { display: none; padding: 9px 11px; color: var(--danger); font-size: 10px; background: var(--danger-soft); border: 1px solid #efc8c2; border-radius: 8px; }
+.form-error.show { display: block; }
+
+/* ---------- detail ---------- */
+.detail-hero { padding: 4px 0 18px; border-bottom: 1px solid var(--line); }
+.detail-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 13px; }
+.detail-question {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.detail-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 15px; }
+.detail-images img { width: 100%; max-height: 300px; object-fit: contain; background: var(--card-soft); border: 1px solid var(--line); border-radius: 10px; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.answer-block { padding: 14px 15px; background: var(--card-soft); border: 1px solid var(--line); border-radius: 10px; }
+.answer-block.accent { background: var(--teal-soft); border-color: #c9e0d8; }
+.answer-block.warn { background: var(--accent-soft); border-color: #efc9bf; }
+.answer-label { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .08em; }
+.answer-block.accent .answer-label { color: var(--teal); }
+.answer-block.warn .answer-label { color: var(--accent-dark); }
+.answer-text { margin: 0; font-size: 12px; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+.detail-analysis { margin-top: 12px; }
+.detail-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 14px; }
+.detail-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+.info-cell { padding: 10px; background: var(--card-soft); border: 1px solid var(--line); border-radius: 8px; }
+.info-cell span { display: block; color: var(--muted); font-size: 8.5px; letter-spacing: .06em; }
+.info-cell strong { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 10.5px; font-weight: 600; }
+.detail-history { margin-top: 16px; }
+.history-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); color: var(--muted); font-size: 10px; }
+.history-row:last-child { border-bottom: 0; }
+
+/* ---------- review overlay ---------- */
+.review-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  padding: 22px clamp(16px, 4vw, 60px);
+  background:
+    radial-gradient(circle at 50% -20%, rgba(212, 90, 62, .14) 0, transparent 38%),
+    #12201d;
+  color: var(--cream);
+  overflow-y: auto;
+}
+.review-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 980px; width: 100%; margin: 0 auto 18px; }
+.review-brand { display: flex; align-items: center; gap: 9px; color: #aebbb5; font-size: 9.5px; letter-spacing: .1em; }
+.review-brand .brand-seal { width: 27px; height: 27px; font-size: 15px; border-radius: 6px; }
+.review-progress-text { color: #8fa49a; font-family: var(--font-mono); font-size: 10px; }
+.review-progress { max-width: 980px; width: 100%; height: 3px; margin: 0 auto 24px; overflow: hidden; background: rgba(255, 255, 255, .09); border-radius: 3px; }
+.review-progress-fill { height: 100%; background: var(--accent); transition: width .3s ease; }
+.review-stage { max-width: 850px; width: 100%; margin: 0 auto 40px; }
+.review-card {
+  padding: clamp(22px, 4vw, 38px);
+  color: var(--ink);
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .28);
+}
+.review-card-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
+.review-q { margin: 0 0 18px; font-family: var(--font-serif); font-size: clamp(18px, 2.2vw, 24px); line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
+.review-images { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.review-images img { max-width: min(100%, 420px); max-height: 300px; object-fit: contain; border: 1px solid var(--line); border-radius: 10px; background: var(--card-soft); }
+.reveal-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  background: var(--teal-soft);
+  border: 1px dashed #a9cdc0;
+  border-radius: 10px;
+}
+.reveal-btn:hover { background: #d7e9e2; }
+.review-answer { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); animation: fadeIn .2s ease both; }
+.review-answer .answer-block { margin-bottom: 10px; }
+.rating-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 18px; }
+.rating-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 11px 8px;
+  color: var(--ink-soft);
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: .16s ease;
+}
+.rating-btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.rating-btn strong { font-size: 11px; }
+.rating-btn span { color: var(--muted); font-size: 8.5px; }
+.rating-btn.again:hover { background: var(--danger-soft); border-color: #efc8c2; }
+.rating-btn.hard:hover { background: var(--gold-soft); border-color: #e5d2a8; }
+.rating-btn.good:hover { background: var(--teal-soft); border-color: #bcd8ce; }
+.rating-btn.easy:hover { background: #e3edf4; border-color: #bfd3e1; }
+.review-hint { margin-top: 13px; color: #7e9489; font-size: 9.5px; text-align: center; }
+.review-summary { max-width: 620px; margin: 7vh auto 0; padding: 38px; text-align: center; background: var(--card); color: var(--ink); border-radius: 20px; box-shadow: var(--shadow-lg); }
+.summary-seal { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 14px; color: #fff; background: var(--accent); border-radius: 12px; transform: rotate(-3deg); }
+.summary-seal .icon { width: 24px; height: 24px; }
+.review-summary h2 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 28px; }
+.review-summary p { margin: 0 0 20px; color: var(--muted); font-size: 12px; }
+.summary-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 20px 0 24px; }
+.summary-stat { padding: 12px 8px; background: var(--card-soft); border: 1px solid var(--line); border-radius: 9px; }
+.summary-stat strong { display: block; font-family: var(--font-serif); font-size: 22px; }
+.summary-stat span { color: var(--muted); font-size: 9px; }
+.summary-actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
+
+/* ---------- toast ---------- */
+.toast-root { position: fixed; right: 24px; bottom: 24px; z-index: 200; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none; }
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 380px;
+  padding: 11px 14px;
+  color: var(--cream);
+  font-size: 11.5px;
+  background: #1b2b27;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 9px;
+  box-shadow: var(--shadow-md);
+  animation: toastIn .22s ease both;
+  pointer-events: auto;
+}
+.toast.success .icon { color: #8fc8b3; }
+.toast.error { background: #4a2520; }
+.toast.error .icon { color: #f0a294; }
+.toast.info .icon { color: #e0b36c; }
+
+/* ---------- misc ---------- */
+.divider { height: 1px; margin: 18px 0; background: var(--line); }
+.row { display: flex; align-items: center; gap: 10px; }
+.spacer { flex: 1; }
+.loading-skeleton { padding: 40px; color: var(--muted); text-align: center; }
+.print-area { display: none; }
+
+/* ---------- animations ---------- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.view > * { animation: rise .32s ease both; }
+.view > *:nth-child(2) { animation-delay: .03s; }
+.view > *:nth-child(3) { animation-delay: .06s; }
+.view > *:nth-child(4) { animation-delay: .09s; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px) {
+  .main { padding-left: 28px; padding-right: 28px; }
+  .hero { grid-template-columns: minmax(0, 1.2fr) minmax(270px, .8fr); }
+  .stat-grid, .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .sidebar {
+    position: relative;
+    inset: auto;
+    width: auto;
+    padding: 12px 16px 9px;
+    display: block;
+    border-right: 0;
+    border-radius: 0 0 18px 18px;
+  }
+  .brand { padding: 2px 2px 11px; }
+  .brand-seal { width: 36px; height: 36px; font-size: 20px; }
+  .brand-copy strong { font-size: 17px; }
+  .brand-copy small { font-size: 6.5px; }
+  .nav { flex-direction: row; overflow-x: auto; gap: 3px; padding-bottom: 2px; scrollbar-width: none; width: 100%; max-width: 100%; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-item { width: auto; flex: 0 0 auto; gap: 7px; padding: 8px 10px; font-size: 11.5px; border-radius: 8px; }
+  .nav-item.active::before { left: 9px; right: 9px; top: auto; bottom: 0; width: auto; height: 2px; }
+  .nav-count { min-width: 18px; height: 17px; font-size: 9px; }
+  .sidebar-foot { display: none; }
+  .main { margin-left: 0; padding: 22px 20px 60px; }
+  .topbar { margin-bottom: 18px; }
+  .page-title { font-size: 26px; }
+  .hero, .review-hero, .dash-grid, .chart-grid, .settings-grid { grid-template-columns: 1fr; }
+  .hero-main { min-height: 0; padding: 26px; }
+  .review-teaser { min-height: 0; }
+  .q-grid { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; gap: 16px; }
+  .modal-body { padding: 18px; }
+  .modal-head, .modal-foot { padding-left: 18px; padding-right: 18px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-info { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .main { padding: 18px 14px 54px; }
+  .topbar { align-items: flex-start; gap: 12px; }
+  .topbar-right { gap: 7px; }
+  .today-chip { display: none; }
+  .page-title { font-size: 23px; }
+  .topbar .btn-primary span { display: none; }
+  .topbar .btn-primary { width: 40px; padding: 0; }
+  .nav-item { gap: 5px; padding: 8px 7px; font-size: 10.5px; }
+  .nav-item .icon { width: 16px; height: 16px; }
+  .nav-count { min-width: 17px; height: 17px; padding: 0 4px; }
+  .page-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .page-head .btn { white-space: nowrap; }
+  .hero-title { font-size: 29px; }
+  .hero-main { padding: 22px; }
+  .stat-grid, .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+  .stat-card { padding: 14px; }
+  .stat-value { font-size: 28px; }
+  .stat-label { font-size: 9px; }
+  .card-pad, .settings-card { padding: 17px; }
+  .q-card { min-height: 0; }
+  .toolbar { padding: 10px; }
+  .search-box { flex-basis: 100%; }
+  .select { flex: 1; min-width: 0; }
+  .toolbar-divider { display: none; }
+  .due-row { grid-template-columns: 48px minmax(0, 1fr) 70px; }
+  .due-row-meta:nth-child(3) { display: none; }
+  .donut-wrap { flex-direction: column; align-items: flex-start; }
+  .donut { width: 140px; height: 140px; }
+  .legend { width: 100%; }
+  .modal-backdrop { padding: 0; align-items: end; }
+  .modal { max-height: 94vh; border-radius: 18px 18px 0 0; }
+  .modal-head { padding-top: 18px; }
+  .modal-foot { flex-wrap: wrap; }
+  .modal-foot .foot-right { width: 100%; }
+  .modal-foot .btn { flex: 1; }
+  .rating-grid { grid-template-columns: repeat(2, 1fr); }
+  .review-overlay { padding: 14px; }
+  .review-card { border-radius: 15px; }
+  .review-summary { padding: 26px 18px; }
+  .summary-stats { grid-template-columns: repeat(2, 1fr); }
+  .toast-root { left: 14px; right: 14px; bottom: 14px; align-items: stretch; }
+  .toast { max-width: none; }
+  .detail-info { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- kaoyan edition ---------- */
+.kaoyan-badge {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 3px 7px;
+  color: #f4d7a4;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  background: rgba(185, 138, 63, .2);
+  border: 1px solid rgba(226, 184, 113, .35);
+  border-radius: 4px;
+  transform: translateY(1px);
+}
+.brand-copy small {
+  white-space: nowrap;
+  letter-spacing: .1em;
+}
+.kaoyan-banner {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
+  align-items: center;
+  gap: 18px;
+  padding: 18px 24px;
+  margin-bottom: 18px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(185, 138, 63, .16) 0, transparent 34%),
+    linear-gradient(110deg, #fffaf0, #f5ead7);
+  border: 1px solid #e6d3b3;
+  border-left: 4px solid var(--gold);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.kaoyan-banner::after {
+  content: "";
+  position: absolute;
+  right: -34px;
+  top: -58px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(185, 138, 63, .2);
+  border-radius: 50%;
+}
+.ky-main { position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.ky-label { color: var(--gold); font-size: 9px; font-weight: 800; letter-spacing: .16em; }
+.ky-count { display: flex; align-items: baseline; gap: 5px; color: var(--accent); }
+.ky-count strong { font-family: var(--font-serif); font-size: 46px; line-height: .9; letter-spacing: -.04em; }
+.ky-count span { color: var(--muted); font-size: 11px; }
+.ky-copy { min-width: 0; }
+.ky-copy strong { display: block; color: var(--ink); font-family: var(--font-serif); font-size: 17px; }
+.ky-copy p { margin: 3px 0 0; color: var(--muted); font-size: 10px; }
+.ky-side { position: relative; z-index: 1; padding-left: 20px; border-left: 1px solid #e5d2b4; }
+.ky-side-label { color: var(--gold); font-size: 8.5px; font-weight: 800; letter-spacing: .12em; }
+.ky-side p { margin: 5px 0 0; color: var(--ink-soft); font-size: 10.5px; line-height: 1.7; }
+.ky-side .btn { margin-top: 10px; }
+.ky-settings .field-row { margin-bottom: 10px; }
+.ky-settings .field { margin-bottom: 10px; }
+.ky-hint { margin-top: 9px; color: var(--muted); font-size: 9.5px; line-height: 1.65; }
+@media (max-width: 900px) {
+  .kaoyan-banner { grid-template-columns: 1fr; gap: 12px; }
+  .ky-side { padding-left: 0; border-left: 0; border-top: 1px solid #e5d2b4; padding-top: 11px; }
+}
+@media (max-width: 640px) {
+  .kaoyan-badge { display: none; }
+  .kaoyan-banner { padding: 15px 16px; margin-bottom: 14px; }
+  .ky-count strong { font-size: 38px; }
+  .ky-main { gap: 10px; }
+  .ky-copy strong { font-size: 15px; }
+}
+
+/* ---------- print ---------- */
+@media print {
+  body { background: #fff; color: #111; }
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { display: block; position: absolute; inset: 0; width: 100%; padding: 0; }
+  .print-page { padding: 20mm 16mm; page-break-after: always; }
+  .print-page:last-child { page-break-after: auto; }
+  .print-head { display: flex; justify-content: space-between; border-bottom: 1px solid #bbb; padding-bottom: 8px; margin-bottom: 14px; font-size: 10pt; }
+  .print-q { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px dashed #ccc; page-break-inside: avoid; }
+  .print-q h3 { margin: 0 0 8px; font-size: 12pt; }
+  .print-q p { margin: 4px 0; font-size: 10pt; line-height: 1.6; white-space: pre-wrap; }
+  .print-label { font-weight: 700; }
+  .print-tags { color: #555; font-size: 9pt; }
+  .print-footer { position: fixed; bottom: 8mm; right: 16mm; color: #777; font-size: 8pt; }
+}
+
+/* ---------- sync edition ---------- */
+.sync-card .sync-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 13px;
+  color: var(--muted);
+  font-size: 10px;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.sync-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--muted-2);
+}
+.sync-dot.on { background: #4c9a7e; box-shadow: 0 0 0 4px rgba(76, 154, 126, .1); }
+.sync-dot.err { background: var(--danger); box-shadow: 0 0 0 4px rgba(179, 58, 50, .08); }
+.sync-dot.wait { background: var(--gold); box-shadow: 0 0 0 4px rgba(185, 138, 63, .1); }
+.sync-status strong { color: var(--ink-soft); font-weight: 700; }
+.sync-status .sync-when { margin-left: auto; color: var(--muted-2); font-size: 9px; }
+.sync-url-row { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 9px; }
+.sync-card .field { margin-bottom: 10px; }
+.sync-card .setting-actions { margin-top: 2px; }
+.sync-install-tip { margin-top: 12px; padding: 10px 12px; color: var(--muted); font-size: 9.5px; line-height: 1.7; background: var(--gold-soft); border-radius: 8px; }
+.sync-install-tip strong { color: var(--ink-soft); }
+@media (max-width: 640px) {
+  .sync-url-row { grid-template-columns: 1fr; }
+}
+@media (display-mode: standalone) {
+  body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  .sidebar { padding-top: calc(12px + env(safe-area-inset-top)); }
+}
+.no-anim .view > *,
+.no-anim .modal,
+.no-anim .modal-backdrop { animation: none !important; }
+
+
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" data-route="dashboard" aria-label="返回总览">
+        <span class="brand-seal">拾</span>
+        <span class="brand-copy">
+          <strong>错题拾遗</strong>
+          <small>MISTAKE ARCHIVE</small>
+        </span>
+        <span class="kaoyan-badge">云端版</span>
+      </a>
+
+      <nav class="nav" aria-label="主导航">
+        <button class="nav-item" data-route="dashboard">
+          <svg class="icon"><use href="#i-grid"></use></svg>
+          <span>总览</span>
+        </button>
+        <button class="nav-item" data-route="questions">
+          <svg class="icon"><use href="#i-book"></use></svg>
+          <span>错题本</span>
+          <span class="nav-count" id="navQuestionCount">0</span>
+        </button>
+        <button class="nav-item" data-route="review">
+          <svg class="icon"><use href="#i-repeat"></use></svg>
+          <span>今日复习</span>
+          <span class="nav-dot" id="navDueDot" hidden></span>
+        </button>
+        <button class="nav-item" data-route="stats">
+          <svg class="icon"><use href="#i-chart"></use></svg>
+          <span>统计分析</span>
+        </button>
+        <button class="nav-item" data-route="settings">
+          <svg class="icon"><use href="#i-settings"></use></svg>
+          <span>设置</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="sidebar-quote">
+          <span class="quote-mark">“</span>
+          <p>错题不是失败，<br>是下一次得分的地图。</p>
+        </div>
+        <div class="sidebar-meta">
+          <span class="pulse-dot"></span>
+          <span>本地保存 · 离线可用</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn mobile-menu" id="mobileMenuBtn" aria-label="打开导航">
+            <svg class="icon"><use href="#i-grid"></use></svg>
+          </button>
+          <div>
+            <div class="eyebrow" id="pageEyebrow">OVERVIEW</div>
+            <h1 class="page-title" id="pageTitle">总览</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="today-chip">
+            <svg class="icon"><use href="#i-calendar"></use></svg>
+            <span id="todayLabel"></span>
+          </div>
+          <button class="btn btn-primary" data-action="add" aria-label="新增错题">
+            <svg class="icon"><use href="#i-plus"></use></svg>
+            <span>新增错题</span>
+          </button>
+        </div>
+      </header>
+
+      <div id="view" class="view" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="toast-root" aria-live="polite"></div>
+  <div id="printArea" class="print-area" aria-hidden="true"></div>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+
+  <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16.5H6.5A2.5 2.5 0 0 0 4 22V5.5Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="18" r="2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15-5-5L5 20"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 21h16"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.6"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v5M12 17.2v.1"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2 6"/><path d="M20 4v7h-7"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  </svg>
+
+  <script>
+/* ============================================================
+   错题拾遗 · Mistake Archive
+   Offline wrong-question notebook. No dependencies.
+   ============================================================ */
+'use strict';
+
+const APP_VERSION = '1.0.0';
+const DB_NAME = 'cuoti_shiyi_db';
+const STORE = 'questions';
+const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
+const LS_LOGS = 'cuoti_shiyi_logs_v1';
+const LS_SEEDED = 'cuoti_shiyi_seeded_v1';
+
+const SUBJECTS = ['数学', '物理', '英语', '化学', '生物', '语文', '历史', '地理', '政治', '其他'];
+const REASONS = ['概念不清', '计算失误', '审题偏差', '方法不会', '记忆混淆', '其他'];
+const TYPES = ['选择题', '填空题', '解答题', '实验题', '其他'];
+const STATUS = {
+  new: { label: '未掌握', cls: 'new' },
+  review: { label: '复习中', cls: 'review' },
+  mastered: { label: '已掌握', cls: 'mastered' }
+};
+const RATING = {
+  again: { label: '又忘了', hint: '明天再来', cls: 'again' },
+  hard: { label: '有点难', hint: '2天后', cls: 'hard' },
+  good: { label: '想起来了', hint: '按间隔', cls: 'good' },
+  easy: { label: '很熟练', hint: '拉长间隔', cls: 'easy' }
+};
+
+/* ---------------- utils ---------------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function br(v) { return esc(v).replace(/\r?\n/g, '<br>'); }
+function uid(p = 'q') { return p + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
+function clamp(n, a, b) { return Math.min(b, Math.max(a, n)); }
+function iso(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+function today() { return iso(new Date()); }
+function parseDate(s) {
+  const p = String(s || '').slice(0, 10).split('-').map(Number);
+  return p.length === 3 && !p.some(Number.isNaN) ? new Date(p[0], p[1] - 1, p[2]) : new Date();
+}
+function addDays(s, n) { const d = parseDate(s); d.setDate(d.getDate() + n); return iso(d); }
+function diffDays(a, b) { return Math.round((parseDate(b) - parseDate(a)) / 86400000); }
+function fmtDate(s, y = false) {
+  const d = parseDate(s);
+  return y ? `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日` : `${d.getMonth() + 1}月${d.getDate()}日`;
+}
+function fmtDateTime(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return '—';
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function fmtDue(s, status) {
+  if (!s) return '未安排';
+  const d = diffDays(today(), s);
+  if (status === 'mastered') return `下次 ${fmtDate(s)}`;
+  if (d < 0) return `逾期 ${Math.abs(d)} 天`;
+  if (d === 0) return '今天复习';
+  if (d === 1) return '明天复习';
+  if (d <= 7) return `${d} 天后`;
+  return fmtDate(s);
+}
+function fmtSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1048576).toFixed(2) + ' MB';
+}
+function icon(name, cls = '') { return `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`; }
+function debounce(fn, ms = 120) {
+  let t;
+  return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); };
+}
+function withTimeout(p, ms, label) {
+  return Promise.race([p, new Promise((_, reject) => setTimeout(() => reject(new Error(label)), ms))]);
+}
+function safeGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function safeSet(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } }
+function download(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1200);
+}
+function toast(msg, type = 'success') {
+  const root = $('#toastRoot');
+  if (!root) return;
+  const iconName = type === 'error' ? 'alert' : type === 'info' ? 'spark' : 'check';
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `${icon(iconName)}<span>${esc(msg)}</span>`;
+  root.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(6px)'; setTimeout(() => el.remove(), 200); }, 2600);
+}
+function weekday(d = new Date()) { return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]; }
+
+/* ---------------- store ---------------- */
+function reqPromise(req) {
+  return new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
+}
+function openDB() {
+  return new Promise((res, rej) => {
+    if (!('indexedDB' in window)) return rej(new Error('no indexedDB'));
+    const r = indexedDB.open(DB_NAME, 1);
+    r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains(STORE)) r.result.createObjectStore(STORE, { keyPath: 'id' }); };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error || new Error('open failed'));
+  });
+}
+const Store = {
+  mode: 'idb', db: null,
+  async init() {
+    try { this.db = await withTimeout(openDB(), 1500, 'IndexedDB timeout'); this.mode = 'idb'; }
+    catch { this.mode = 'local'; }
+  },
+  local() {
+    try { const x = JSON.parse(safeGet(LS_QUESTIONS) || '[]'); return Array.isArray(x) ? x : []; } catch { return []; }
+  },
+  writeLocal(items) { localStorage.setItem(LS_QUESTIONS, JSON.stringify(items)); },
+  async all() {
+    if (this.mode === 'idb') {
+      const tx = this.db.transaction(STORE, 'readonly');
+      const x = await reqPromise(tx.objectStore(STORE).getAll());
+      return Array.isArray(x) ? x : [];
+    }
+    return this.local();
+  },
+  async put(q) {
+    if (this.mode === 'idb') {
+      const tx = this.db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).put(q);
+      await new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+      return;
+    }
+    const items = this.local();
+    const i = items.findIndex((x) => x.id === q.id);
+    if (i >= 0) items[i] = q; else items.push(q);
+    this.writeLocal(items);
+  },
+  async remove(id) {
+    if (this.mode === 'idb') {
+      const tx = this.db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).delete(id);
+      await new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
+      return;
+    }
+    this.writeLocal(this.local().filter((q) => q.id !== id));
+  },
+  async clear() {
+    if (this.mode === 'idb') {
+      const tx = this.db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).clear();
+      await new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
+      return;
+    }
+    localStorage.removeItem(LS_QUESTIONS);
+  },
+  async bulk(items) {
+    if (this.mode === 'idb') {
+      const tx = this.db.transaction(STORE, 'readwrite');
+      const s = tx.objectStore(STORE);
+      items.forEach((q) => s.put(q));
+      await new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+      return;
+    }
+    this.writeLocal(items);
+  }
+};
+function loadLogs() { try { const x = JSON.parse(safeGet(LS_LOGS) || '[]'); return Array.isArray(x) ? x : []; } catch { return []; } }
+function saveLogs() { try { localStorage.setItem(LS_LOGS, JSON.stringify(state.logs.slice(-800))); } catch {} }
+
+/* ---------------- data ---------------- */
+function normalize(raw = {}) {
+  const tags = Array.isArray(raw.tags) ? raw.tags : String(raw.tags || '').split(/[,，、\s]+/);
+  const images = Array.isArray(raw.images) ? raw.images : [];
+  const status = ['new', 'review', 'mastered'].includes(raw.status) ? raw.status : 'new';
+  return {
+    id: raw.id || uid(),
+    subject: SUBJECTS.includes(raw.subject) ? raw.subject : (raw.subject || '其他'),
+    topic: String(raw.topic || '').trim(),
+    source: String(raw.source || '').trim(),
+    type: TYPES.includes(raw.type) ? raw.type : (raw.type || '其他'),
+    difficulty: clamp(Number(raw.difficulty) || 3, 1, 5),
+    question: String(raw.question || '').trim(),
+    myAnswer: String(raw.myAnswer || '').trim(),
+    answer: String(raw.answer || '').trim(),
+    analysis: String(raw.analysis || '').trim(),
+    reason: REASONS.includes(raw.reason) ? raw.reason : (raw.reason || '其他'),
+    tags: tags.map((x) => String(x).trim()).filter(Boolean).slice(0, 8),
+    images: images.filter((x) => typeof x === 'string' && x.startsWith('data:image/')).slice(0, 4),
+    starred: Boolean(raw.starred),
+    status,
+    reviewCount: Number(raw.reviewCount) || 0,
+    correctStreak: Number(raw.correctStreak) || 0,
+    interval: Number(raw.interval) || 0,
+    lastReviewed: raw.lastReviewed || null,
+    nextReview: raw.nextReview ? String(raw.nextReview).slice(0, 10) : today(),
+    createdAt: raw.createdAt || new Date().toISOString(),
+    updatedAt: raw.updatedAt || raw.createdAt || new Date().toISOString()
+  };
+}
+
+function graphImage() {
+  const pts = [];
+  for (let i = 0; i <= 70; i++) {
+    const x = -2 + 4 * i / 70;
+    const y = x * x * x - 3 * x + 1;
+    pts.push(`${(76 + (x + 2) / 4 * 420).toFixed(1)},${(224 - (y + 2) / 6 * 180).toFixed(1)}`);
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="560" height="280" viewBox="0 0 560 280"><rect width="560" height="280" fill="#fffdf8"/><g stroke="#e3d9c9"><path d="M76 44V224H496"/><path d="M76 164H496" stroke-dasharray="4 4"/><path d="M181 44V224" stroke-dasharray="3 5"/><path d="M286 44V224" stroke-dasharray="3 5"/><path d="M391 44V224" stroke-dasharray="3 5"/></g><path d="M${pts.join(' L')}" fill="none" stroke="#2f6d62" stroke-width="3.2" stroke-linecap="round"/><g fill="#7a8783" font-family="Arial" font-size="12"><text x="64" y="242">-2</text><text x="170" y="242">-1</text><text x="282" y="242">0</text><text x="387" y="242">1</text><text x="491" y="242">2</text><text x="502" y="168">1</text><text x="502" y="88">3</text></g><g fill="#d45a3e" font-family="Arial" font-size="12" font-weight="700"><circle cx="181" cy="84" r="3.5"/><text x="190" y="82">(-1, 3)</text><circle cx="391" cy="164" r="3.5"/><text x="400" y="162">(1, -1)</text></g><text x="76" y="28" fill="#1e2b2a" font-family="Arial" font-size="14" font-weight="700">f(x) = x³ - 3x + 1</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+function seedQuestions() {
+  const now = Date.now();
+  const ago = (n) => new Date(now - n * 86400000).toISOString();
+  const t = today();
+  const graph = graphImage();
+  return [
+    normalize({ id: 'demo_math_1', subject: '数学', topic: '导数与闭区间最值', source: '期中试卷', type: '解答题', difficulty: 4,
+      question: '已知函数 f(x)=x³-3x+1，求 f(x) 在区间 [-2,2] 上的最大值与最小值。',
+      myAnswer: '最大值为 3，最小值为 -1。', answer: '最大值为 3，最小值为 -3。',
+      analysis: "f'(x)=3x²-3=3(x-1)(x+1)，驻点为 x=±1。比较端点与驻点：f(-2)=-1，f(-1)=3，f(1)=-1，f(2)=3，所以最大值为 3，最小值为 -3。",
+      reason: '方法不会', tags: '导数, 闭区间最值, 极值', images: [graph], status: 'review',
+      reviewCount: 2, correctStreak: 1, interval: 2, nextReview: t, createdAt: ago(4), updatedAt: ago(1) }),
+    normalize({ id: 'demo_physics_1', subject: '物理', topic: '电磁感应方向', source: '周测', type: '选择题', difficulty: 3,
+      question: '闭合回路的一部分导体棒在匀强磁场中向右匀速运动。请判断感应电流的方向，并说明依据。',
+      myAnswer: '感应电流方向为顺时针，因为导体棒向右运动。',
+      answer: '感应电流方向为逆时针。依据：右手定则，磁场垂直纸面向里时，导体棒向右运动，感应电流由下向上；也可用楞次定律判断。',
+      analysis: '先确定原磁场方向，再用右手定则；四指指向电流方向，拇指指向导体运动方向。楞次定律可用来验算。',
+      reason: '概念不清', tags: '右手定则, 楞次定律, 电磁感应', starred: true, status: 'review',
+      reviewCount: 1, correctStreak: 0, interval: 1, nextReview: addDays(t, -2), createdAt: ago(8), updatedAt: ago(3) }),
+    normalize({ id: 'demo_english_1', subject: '英语', topic: '非谓语动词', source: '英语作业', type: '填空题', difficulty: 3,
+      question: '______ (walk) along the street, he heard a familiar voice behind him.',
+      myAnswer: 'Walked', answer: 'Walking',
+      analysis: '句中已有谓语 heard，walk 作伴随状语，逻辑主语 he 与 walk 是主动关系，所以用现在分词 Walking。',
+      reason: '记忆混淆', tags: '非谓语, 现在分词, 伴随状语', status: 'new',
+      reviewCount: 0, correctStreak: 0, interval: 0, nextReview: t, createdAt: ago(1), updatedAt: ago(1) }),
+    normalize({ id: 'demo_chemistry_1', subject: '化学', topic: '恒容充惰性气体', source: '月考', type: '选择题', difficulty: 4,
+      question: '恒温恒容的密闭容器中，反应 2SO₂(g)+O₂(g)⇌2SO₃(g) 达到平衡后，充入稀有气体。SO₃ 的体积分数如何变化？',
+      myAnswer: '减小，因为充入气体后压强增大，平衡正向移动。',
+      answer: '不变。恒容条件下充入稀有气体，各反应物、生成物的浓度均不变，平衡不移动。',
+      analysis: '恒容充惰性气体：总压增大，但各组分浓度不变，Q=K，平衡不移动；恒压充惰性气体才会使分压降低、平衡向气体分子数增大的方向移动。',
+      reason: '概念不清', tags: '化学平衡, 惰性气体, 恒容', status: 'review',
+      reviewCount: 3, correctStreak: 2, interval: 4, nextReview: addDays(t, 3), createdAt: ago(10), updatedAt: ago(2) }),
+    normalize({ id: 'demo_math_2', subject: '数学', topic: '正四面体外接球', source: '课本例题', type: '填空题', difficulty: 3,
+      question: '棱长为 2 的正四面体，其外接球的半径是多少？',
+      myAnswer: '√3', answer: '√6/2',
+      analysis: '正四面体外接球半径 R=√6a/4，代入 a=2 得 R=√6/2。也可把正四面体补成正方体，正方体体对角线的一半即为外接球半径。',
+      reason: '计算失误', tags: '立体几何, 外接球, 正四面体', starred: true, status: 'mastered',
+      reviewCount: 5, correctStreak: 3, interval: 21, nextReview: addDays(t, 18), createdAt: ago(16), updatedAt: ago(5) }),
+    normalize({ id: 'demo_physics_2', subject: '物理', topic: '斜面受力分析', source: '练习册', type: '解答题', difficulty: 2,
+      question: '质量为 m 的物块沿倾角为 θ 的斜面匀速下滑，求物块与斜面间的动摩擦因数 μ。',
+      myAnswer: 'μ=sinθ', answer: 'μ=tanθ',
+      analysis: '匀速下滑，沿斜面方向合力为零：mg sinθ = f；垂直斜面方向 N=mg cosθ；又 f=μN，所以 μ=tanθ。',
+      reason: '审题偏差', tags: '受力分析, 摩擦力, 平衡', status: 'new',
+      reviewCount: 0, correctStreak: 0, interval: 0, nextReview: t, createdAt: ago(2), updatedAt: ago(2) })
+  ];
+}
+
+function seedLogs(qs) {
+  const out = [];
+  const t = today();
+  const counts = [2, 4, 1, 5, 3, 2, 3];
+  for (let d = 6; d >= 0; d--) {
+    const n = counts[6 - d];
+    for (let i = 0; i < n; i++) {
+      const q = qs[(i + d) % qs.length];
+      out.push({ id: uid('log'), qid: q.id, date: addDays(t, -d), rating: ['good', 'hard', 'again', 'easy'][(i + d) % 4], at: new Date().toISOString() });
+    }
+  }
+  return out;
+}
+
+/* ---------------- state ---------------- */
+const state = {
+  route: 'dashboard',
+  questions: [],
+  logs: [],
+  filters: { search: '', subject: 'all', status: 'all', sort: 'updated' },
+  formImages: [],
+  formStarred: false,
+  review: null
+};
+const ROUTES = {
+  dashboard: ['OVERVIEW', '总览'],
+  questions: ['LIBRARY', '错题本'],
+  review: ['REVIEW', '今日复习'],
+  stats: ['INSIGHTS', '统计分析'],
+  settings: ['SETTINGS', '设置与备份']
+};
+
+/* ---------------- selectors ---------------- */
+function dueQuestions() {
+  const t = today();
+  return state.questions.filter((q) => q.status !== 'mastered' && q.nextReview <= t)
+    .sort((a, b) => a.nextReview.localeCompare(b.nextReview) || b.difficulty - a.difficulty);
+}
+function statusCounts() {
+  return state.questions.reduce((a, q) => { a[q.status] = (a[q.status] || 0) + 1; return a; }, { new: 0, review: 0, mastered: 0 });
+}
+function subjectCounts() {
+  const m = new Map();
+  state.questions.forEach((q) => m.set(q.subject, (m.get(q.subject) || 0) + 1));
+  return [...m.entries()].sort((a, b) => b[1] - a[1]);
+}
+function reasonCounts() {
+  const m = new Map();
+  state.questions.forEach((q) => m.set(q.reason, (m.get(q.reason) || 0) + 1));
+  return [...m.entries()].sort((a, b) => b[1] - a[1]);
+}
+function masteryRate() {
+  return state.questions.length ? Math.round(state.questions.filter((q) => q.status === 'mastered').length / state.questions.length * 100) : 0;
+}
+function todayReviewed() { return state.logs.filter((l) => l.date === today()).length; }
+function last7() {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = addDays(today(), i - 6);
+    const date = parseDate(d);
+    return { iso: d, label: `${date.getMonth() + 1}/${date.getDate()}`, count: state.logs.filter((l) => l.date === d).length };
+  });
+}
+function titleOf(q) {
+  if (q.question) { const s = q.question.split(/\r?\n/)[0].trim(); return s.length > 70 ? s.slice(0, 70) + '…' : s; }
+  return q.images.length ? '图片错题（点击查看）' : '未填写题干';
+}
+function excerptOf(q) {
+  if (q.myAnswer) return '我的答案：' + q.myAnswer;
+  if (q.answer) return '正确答案：' + q.answer;
+  return q.topic || q.analysis || '还没有写解析，点击补充。';
+}
+function storageBytes() { try { return new Blob([JSON.stringify(state.questions)]).size; } catch { return 0; } }
+
+/* ---------------- view fragments ---------------- */
+function statusBadge(q) {
+  const s = STATUS[q.status] || STATUS.new;
+  return `<span class="q-status"><span class="status-dot ${s.cls}"></span>${s.label}</span>`;
+}
+function subjectBadge(s) { return `<span class="q-subject">${esc(s)}</span>`; }
+function tagHTML(t) { return `<span class="q-tag">${esc(t)}</span>`; }
+function qCard(q) {
+  const tags = q.tags.slice(0, 3).map(tagHTML).join('');
+  return `<article class="q-card" data-action="detail" data-id="${esc(q.id)}" role="button" tabindex="0">
+    <div class="q-top">${subjectBadge(q.subject)}${statusBadge(q)}</div>
+    <h3 class="q-title">${esc(titleOf(q))}</h3>
+    <p class="q-excerpt">${esc(excerptOf(q))}</p>
+    <div class="q-tags">${tags}</div>
+    <div class="q-foot">
+      <span>${icon('clock', 'icon-sm')} ${esc(fmtDue(q.nextReview, q.status))}</span>
+      ${q.images.length ? `<span class="q-image-badge">${icon('image', 'icon-sm')} ${q.images.length}</span>` : ''}
+      <button class="icon-btn q-star ${q.starred ? 'on' : ''}" data-action="star" data-id="${esc(q.id)}" title="重点" style="width:22px;height:22px">${icon('star', 'icon-sm')}</button>
+    </div>
+  </article>`;
+}
+function emptyState(title, copy, action = 'add', label = '新增第一道错题') {
+  return `<div class="empty"><div class="empty-icon">${icon('book', 'icon-lg')}</div><h3>${esc(title)}</h3><p>${esc(copy)}</p><button class="btn btn-primary" data-action="${action}">${icon('plus')}<span>${esc(label)}</span></button></div>`;
+}
+function dueItem(q, i) {
+  return `<div class="due-item" data-action="detail" data-id="${esc(q.id)}" role="button" tabindex="0">
+    <span class="due-index">${String(i + 1).padStart(2, '0')}</span>
+    <div class="due-main"><div class="due-title">${esc(titleOf(q))}</div><div class="due-meta"><span>${esc(q.subject)}</span><span class="dot"></span><span>${esc(q.reason)}</span><span class="dot"></span><span>${esc(fmtDue(q.nextReview, q.status))}</span></div></div>
+    ${icon('arrow', 'icon-sm')}
+  </div>`;
+}
+
+/* ---------------- dashboard ---------------- */
+function renderDashboard() {
+  const due = dueQuestions();
+  const c = statusCounts();
+  const subjects = subjectCounts().slice(0, 5);
+  const max = Math.max(1, ...subjects.map((x) => x[1]));
+  const recent = state.questions.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
+  const dueSubjects = [...new Set(due.map((q) => q.subject))].slice(0, 3);
+  const total = state.questions.length;
+  return `<section class="hero">
+    <div class="hero-main">
+      <div class="hero-kicker">A NOTEBOOK FOR YOUR NEXT TRY</div>
+      <h2 class="hero-title">把每一道错题，<br>变成下一次的 <em>得分点</em>。</h2>
+      <p class="hero-copy">不只抄题，更要归因。按学科、错因和掌握度整理，配合间隔复习，把错过变成会了。</p>
+      <div class="hero-actions"><button class="btn btn-primary" data-action="add">${icon('plus')}录入一道错题</button><button class="btn btn-ghost" data-route="review">${icon('repeat')}开始今日复习</button></div>
+    </div>
+    <aside class="review-teaser">
+      <div class="teaser-top"><span class="teaser-label">TODAY'S REVIEW</span><span class="teaser-badge">${due.length ? '待复习' : '已清空'}</span></div>
+      <div class="teaser-number">${due.length}<span>道</span></div>
+      <p class="teaser-copy">${due.length ? `今天有 ${due.length} 道题等你回看，预计 ${Math.max(3, Math.ceil(due.length * 1.4))} 分钟。` : '今天的复习任务已经完成。可以随机抽一道，保持手感。'}</p>
+      <div class="teaser-list">${dueSubjects.map((s) => `<span class="mini-subject">${esc(s)}</span>`).join('') || '<span class="mini-subject">无待复习</span>'}</div>
+      <div class="teaser-foot"><button class="btn btn-dark" data-action="start-review" data-mode="${due.length ? 'due' : 'random'}">${icon(due.length ? 'play' : 'refresh')}${due.length ? '开始复习' : '随机抽一道'}</button><button class="icon-btn" data-route="review" aria-label="复习页">${icon('arrow')}</button></div>
+    </aside>
+  </section>
+  <section class="stat-grid">
+    <div class="stat-card"><div class="stat-label">${icon('layers', 'icon-sm')}错题总量</div><div class="stat-value">${total}<small>道</small></div><div class="stat-foot">覆盖 <strong>${subjects.length}</strong> 个学科</div></div>
+    <div class="stat-card"><div class="stat-label">${icon('target', 'icon-sm')}掌握率</div><div class="stat-value">${masteryRate()}<small>%</small></div><div class="stat-foot"><strong>${c.mastered}</strong> 道已掌握</div></div>
+    <div class="stat-card"><div class="stat-label">${icon('repeat', 'icon-sm')}今日待复习</div><div class="stat-value">${due.length}<small>道</small></div><div class="stat-foot">今天已复习 <strong>${todayReviewed()}</strong> 次</div></div>
+    <div class="stat-card"><div class="stat-label">${icon('spark', 'icon-sm')}复习中</div><div class="stat-value">${c.review}<small>道</small></div><div class="stat-foot">未掌握 <strong>${c.new}</strong> 道</div></div>
+  </section>
+  <section class="dash-grid">
+    <div class="card card-pad">
+      <div class="card-head"><div><h2 class="card-title">今天先看这几道</h2><p class="card-sub">按逾期时间和难度排序。</p></div><button class="btn btn-ghost btn-sm" data-route="review">全部 ${due.length} 道 ${icon('arrow', 'icon-sm')}</button></div>
+      <div class="due-list">${due.slice(0, 4).map(dueItem).join('') || '<div class="empty-mini">今天没有待复习的错题，去错题本里翻翻吧。</div>'}</div>
+    </div>
+    <div class="card card-pad">
+      <div class="card-head"><div><h2 class="card-title">学科分布</h2><p class="card-sub">错题集中在哪里，复习就从哪里开始。</p></div><span class="mono muted" style="font-size:9px">${total} TOTAL</span></div>
+      <div class="subject-bars">${subjects.length ? subjects.map(([n, v]) => `<div class="subject-row"><span class="subject-name">${esc(n)}</span><span class="subject-track"><span class="subject-fill" style="width:${Math.round(v / max * 100)}%"></span></span><span class="subject-num">${v}</span></div>`).join('') : '<div class="empty-mini">还没有数据。</div>'}</div>
+      <div class="divider"></div><div class="row" style="justify-content:space-between"><span class="muted" style="font-size:10px">最近 7 天复习 ${state.logs.filter((l) => l.date >= addDays(today(), -6)).length} 次</span><button class="btn btn-ghost btn-sm" data-route="stats">看统计 ${icon('arrow', 'icon-sm')}</button></div>
+    </div>
+  </section>
+  <section><div class="recent-head"><div><h2 class="card-title">最近收录</h2><p class="card-sub">新错题先归因，再安排复习。</p></div><button class="btn btn-ghost btn-sm" data-route="questions">打开错题本 ${icon('arrow', 'icon-sm')}</button></div>
+  ${recent.length ? `<div class="q-grid">${recent.map(qCard).join('')}</div>` : emptyState('错题本还是空的', '把第一道错题录进来，给它一个学科、一个错因，和一次重新出发的机会。')}</section>`;
+}
+
+/* ---------------- questions ---------------- */
+function filtered() {
+  const f = state.filters;
+  let list = state.questions.slice();
+  if (f.search.trim()) {
+    const n = f.search.trim().toLowerCase();
+    list = list.filter((q) => [q.question, q.topic, q.source, q.answer, q.analysis, q.myAnswer, q.tags.join(' ')].join(' ').toLowerCase().includes(n));
+  }
+  if (f.subject !== 'all') list = list.filter((q) => q.subject === f.subject);
+  if (f.status === 'starred') list = list.filter((q) => q.starred);
+  else if (f.status !== 'all') list = list.filter((q) => q.status === f.status);
+  const sorters = {
+    due: (a, b) => a.nextReview.localeCompare(b.nextReview),
+    difficulty: (a, b) => b.difficulty - a.difficulty || b.updatedAt.localeCompare(a.updatedAt),
+    subject: (a, b) => a.subject.localeCompare(b.subject) || b.updatedAt.localeCompare(a.updatedAt),
+    created: (a, b) => b.createdAt.localeCompare(a.createdAt),
+    updated: (a, b) => b.updatedAt.localeCompare(a.updatedAt)
+  };
+  return list.sort(sorters[f.sort] || sorters.updated);
+}
+function resultsHTML() {
+  const list = filtered();
+  if (!list.length) return `<div id="questionResults">${emptyState('没有找到匹配的错题', '换个关键词，或清空筛选条件再试一次。', 'reset-filters', '清空筛选')}</div>`;
+  return `<div id="questionResults"><div class="results-meta"><span>共 <strong>${list.length}</strong> 道错题</span><span>${state.filters.search ? `搜索“${esc(state.filters.search)}”` : '按最近更新排序'}</span></div><div class="q-grid">${list.map(qCard).join('')}</div></div>`;
+}
+function renderQuestions() {
+  const c = statusCounts();
+  const total = state.questions.length;
+  const tabs = [['all', '全部', total], ['new', '未掌握', c.new], ['review', '复习中', c.review], ['mastered', '已掌握', c.mastered], ['starred', '重点', state.questions.filter((q) => q.starred).length]];
+  return `<div class="page-head"><div><h2>所有错题，按你的方式归档</h2><p>搜索题干、解析或标签；按学科和掌握度筛选，找到最该复习的那一道。</p></div><button class="btn btn-ghost btn-sm" data-action="print" data-scope="filtered">${icon('print', 'icon-sm')}打印当前列表</button></div>
+  <div class="toolbar">
+    <div class="search-box">${icon('search')}<input id="searchInput" type="search" value="${esc(state.filters.search)}" placeholder="搜索题干、解析、标签…" autocomplete="off"></div>
+    <select class="select" id="subjectFilter"><option value="all">全部学科</option>${SUBJECTS.map((s) => `<option value="${esc(s)}" ${state.filters.subject === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
+    <select class="select" id="sortFilter"><option value="updated" ${state.filters.sort === 'updated' ? 'selected' : ''}>最近更新</option><option value="due" ${state.filters.sort === 'due' ? 'selected' : ''}>最近要复习</option><option value="difficulty" ${state.filters.sort === 'difficulty' ? 'selected' : ''}>难度从高到低</option><option value="created" ${state.filters.sort === 'created' ? 'selected' : ''}>最近添加</option><option value="subject" ${state.filters.sort === 'subject' ? 'selected' : ''}>按学科</option></select>
+    <div class="toolbar-divider"></div><button class="btn btn-primary" data-action="add">${icon('plus')}新增</button>
+  </div>
+  <div class="filter-chips">${tabs.map(([k, l, n]) => `<button class="chip ${state.filters.status === k ? 'active' : ''}" data-action="filter-status" data-status="${k}">${l}<span class="count">${n}</span></button>`).join('')}</div>
+  ${resultsHTML()}`;
+}
+function updateResults() {
+  const el = $('#questionResults');
+  if (el) el.outerHTML = resultsHTML();
+}
+function resetFilters() {
+  state.filters = { search: '', subject: 'all', status: 'all', sort: 'updated' };
+  render();
+}
+
+/* ---------------- review page ---------------- */
+function renderReviewPage() {
+  const due = dueQuestions();
+  const subjects = [...new Set(due.map((q) => q.subject))];
+  const c = statusCounts();
+  const logs = state.logs.slice(-8).reverse();
+  return `<div class="review-hero">
+    <div class="review-panel"><div class="eyebrow" style="color:#e6a48f">SPACED REPETITION</div><h2>今天，把“不会”再想一遍。</h2><p>先回忆，再看答案。根据真实感受选择“又忘了 / 有点难 / 想起来了 / 很熟练”，系统会自动安排下一次复习。</p><div class="review-metrics"><div class="review-metric"><strong>${due.length}</strong><span>今日待复习</span></div><div class="review-metric"><strong>${todayReviewed()}</strong><span>今天已复习</span></div><div class="review-metric"><strong>${masteryRate()}%</strong><span>整体掌握率</span></div></div><button class="btn btn-primary" data-action="start-review" data-mode="${due.length ? 'due' : 'random'}">${icon(due.length ? 'play' : 'refresh')}${due.length ? '开始今日复习' : '随机抽一道'}</button></div>
+    <div class="review-side"><div class="mini-card"><h3>复习节奏</h3><p>又忘了 → 明天；有点难 → 2 天后；想起来了 → 按上次间隔拉长；很熟练 → 拉得更长。连续 3 次想起来，自动标记为已掌握。</p></div><div class="mini-card"><h3>今天的学科</h3><div class="teaser-list">${subjects.map((s) => `<span class="mini-subject">${esc(s)}</span>`).join('') || '<span class="mini-subject">暂无待复习</span>'}</div><p style="margin-top:9px">${due.length ? `预计 ${Math.max(3, Math.ceil(due.length * 1.4))} 分钟可以完成。` : '今天可以先休息，或者随机抽一道保持手感。'}</p></div></div>
+  </div>
+  <div class="card card-pad" style="margin-bottom:18px"><div class="card-head"><div><h2 class="card-title">今日复习清单</h2><p class="card-sub">点击任意一道可以直接看详情。</p></div><button class="btn btn-dark btn-sm" data-action="start-review" data-mode="due" ${due.length ? '' : 'disabled'}>${icon('play', 'icon-sm')}连续复习</button></div><div class="due-table">${due.length ? due.map((q) => `<div class="due-row" data-action="detail" data-id="${esc(q.id)}" role="button" tabindex="0"><span class="due-subject">${esc(q.subject)}</span><span class="due-row-title">${esc(titleOf(q))}</span><span class="due-row-meta">${esc(q.reason)}</span><span class="due-row-meta">${esc(fmtDue(q.nextReview, q.status))}</span></div>`).join('') : '<div class="empty-mini">今天没有待复习的错题。去错题本里加一道，或者随机抽一道。</div>'}</div></div>
+  <div class="dash-grid"><div class="card card-pad"><div class="card-head"><div><h2 class="card-title">最近复习记录</h2><p class="card-sub">每一次回看，都算数。</p></div><span class="mono muted" style="font-size:9px">${state.logs.length} LOGS</span></div>${logs.length ? logs.map((l) => { const q = state.questions.find((x) => x.id === l.qid); return `<div class="history-row"><span>${q ? esc(q.subject) + ' · ' + esc(titleOf(q)) : '已删除的错题'}</span><span>${esc(RATING[l.rating]?.label || l.rating)} · ${esc(fmtDate(l.date))}</span></div>`; }).join('') : '<div class="empty-mini">还没有复习记录。</div>'}</div><div class="card card-pad"><div class="card-head"><div><h2 class="card-title">复习小提示</h2><p class="card-sub">别把“看懂了”当成“会做了”。</p></div></div><div class="about-note"><strong>先遮住答案，完整讲一遍思路。</strong><br>能说出“第一步为什么这样做”，比“最后答案对了”更重要。卡住的地方，就是下一次要补的知识点。</div><div class="divider"></div><div class="row" style="justify-content:space-between"><span class="muted" style="font-size:10px">已掌握 ${c.mastered} 道 / 未掌握 ${c.new} 道</span><button class="btn btn-ghost btn-sm" data-route="stats">看错因分析 ${icon('arrow', 'icon-sm')}</button></div></div></div>`;
+}
+
+/* ---------------- stats ---------------- */
+function renderStats() {
+  const total = state.questions.length;
+  const c = statusCounts();
+  const rate = masteryRate();
+  const reasons = reasonCounts();
+  const subjects = subjectCounts().slice(0, 6);
+  const maxS = Math.max(1, ...subjects.map((x) => x[1]));
+  const maxR = Math.max(1, ...reasons.map((x) => x[1]));
+  const days = last7();
+  const maxA = Math.max(1, ...days.map((x) => x.count));
+  const attention = state.questions.slice().sort((a, b) => {
+    const am = a.status === 'mastered' ? 1 : 0;
+    const bm = b.status === 'mastered' ? 1 : 0;
+    if (am !== bm) return am - bm;
+    const ad = a.nextReview <= today() ? 0 : 1;
+    const bd = b.nextReview <= today() ? 0 : 1;
+    if (ad !== bd) return ad - bd;
+    if (a.nextReview !== b.nextReview) return a.nextReview.localeCompare(b.nextReview);
+    return b.difficulty - a.difficulty;
+  }).slice(0, 5);
+  const avg = total ? (state.questions.reduce((s, q) => s + q.reviewCount, 0) / total).toFixed(1) : '0.0';
+  return `<div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">${icon('layers', 'icon-sm')}错题总量</div><div class="stat-value">${total}<small>道</small></div><div class="stat-foot">${subjects.length} 个学科 · ${state.logs.length} 次复习</div></div>
+    <div class="stat-card"><div class="stat-label">${icon('target', 'icon-sm')}掌握率</div><div class="stat-value">${rate}<small>%</small></div><div class="stat-foot">已掌握 <strong>${c.mastered}</strong> 道</div></div>
+    <div class="stat-card"><div class="stat-label">${icon('repeat', 'icon-sm')}平均复习次数</div><div class="stat-value">${avg}<small>次</small></div><div class="stat-foot">每道题平均回看次数</div></div>
+    <div class="stat-card"><div class="stat-label">${icon('alert', 'icon-sm')}最高频错因</div><div class="stat-value" style="font-size:21px;line-height:1.35">${esc(reasons[0]?.[0] || '暂无')}</div><div class="stat-foot">${reasons[0]?.[1] || 0} 道题 · 优先补这个漏洞</div></div>
+  </div>
+  <div class="chart-grid"><div class="card card-pad"><div class="card-head"><div><h2 class="card-title">掌握结构</h2><p class="card-sub">未掌握、复习中、已掌握的比例。</p></div></div><div class="donut-wrap"><div class="donut" style="background:conic-gradient(var(--accent) 0 ${c.new / Math.max(1, total) * 100}%, var(--gold) ${c.new / Math.max(1, total) * 100}% ${(c.new + c.review) / Math.max(1, total) * 100}%, var(--teal) ${(c.new + c.review) / Math.max(1, total) * 100}% 100%)"><div class="donut-center"><strong>${rate}%</strong><span>掌握率</span></div></div><div class="legend"><div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>未掌握<strong>${c.new}</strong></div><div class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span>复习中<strong>${c.review}</strong></div><div class="legend-item"><span class="legend-dot" style="background:var(--teal)"></span>已掌握<strong>${c.mastered}</strong></div><div class="legend-item" style="border-top:1px dashed var(--line);padding-top:10px"><span>总计</span><strong>${total}</strong></div></div></div></div>
+  <div class="card card-pad"><div class="card-head"><div><h2 class="card-title">学科分布</h2><p class="card-sub">错题最多的学科，值得先安排时间。</p></div></div><div class="subject-bars">${subjects.length ? subjects.map(([n, v]) => `<div class="subject-row"><span class="subject-name">${esc(n)}</span><span class="subject-track"><span class="subject-fill" style="width:${Math.round(v / maxS * 100)}%"></span></span><span class="subject-num">${v}</span></div>`).join('') : '<div class="empty-mini">还没有数据。</div>'}</div></div></div>
+  <div class="chart-grid"><div class="card card-pad"><div class="card-head"><div><h2 class="card-title">错因排行</h2><p class="card-sub">比“粗心”更具体，才能真的改。</p></div></div><div class="reason-list">${reasons.length ? reasons.map(([n, v]) => `<div class="reason-row"><span class="reason-name">${esc(n)}</span><span class="reason-track"><span class="reason-fill" style="width:${Math.round(v / maxR * 100)}%"></span></span><span class="reason-num">${v}</span></div>`).join('') : '<div class="empty-mini">还没有数据。</div>'}</div></div>
+  <div class="card card-pad"><div class="card-head"><div><h2 class="card-title">最近 7 天复习</h2><p class="card-sub">保持节奏，比一次刷很多更重要。</p></div><span class="mono muted" style="font-size:9px">${days.reduce((s, d) => s + d.count, 0)} TIMES</span></div><div class="activity">${days.map((d) => `<div class="day-bar" title="${d.iso} · ${d.count} 次"><strong>${d.count}</strong><div class="bar-wrap"><div class="bar" style="height:${Math.max(3, Math.round(d.count / maxA * 100))}%"></div></div><span>${d.label}</span></div>`).join('')}</div></div></div>
+  <div class="card card-pad"><div class="card-head"><div><h2 class="card-title">最需要关注的 5 道</h2><p class="card-sub">按未掌握、难度和逾期程度综合排序。</p></div><button class="btn btn-ghost btn-sm" data-route="questions">去错题本 ${icon('arrow', 'icon-sm')}</button></div><div class="attention-list">${attention.length ? attention.map((q, i) => `<div class="attention-item" data-action="detail" data-id="${esc(q.id)}" role="button" tabindex="0"><span class="attention-rank">${String(i + 1).padStart(2, '0')}</span><div class="attention-main"><div class="attention-title">${esc(titleOf(q))}</div><div class="attention-meta">${esc(q.subject)} · ${esc(q.reason)} · ${STATUS[q.status].label}</div></div><span class="attention-score">${q.status === 'mastered' ? '已掌握' : (q.nextReview <= today() ? '待复习' : esc(fmtDue(q.nextReview, q.status)))}</span></div>`).join('') : '<div class="empty-mini">还没有数据。</div>'}</div></div>`;
+}
+
+/* ---------------- settings ---------------- */
+function renderSettings() {
+  const bytes = storageBytes();
+  const max = 50 * 1048576;
+  const mode = Store.mode === 'idb' ? 'IndexedDB（容量更大）' : '本地存储（兼容模式）';
+  return `<div class="settings-grid">
+    <div class="card settings-card"><h3>${icon('download')}数据备份</h3><p>数据只保存在当前浏览器里。换电脑、换浏览器或清理缓存前，先导出 JSON 备份。</p><div class="setting-actions"><button class="btn btn-primary" data-action="export-json">${icon('download')}导出 JSON</button><button class="btn btn-ghost" data-action="import-json">${icon('upload')}导入 JSON</button><button class="btn btn-ghost" data-action="export-csv">${icon('book')}导出 CSV</button><button class="btn btn-ghost" data-action="print" data-scope="all">${icon('print')}打印全部</button></div><div class="storage-box"><div class="storage-top"><span>当前数据体积</span><strong>${fmtSize(bytes)}</strong></div><div class="storage-track"><div class="storage-fill" style="width:${Math.min(100, Math.max(1, bytes / max * 100))}%"></div></div><div class="storage-top" style="margin-top:7px"><span>${mode}</span><span>${state.questions.length} 道错题</span></div></div></div>
+    <div class="card settings-card"><h3>${icon('spark')}示例与重置</h3><p>第一次打开会有一组示例错题，方便熟悉功能。可以恢复示例，或清空全部数据重新开始。</p><div class="setting-actions"><button class="btn btn-ghost" data-action="restore-demo">${icon('refresh')}恢复示例数据</button><button class="btn btn-danger" data-action="clear-all">${icon('trash')}清空全部数据</button></div><div class="about-note" style="margin-top:16px"><strong>建议：</strong>每周导出一次 JSON。图片会自动压缩到长边 1400px。</div></div>
+    <div class="card settings-card"><h3>${icon('target')}快捷键</h3><p>复习时尽量不看鼠标，用键盘完成“回忆—评分”的循环。</p><ul class="kbd-list"><li><span>新增错题</span><kbd>N</kbd></li><li><span>聚焦搜索</span><kbd>/</kbd></li><li><span>显示答案</span><kbd>Space</kbd></li><li><span>评分：又忘了 / 有点难 / 想起来了 / 很熟练</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd></span></li><li><span>关闭弹窗</span><kbd>Esc</kbd></li></ul></div>
+    <div class="card settings-card"><h3>${icon('book')}关于错题拾遗</h3><p>一个不联网、不注册、打开就能用的错题本。把“抄题”变成“归因”，把“看过”变成“会了”。</p><div class="about-note"><strong>数据在哪？</strong><br>只在你当前浏览器。清理浏览器数据、换浏览器或换电脑都会丢失，所以一定要导出备份。</div><div class="divider"></div><div class="row" style="justify-content:space-between"><span class="muted" style="font-size:9.5px">版本 ${APP_VERSION} · 离线版</span><button class="btn btn-ghost btn-sm" data-action="show-help">${icon('spark', 'icon-sm')}使用说明</button></div></div>
+  </div>`;
+}
+
+/* ---------------- render ---------------- */
+function updateNav() {
+  const n = state.questions.length;
+  const d = dueQuestions().length;
+  if ($('#navQuestionCount')) $('#navQuestionCount').textContent = n;
+  if ($('#navDueDot')) $('#navDueDot').hidden = d === 0;
+  $$('.nav-item').forEach((el) => el.classList.toggle('active', el.dataset.route === state.route));
+}
+function render() {
+  const meta = ROUTES[state.route] || ROUTES.dashboard;
+  document.title = `${meta[1]} · 错题拾遗`;
+  if ($('#pageEyebrow')) $('#pageEyebrow').textContent = meta[0];
+  if ($('#pageTitle')) $('#pageTitle').textContent = meta[1];
+  let html = '';
+  if (state.route === 'questions') html = renderQuestions();
+  else if (state.route === 'review') html = renderReviewPage();
+  else if (state.route === 'stats') html = renderStats();
+  else if (state.route === 'settings') html = renderSettings();
+  else html = renderDashboard();
+  if ($('#view')) $('#view').innerHTML = html;
+  updateNav();
+  bindView();
+}
+function navigate(route) {
+  state.route = ROUTES[route] ? route : 'dashboard';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function bindView() {
+  const s = $('#searchInput');
+  if (s) s.addEventListener('input', debounce((e) => { state.filters.search = e.target.value; updateResults(); }, 110));
+  const sub = $('#subjectFilter');
+  if (sub) sub.addEventListener('change', (e) => { state.filters.subject = e.target.value; render(); });
+  const sort = $('#sortFilter');
+  if (sort) sort.addEventListener('change', (e) => { state.filters.sort = e.target.value; render(); });
+}
+
+/* ---------------- modal ---------------- */
+function openModal(html, small = false) {
+  $('#modalRoot').innerHTML = `<div class="modal-backdrop" data-modal-backdrop><div class="modal ${small ? 'modal-sm' : ''}" role="dialog" aria-modal="true">${html}</div></div>`;
+  document.body.classList.add('modal-open');
+}
+function closeModal() {
+  $('#modalRoot').innerHTML = '';
+  document.body.classList.remove('modal-open');
+  state.formImages = [];
+  state.formStarred = false;
+}
+
+/* ---------------- form ---------------- */
+function options(list, selected) {
+  return list.map((x) => `<option value="${esc(x)}" ${selected === x ? 'selected' : ''}>${esc(x)}</option>`).join('');
+}
+function openForm(id = null) {
+  const old = id ? state.questions.find((q) => q.id === id) : null;
+  const q = old || normalize({ subject: state.filters.subject !== 'all' ? state.filters.subject : '数学', status: 'new', reason: '概念不清', type: '选择题' });
+  state.formImages = q.images.slice();
+  state.formStarred = q.starred;
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">${old ? 'EDIT' : 'NEW ENTRY'}</div><h2 class="modal-title">${old ? '编辑错题' : '录入一道错题'}</h2><p class="modal-sub">先写清“错在哪”，比抄一遍答案更有用。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <form id="questionForm" data-id="${esc(old ? old.id : '')}" novalidate><div class="modal-body"><div class="form-error" id="formError"></div><div class="form-grid">
+    <div class="form-col">
+      <div class="field"><label for="qQuestion">题干 <span class="req">*</span><span class="hint">可直接粘贴文字，也可以只传图片</span></label><textarea class="textarea textarea-lg" id="qQuestion" name="question" placeholder="把题目贴在这里…">${esc(q.question)}</textarea></div>
+      <div class="field"><label for="qMyAnswer">我的答案 / 思路</label><textarea class="textarea" id="qMyAnswer" name="myAnswer" placeholder="当时是怎么想的？错在哪一步？">${esc(q.myAnswer)}</textarea></div>
+      <div class="field"><label for="qAnswer">正确答案</label><textarea class="textarea" id="qAnswer" name="answer" placeholder="正确答案或关键步骤">${esc(q.answer)}</textarea></div>
+      <div class="field"><label for="qAnalysis">解析 / 方法总结</label><textarea class="textarea" id="qAnalysis" name="analysis" placeholder="下次遇到同类题，先做什么？">${esc(q.analysis)}</textarea></div>
+      <div class="field"><label>题目图片<span class="hint">支持粘贴、拖拽，最多 4 张</span></label><div class="dropzone" id="imageDropzone" tabindex="0" role="button">${icon('image', 'icon-lg')}<strong>拖拽图片到这里，或点击选择</strong><span>也可以直接 Ctrl+V 粘贴截图</span><input type="file" id="formImageInput" accept="image/*" multiple hidden></div><div class="image-list" id="formImageList"></div></div>
+    </div>
+    <div class="form-col">
+      <div class="field-row"><div class="field"><label for="qSubject">学科 <span class="req">*</span></label><select class="select input" id="qSubject" name="subject">${options(SUBJECTS, q.subject)}</select></div><div class="field"><label for="qType">题型</label><select class="select input" id="qType" name="type">${options(TYPES, q.type || '其他')}</select></div></div>
+      <div class="field-row"><div class="field"><label for="qTopic">章节 / 知识点</label><input class="input" id="qTopic" name="topic" value="${esc(q.topic)}" placeholder="例：导数与最值"></div><div class="field"><label for="qSource">来源</label><input class="input" id="qSource" name="source" value="${esc(q.source)}" placeholder="例：期中试卷"></div></div>
+      <div class="field"><label>难度</label><div class="segmented">${[1, 2, 3, 4, 5].map((n) => `<input type="radio" id="diff${n}" name="difficulty" value="${n}" ${q.difficulty === n ? 'checked' : ''}><label for="diff${n}">${'★'.repeat(n)}</label>`).join('')}</div></div>
+      <div class="field"><label>掌握状态</label><div class="segmented">${[['new', '未掌握'], ['review', '复习中'], ['mastered', '已掌握']].map(([k, l]) => `<input type="radio" id="st${k}" name="status" value="${k}" ${q.status === k ? 'checked' : ''}><label for="st${k}">${l}</label>`).join('')}</div></div>
+      <div class="field"><label for="qReason">错因 <span class="req">*</span></label><select class="select input" id="qReason" name="reason">${options(REASONS, q.reason || '概念不清')}</select></div>
+      <div class="field"><label for="qTags">标签<span class="hint">逗号分隔，最多 8 个</span></label><input class="input" id="qTags" name="tags" value="${esc(q.tags.join(', '))}" placeholder="例：导数, 极值, 闭区间"></div>
+      <div class="field"><label>重点标记</label><button type="button" class="btn btn-ghost btn-sm ${state.formStarred ? 'is-on' : ''}" id="formStarBtn" data-action="toggle-form-star">${icon('star', 'icon-sm')}<span>${state.formStarred ? '已标为重点' : '标为重点'}</span></button><input type="hidden" name="starred" id="formStarred" value="${state.formStarred ? '1' : '0'}"></div>
+      <div class="form-note">图片会自动压缩到长边 1400px，保存在本地浏览器里。涉及隐私的姓名、学号请先打码。</div>
+    </div>
+  </div></div><div class="modal-foot"><span class="muted" style="font-size:9.5px">带 <span class="text-accent">*</span> 为必填</span><div class="foot-right"><button type="button" class="btn btn-ghost" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">${icon('check')}保存错题</button></div></div></form>`, false);
+  renderFormImages();
+  bindForm(q);
+}
+function renderFormImages() {
+  const list = $('#formImageList');
+  if (!list) return;
+  list.innerHTML = state.formImages.map((src, i) => `<div class="image-thumb"><img src="${esc(src)}" alt="题目图片 ${i + 1}"><button type="button" class="image-remove" data-action="remove-form-image" data-index="${i}" aria-label="移除">${icon('x', 'icon-sm')}</button></div>`).join('');
+  const strong = $('#imageDropzone strong');
+  if (strong) strong.textContent = state.formImages.length ? '继续添加图片' : '拖拽图片到这里，或点击选择';
+}
+function bindForm(q) {
+  const form = $('#questionForm');
+  if (!form) return;
+  form.addEventListener('submit', (e) => { e.preventDefault(); saveForm(q); });
+  const input = $('#formImageInput');
+  const drop = $('#imageDropzone');
+  if (drop && input) {
+    drop.addEventListener('click', () => input.click());
+    drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+    drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('drag'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
+    drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('drag'); addImages(e.dataTransfer.files); });
+    input.addEventListener('change', (e) => { addImages(e.target.files); input.value = ''; });
+  }
+  const body = $('.modal-body', form);
+  if (body) body.addEventListener('paste', (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    const files = [...items].filter((x) => x.kind === 'file' && x.type.startsWith('image/')).map((x) => x.getAsFile()).filter(Boolean);
+    if (files.length) { e.preventDefault(); addImages(files); }
+  });
+}
+async function addImages(files) {
+  const list = [...files].filter((f) => f.type.startsWith('image/'));
+  const room = 4 - state.formImages.length;
+  if (!list.length) return toast('请选择图片文件', 'error');
+  if (room <= 0) return toast('最多 4 张图片', 'error');
+  for (const f of list.slice(0, room)) {
+    try { state.formImages.push(await compress(f)); }
+    catch (e) { toast(e.message || '图片处理失败', 'error'); }
+  }
+  renderFormImages();
+  toast('图片已加入', 'success');
+}
+function compress(file) {
+  return new Promise((res, rej) => {
+    if (!file.type.startsWith('image/')) return rej(new Error('不是图片文件'));
+    if (file.size > 12 * 1048576) return rej(new Error('图片超过 12MB'));
+    const r = new FileReader();
+    r.onerror = () => rej(new Error('图片读取失败'));
+    r.onload = () => {
+      const img = new Image();
+      img.onerror = () => rej(new Error('图片解析失败'));
+      img.onload = () => {
+        const max = 1400;
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        const k = Math.min(1, max / Math.max(w, h));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(w * k));
+        canvas.height = Math.max(1, Math.round(h * k));
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        res(canvas.toDataURL('image/jpeg', 0.78));
+      };
+      img.src = r.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+async function saveForm(old) {
+  const form = $('#questionForm');
+  const error = $('#formError');
+  const d = Object.fromEntries(new FormData(form).entries());
+  if (!String(d.question || '').trim() && !state.formImages.length) {
+    error.textContent = '题干和图片至少填一个。';
+    error.classList.add('show');
+    return;
+  }
+  const isNew = !old || !old.id;
+  const now = new Date().toISOString();
+  const base = old || normalize({ id: uid(), status: d.status || 'new' });
+  const q = normalize({ ...base, subject: d.subject, topic: d.topic, source: d.source, type: d.type, difficulty: d.difficulty,
+    question: d.question, myAnswer: d.myAnswer, answer: d.answer, analysis: d.analysis, reason: d.reason,
+    tags: d.tags, images: state.formImages, starred: d.starred === '1', status: d.status, updatedAt: now });
+  if (isNew) {
+    q.createdAt = now;
+    q.reviewCount = 0;
+    q.correctStreak = q.status === 'mastered' ? 3 : 0;
+    q.interval = q.status === 'mastered' ? 30 : 0;
+    q.nextReview = q.status === 'mastered' ? addDays(today(), 30) : today();
+  } else if (q.status !== old.status) {
+    if (q.status === 'mastered') { q.correctStreak = Math.max(3, old.correctStreak || 0); q.interval = Math.max(30, old.interval || 0); q.nextReview = addDays(today(), 30); }
+    else if (q.status === 'new') { q.correctStreak = 0; q.interval = 0; q.nextReview = today(); }
+    else if (old.status === 'mastered') { q.correctStreak = 0; q.interval = 1; q.nextReview = addDays(today(), 1); }
+  }
+  try {
+    await Store.put(q);
+    const i = state.questions.findIndex((x) => x.id === q.id);
+    if (i >= 0) state.questions[i] = q; else state.questions.unshift(q);
+    closeModal(); render(); toast(isNew ? '错题已收录' : '修改已保存');
+  } catch (e) {
+    console.error(e);
+    error.textContent = '保存失败：浏览器存储可能已满，请先导出备份。';
+    error.classList.add('show');
+  }
+}
+
+/* ---------------- detail ---------------- */
+function openDetail(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q) return;
+  const history = state.logs.filter((l) => l.qid === q.id).slice(-6).reverse();
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+  <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
+  <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '还没有写解析。编辑这道题，把“下次怎么做”写下来。')}</p></div>
+  <div class="detail-tags">${q.tags.map(tagHTML).join('') || '<span class="q-tag">暂无标签</span>'}</div>
+  <div class="detail-info"><div class="info-cell"><span>题型</span><strong>${esc(q.type)}</strong></div><div class="info-cell"><span>复习次数</span><strong>${q.reviewCount} 次</strong></div><div class="info-cell"><span>连续掌握</span><strong>${q.correctStreak} 次</strong></div><div class="info-cell"><span>下次复习</span><strong>${esc(fmtDue(q.nextReview, q.status))}</strong></div></div>
+  ${history.length ? `<div class="detail-history"><div class="answer-label">最近复习</div>${history.map((l) => `<div class="history-row"><span>${esc(RATING[l.rating]?.label || l.rating)}</span><span>${esc(fmtDate(l.date))} · ${esc(fmtDateTime(l.at))}</span></div>`).join('')}</div>` : ''}
+  </div></div><div class="modal-foot"><button class="btn btn-danger btn-sm" data-action="delete" data-id="${esc(q.id)}">${icon('trash', 'icon-sm')}删除</button><div class="foot-right"><button class="btn btn-ghost" data-action="star" data-id="${esc(q.id)}">${icon('star')}${q.starred ? '取消重点' : '标为重点'}</button><button class="btn btn-ghost" data-action="edit" data-id="${esc(q.id)}">${icon('edit')}编辑</button><button class="btn btn-primary" data-action="start-review" data-mode="single" data-id="${esc(q.id)}">${icon('play')}复习这道</button></div></div>`, false);
+}
+
+/* ---------------- review ---------------- */
+function startReview(mode = 'due', id = null) {
+  let ids = [];
+  if (mode === 'single' && id) ids = [id];
+  else if (mode === 'random') {
+    if (!state.questions.length) return toast('错题本还是空的，先加一道吧', 'info');
+    ids = [state.questions[Math.floor(Math.random() * state.questions.length)].id];
+  } else {
+    ids = dueQuestions().map((q) => q.id);
+    if (!ids.length) return toast('今天没有待复习的错题', 'info');
+  }
+  state.review = { queue: ids, index: 0, revealed: false, results: { again: 0, hard: 0, good: 0, easy: 0 }, total: ids.length };
+  renderReview();
+}
+function currentReview() {
+  return state.review ? state.questions.find((q) => q.id === state.review.queue[state.review.index]) : null;
+}
+function renderReview() {
+  const root = $('#modalRoot');
+  if (!root || !state.review) return;
+  const r = state.review;
+  const q = currentReview();
+  if (!q || r.index >= r.total) {
+    const total = r.results.again + r.results.hard + r.results.good + r.results.easy;
+    root.innerHTML = `<div class="review-overlay"><div class="review-summary"><div class="summary-seal">${icon('check')}</div><h2>这一轮复习完成</h2><p>记忆需要间隔，明天再来一次会更牢。</p><div class="summary-stats"><div class="summary-stat"><strong>${total}</strong><span>复习总数</span></div><div class="summary-stat"><strong>${r.results.good + r.results.easy}</strong><span>想起来</span></div><div class="summary-stat"><strong>${r.results.again}</strong><span>又忘了</span></div><div class="summary-stat"><strong>${r.results.hard}</strong><span>有点难</span></div></div><div class="summary-actions"><button class="btn btn-ghost" data-action="close-review">返回总览</button><button class="btn btn-primary" data-action="start-review" data-mode="due">${icon('repeat')}再复习一轮</button></div></div></div>`;
+    document.body.classList.add('modal-open');
+    return;
+  }
+  const progress = Math.round(r.index / r.total * 100);
+  root.innerHTML = `<div class="review-overlay"><div class="review-top"><div class="review-brand"><span class="brand-seal">拾</span><span>REVIEW MODE · 先回忆，再看答案</span></div><div class="row"><span class="review-progress-text">${String(r.index + 1).padStart(2, '0')} / ${String(r.total).padStart(2, '0')}</span><button class="icon-btn" data-action="close-review" aria-label="退出" style="color:#aebbb5">${icon('x')}</button></div></div><div class="review-progress"><div class="review-progress-fill" style="width:${progress}%"></div></div><div class="review-stage"><div class="review-card"><div class="review-card-meta"><div class="row" style="gap:7px">${subjectBadge(q.subject)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span></div>${statusBadge(q)}</div><p class="review-q">${esc(q.question || '（图片错题，请查看图片）')}</p>${q.images.length ? `<div class="review-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+  ${!r.revealed ? `<button class="reveal-btn" data-action="reveal">${icon('eye')}点击显示答案与解析</button>` : `<div class="review-answer"><div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div><div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '暂无解析')}</p></div><div class="rating-grid">${Object.entries(RATING).map(([k, v], i) => `<button class="rating-btn ${v.cls}" data-action="rate" data-rating="${k}"><strong>${i + 1} · ${v.label}</strong><span>${v.hint}</span></button>`).join('')}</div></div>`}</div><div class="review-hint">${r.revealed ? '按 1—4 评分，按 Esc 退出' : '先在心里完整讲一遍，再按 Space 显示答案'}</div></div></div>`;
+  document.body.classList.add('modal-open');
+}
+function schedule(q, rating) {
+  let interval = q.interval || 0;
+  let streak = q.correctStreak || 0;
+  let status = q.status === 'mastered' ? 'mastered' : 'review';
+  if (rating === 'again') { interval = 1; streak = 0; status = 'review'; }
+  if (rating === 'hard') { interval = Math.max(2, Math.round((interval || 1) * 1.45)); streak = 0; status = 'review'; }
+  if (rating === 'good') { interval = Math.max(3, Math.round((interval || 1) * 2.25)); streak++; if (streak >= 3) status = 'mastered'; }
+  if (rating === 'easy') { interval = Math.max(5, Math.round((interval || 1) * 3.1)); streak += 2; if (streak >= 3) status = 'mastered'; }
+  if (status === 'mastered') interval = Math.max(21, interval);
+  return { interval, correctStreak: streak, status, nextReview: addDays(today(), interval), lastReviewed: new Date().toISOString() };
+}
+async function rate(rating) {
+  if (!state.review || !state.review.revealed) return;
+  const q = currentReview();
+  if (!q) return;
+  const updated = normalize({ ...q, ...schedule(q, rating), reviewCount: (q.reviewCount || 0) + 1, updatedAt: new Date().toISOString() });
+  const i = state.questions.findIndex((x) => x.id === q.id);
+  if (i >= 0) state.questions[i] = updated;
+  state.review.results[rating]++;
+  state.logs.push({ id: uid('log'), qid: q.id, date: today(), rating, at: new Date().toISOString() });
+  saveLogs();
+  try { await Store.put(updated); } catch (e) { console.error(e); toast('记录保存失败', 'error'); }
+  state.review.index++;
+  state.review.revealed = false;
+  renderReview();
+  updateNav();
+}
+function closeReview() {
+  state.review = null;
+  $('#modalRoot').innerHTML = '';
+  document.body.classList.remove('modal-open');
+  render();
+}
+
+/* ---------------- actions ---------------- */
+async function del(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q || !confirm(`确定删除“${titleOf(q)}”吗？`)) return;
+  try {
+    await Store.remove(id);
+    state.questions = state.questions.filter((x) => x.id !== id);
+    state.logs = state.logs.filter((l) => l.qid !== id);
+    saveLogs(); closeModal(); render(); toast('已删除');
+  } catch { toast('删除失败', 'error'); }
+}
+async function star(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q) return;
+  q.starred = !q.starred;
+  q.updatedAt = new Date().toISOString();
+  try {
+    await Store.put(q);
+    const detailOpen = $('#modalRoot').innerHTML.includes('QUESTION DETAIL');
+    render();
+    if (detailOpen) openDetail(id);
+    toast(q.starred ? '已标为重点' : '已取消重点');
+  } catch { toast('保存失败', 'error'); }
+}
+function exportJSON() {
+  const data = { app: '错题拾遗', version: APP_VERSION, exportedAt: new Date().toISOString(), questions: state.questions, logs: state.logs };
+  download(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' }), `错题拾遗-备份-${today()}.json`);
+  toast('备份已导出');
+}
+function exportCSV() {
+  const H = ['学科', '知识点', '来源', '题型', '难度', '题干', '我的答案', '正确答案', '解析', '错因', '标签', '状态', '复习次数', '下次复习'];
+  const rows = state.questions.map((q) => [q.subject, q.topic, q.source, q.type, q.difficulty, q.question, q.myAnswer, q.answer, q.analysis, q.reason, q.tags.join(' / '), STATUS[q.status].label, q.reviewCount, q.nextReview]);
+  const cell = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const csv = '\ufeff' + [H, ...rows].map((r) => r.map(cell).join(',')).join('\r\n');
+  download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `错题拾遗-表格-${today()}.csv`);
+  toast('CSV 已导出');
+}
+function importFile(file) {
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    try {
+      const p = JSON.parse(String(r.result || ''));
+      const list = Array.isArray(p) ? p : p.questions;
+      if (!Array.isArray(list) || !list.length) throw new Error('no data');
+      const normalized = list.map(normalize);
+      if (!confirm(`将导入 ${normalized.length} 道错题，合并到现有数据。继续吗？`)) return;
+      const map = new Map(state.questions.map((q) => [q.id, q]));
+      normalized.forEach((q) => map.set(q.id, q));
+      const merged = [...map.values()];
+      await Store.bulk(merged);
+      state.questions = merged;
+      if (Array.isArray(p.logs)) {
+        const ids = new Set(state.logs.map((l) => l.id));
+        p.logs.forEach((l) => { if (l?.qid && !ids.has(l.id)) state.logs.push({ id: l.id || uid('log'), qid: l.qid, date: String(l.date || today()).slice(0, 10), rating: l.rating || 'good', at: l.at || new Date().toISOString() }); });
+        saveLogs();
+      }
+      render(); toast(`已导入 ${normalized.length} 道错题`);
+    } catch { toast('导入失败：请确认是有效的 JSON 备份', 'error'); }
+  };
+  r.readAsText(file, 'utf-8');
+}
+function printList(scope) {
+  const list = scope === 'all' ? state.questions : filtered();
+  if (!list.length) return toast('没有可打印的错题', 'info');
+  $('#printArea').innerHTML = list.map((q, i) => `<div class="print-q"><h3>${String(i + 1).padStart(2, '0')}　${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}</h3><p><span class="print-label">题目：</span>${br(q.question || '（图片错题）')}</p>${q.images.map((s) => `<p><img src="${esc(s)}" alt="" style="max-width:70%;max-height:220px;border:1px solid #ddd"></p>`).join('')}<p><span class="print-label">我的答案：</span>${br(q.myAnswer || '—')}</p><p><span class="print-label">正确答案：</span>${br(q.answer || '—')}</p><p><span class="print-label">解析：</span>${br(q.analysis || '—')}</p><p class="print-tags">错因：${esc(q.reason)}　｜　标签：${esc(q.tags.join(' / ') || '—')}</p></div>`).join('');
+  print();
+  window.addEventListener('afterprint', () => { $('#printArea').innerHTML = ''; }, { once: true });
+}
+async function clearAll() {
+  if (!confirm('确定清空全部错题和复习记录吗？建议先导出 JSON 备份。')) return;
+  try { await Store.clear(); state.questions = []; state.logs = []; saveLogs(); safeSet(LS_SEEDED, '1'); closeModal(); render(); toast('已清空'); }
+  catch { toast('清空失败', 'error'); }
+}
+async function restoreDemo() {
+  if (!confirm('这会清空当前数据，并恢复一组示例错题。继续吗？')) return;
+  try {
+    await Store.clear();
+    state.questions = seedQuestions();
+    state.logs = seedLogs(state.questions);
+    await Store.bulk(state.questions);
+    saveLogs(); safeSet(LS_SEEDED, '1'); closeModal(); render(); toast('示例数据已恢复');
+  } catch { toast('恢复失败', 'error'); }
+}
+function help() {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">QUICK START</div><h2 class="modal-title">三步开始整理错题</h2><p class="modal-sub">不需要注册，打开就能用。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div><div class="modal-body"><div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">01 · 录入</div><p class="answer-text">点右上角“新增错题”。题干、答案、解析都可以只写关键步骤；图片支持拖拽和 Ctrl+V 粘贴。</p></div><div class="answer-block" style="margin-bottom:12px"><div class="answer-label">02 · 归因</div><p class="answer-text">选一个最具体的错因：概念不清、计算失误、审题偏差、方法不会、记忆混淆。错因比学科更能告诉你下一步补什么。</p></div><div class="answer-block" style="margin-bottom:12px"><div class="answer-label">03 · 复习</div><p class="answer-text">每天打开“今日复习”，先回忆再看答案，按真实感受评分。系统会自动安排下一次复习；连续 3 次想起来，自动标记为已掌握。</p></div><div class="about-note"><strong>重要：</strong>数据只保存在当前浏览器。换电脑、换浏览器或清理缓存前，一定要到“设置与备份”导出 JSON。</div></div><div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">开始使用</button></div></div>`, true);
+}
+
+/* ---------------- events ---------------- */
+function action(el, e) {
+  const a = el.dataset.action;
+  const id = el.dataset.id;
+  const map = {
+    add: () => openForm(),
+    detail: () => openDetail(id),
+    edit: () => openForm(id),
+    delete: () => del(id),
+    star: () => star(id),
+    'close-modal': () => closeModal(),
+    'close-review': () => closeReview(),
+    reveal: () => { if (state.review) { state.review.revealed = true; renderReview(); } },
+    rate: () => rate(el.dataset.rating),
+    'start-review': () => startReview(el.dataset.mode || 'due', el.dataset.id || null),
+    'filter-status': () => { state.filters.status = el.dataset.status; render(); },
+    'reset-filters': () => resetFilters(),
+    'export-json': () => exportJSON(),
+    'export-csv': () => exportCSV(),
+    'import-json': () => $('#importFile')?.click(),
+    print: () => printList(el.dataset.scope || 'filtered'),
+    'clear-all': () => clearAll(),
+    'restore-demo': () => restoreDemo(),
+    'show-help': () => help(),
+    'toggle-form-star': () => {
+      state.formStarred = !state.formStarred;
+      $('#formStarred').value = state.formStarred ? '1' : '0';
+      el.classList.toggle('is-on', state.formStarred);
+      el.innerHTML = `${icon('star', 'icon-sm')}<span>${state.formStarred ? '已标为重点' : '标为重点'}</span>`;
+    },
+    'remove-form-image': () => {
+      const i = Number(el.dataset.index);
+      if (Number.isInteger(i)) { state.formImages.splice(i, 1); renderFormImages(); }
+    }
+  };
+  if (map[a]) { e.preventDefault(); map[a](); }
+}
+function bindGlobal() {
+  document.addEventListener('click', (e) => {
+    const route = e.target.closest('[data-route]');
+    if (route) { e.preventDefault(); navigate(route.dataset.route); return; }
+    const a = e.target.closest('[data-action]');
+    if (a) action(a, e);
+  });
+  document.addEventListener('click', (e) => { if (e.target.matches('[data-modal-backdrop]')) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    const typing = e.target.matches('input, textarea, select, [contenteditable="true"]');
+    if (e.key === 'Escape') {
+      if (state.review) closeReview();
+      else if ($('#modalRoot').innerHTML.trim()) closeModal();
+      return;
+    }
+    if (state.review) {
+      if (e.code === 'Space' && !state.review.revealed) { e.preventDefault(); state.review.revealed = true; renderReview(); return; }
+      if (state.review.revealed && ['1', '2', '3', '4'].includes(e.key)) { e.preventDefault(); rate({ 1: 'again', 2: 'hard', 3: 'good', 4: 'easy' }[e.key]); }
+      return;
+    }
+    if (typing) return;
+    if (e.key.toLowerCase() === 'n') { e.preventDefault(); openForm(); }
+    if (e.key === '/' && state.route === 'questions') { e.preventDefault(); $('#searchInput')?.focus(); }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const el = e.target.closest('[data-action="detail"]');
+    if (!el) return;
+    e.preventDefault(); openDetail(el.dataset.id);
+  });
+  const imp = $('#importFile');
+  if (imp) imp.addEventListener('change', (e) => { importFile(e.target.files?.[0]); e.target.value = ''; });
+  window.addEventListener('beforeunload', (e) => { if (state.review && state.review.index > 0) { e.preventDefault(); e.returnValue = ''; } });
+}
+
+/* ---------------- init ---------------- */
+function showFatal(err) {
+  console.error(err);
+  if (!$('#view')) return;
+  $('#view').innerHTML = `<div class="empty"><div class="empty-icon">${icon('alert', 'icon-lg')}</div><h3>启动时遇到了一点问题</h3><p>${esc(err?.message || err)}</p><button class="btn btn-ghost" onclick="location.reload()">重新打开</button></div>`;
+}
+async function init() {
+  const now = new Date();
+  if ($('#todayLabel')) $('#todayLabel').textContent = `${now.getMonth() + 1}月${now.getDate()}日 · ${weekday(now)}`;
+  $('#view').innerHTML = '<div class="loading-skeleton">正在打开错题本…</div>';
+  window.__CUOTI_READY__ = false;
+  try {
+    await Store.init();
+    try { state.questions = (await withTimeout(Store.all(), 2200, '读取超时')).map(normalize); }
+    catch { Store.mode = 'local'; state.questions = Store.local().map(normalize); }
+    state.logs = loadLogs();
+    if (!state.questions.length && safeGet(LS_SEEDED) !== '1') {
+      state.questions = seedQuestions();
+      state.logs = seedLogs(state.questions);
+      try { await Store.bulk(state.questions); saveLogs(); safeSet(LS_SEEDED, '1'); } catch {}
+    }
+    bindGlobal();
+    const params = new URLSearchParams(location.search);
+    if (params.get('route') && ROUTES[params.get('route')]) state.route = params.get('route');
+    render();
+    window.__CUOTI_READY__ = true;
+    if (params.get('open') === 'add') openForm();
+    if (params.get('open') === 'detail') openDetail(params.get('id') || state.questions[0]?.id);
+    if (params.get('open') === 'review') startReview('due');
+    if (params.get('selftest') === '1') selftest();
+    if (params.get('test') === 'flow') flowtest();
+    if (params.get('debug') === '1') {
+      const p = document.createElement('div');
+      p.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9999;background:#fff;border:1px solid #ccc;padding:8px;font:11px monospace;white-space:pre';
+      const over = [...document.querySelectorAll('body *')]
+        .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 1 && getComputedStyle(el).position !== 'fixed')
+        .slice(0, 8)
+        .map((el) => `${el.tagName.toLowerCase()}.${String(el.className).split(' ').slice(0, 2).join('.')}`)
+        .join(', ');
+      p.textContent = `mode=${Store.mode}\nquestions=${state.questions.length}\nseeded=${safeGet(LS_SEEDED)}\nview=${$('#view').innerHTML.length}\ninner=${window.innerWidth} scroll=${document.documentElement.scrollWidth}\nover=${over}`;
+      document.body.appendChild(p);
+    }
+  } catch (e) { showFatal(e); }
+}
+function selftest() {
+  const checks = [
+    ['questions', state.questions.length >= 6],
+    ['due', dueQuestions().length >= 3],
+    ['mastered', statusCounts().mastered >= 1],
+    ['filter', filtered().length > 0],
+    ['normalize', normalize({ tags: 'a, b' }).tags.length === 2],
+    ['schedule', schedule({ interval: 5, correctStreak: 2 }, 'easy').status === 'mastered'],
+    ['escape', esc('<b>') === '&lt;b&gt;']
+  ];
+  const p = checks.filter((c) => c[1]).length;
+  const box = document.createElement('pre');
+  box.id = 'selftest-result';
+  box.textContent = `SELFTEST ${p}/${checks.length}\n` + checks.map((c) => `${c[1] ? 'PASS' : 'FAIL'} ${c[0]}`).join('\n') + `\nMODE ${Store.mode} QUESTIONS ${state.questions.length}`;
+  box.style.cssText = 'position:fixed;left:0;bottom:0;z-index:9999;background:#fff;border:1px solid #ccc;padding:8px;font:11px monospace;white-space:pre';
+  document.body.appendChild(box);
+}
+
+async function flowtest() {
+  const checks = [];
+  const add = (name, ok) => checks.push([name, Boolean(ok)]);
+  const before = state.questions.length;
+  openForm();
+  $('#qQuestion').value = '测试题：1+1 等于多少？';
+  $('#qAnswer').value = '2';
+  $('#qReason').value = '计算失误';
+  $('#qTopic').value = '测试';
+  $('#questionForm').requestSubmit();
+  await new Promise((r) => setTimeout(r, 900));
+  const created = state.questions.find((q) => q.question === '测试题：1+1 等于多少？');
+  add('form save', state.questions.length === before + 1 && Boolean(created));
+  if (created) {
+    await star(created.id);
+    add('star', state.questions.find((q) => q.id === created.id)?.starred === true);
+    startReview('single', created.id);
+    state.review.revealed = true;
+    renderReview();
+    await rate('good');
+    add('review rate', state.questions.find((q) => q.id === created.id)?.reviewCount === 1);
+    closeReview();
+  }
+  const box = document.createElement('pre');
+  box.id = 'flowtest-result';
+  box.textContent = `FLOWTEST ${checks.filter((c) => c[1]).length}/${checks.length}\n` + checks.map((c) => `${c[1] ? 'PASS' : 'FAIL'} ${c[0]}`).join('\n');
+  box.style.cssText = 'position:fixed;left:0;bottom:0;z-index:9999;background:#fff;border:1px solid #ccc;padding:8px;font:11px monospace;white-space:pre';
+  document.body.appendChild(box);
+}
+
+window.__CUOTI__ = { state, Store, dueQuestions, schedule, render };
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 考研版扩展层
+   在基础版之上增加：考研科目、模块建议、倒计时、目标院校。
+   ============================================================ */
+'use strict';
+
+/* ---------- 考研科目 / 错因 / 题型 ---------- */
+const KY_SUBJECTS = ['政治', '英语一', '英语二', '数学一', '数学二', '数学三', '专业课一', '专业课二', '管综', '其他'];
+const KY_REASONS = ['概念不清', '计算失误', '审题偏差', '方法不会', '记忆混淆', '时间不够', '其他'];
+const KY_TYPES = ['选择题', '填空题', '解答题', '写作', '背诵知识点', '实验题', '其他'];
+SUBJECTS.splice(0, SUBJECTS.length, ...KY_SUBJECTS);
+REASONS.splice(0, REASONS.length, ...KY_REASONS);
+TYPES.splice(0, TYPES.length, ...KY_TYPES);
+
+const KY_MODULES = {
+  '政治': ['马原', '毛中特', '史纲', '思修法基', '时政'],
+  '英语一': ['完形', '阅读', '新题型', '翻译', '写作', '词汇语法'],
+  '英语二': ['完形', '阅读', '新题型', '翻译', '写作', '词汇语法'],
+  '数学一': ['高等数学', '线性代数', '概率论与数理统计'],
+  '数学二': ['高等数学', '线性代数'],
+  '数学三': ['高等数学', '线性代数', '概率论与数理统计'],
+  '专业课一': ['408·数据结构', '408·计算机组成', '408·操作系统', '408·计算机网络', '自命题章节'],
+  '专业课二': ['自命题章节'],
+  '管综': ['数学基础', '逻辑', '写作'],
+  '其他': []
+};
+const KY_SOURCES = ['2026真题', '2025真题', '2024真题', '2023真题', '模拟卷', '1000题', '880题', '660题', '背诵手册', '网课讲义', '其他'];
+
+/* ---------- 考研档案 ---------- */
+const KY_KEY = 'cuoti_kaoyan_profile_v1';
+const KY_DEFAULT = { examDate: '2026-12-26', school: '', major: '' };
+let kyProfile = { ...KY_DEFAULT };
+try {
+  const raw = JSON.parse(safeGet(KY_KEY) || 'null');
+  if (raw && typeof raw === 'object') {
+    kyProfile = {
+      examDate: /^\d{4}-\d{2}-\d{2}$/.test(raw.examDate || '') ? raw.examDate : KY_DEFAULT.examDate,
+      school: String(raw.school || '').slice(0, 40),
+      major: String(raw.major || '').slice(0, 40)
+    };
+  }
+} catch {}
+function saveKyProfile() {
+  safeSet(KY_KEY, JSON.stringify(kyProfile));
+}
+
+/* ---------- 考研示例错题 ---------- */
+function kaoyanSeedQuestions() {
+  const now = Date.now();
+  const ago = (n) => new Date(now - n * 86400000).toISOString();
+  const t = today();
+  return [
+    normalize({
+      id: 'ky_politics_marx_1', subject: '政治', topic: '马原', source: '2025真题', type: '选择题', difficulty: 3,
+      question: '劳动力商品在使用价值上的特殊性，在于它能够（ ）。\nA. 转移自身价值\nB. 保存自身价值\nC. 创造出比自身价值更大的价值\nD. 决定商品的价值量',
+      myAnswer: 'B', answer: 'C',
+      analysis: '劳动力商品的使用价值是劳动。劳动不仅能创造价值，还能创造出比劳动力自身价值更大的价值，这是剩余价值产生的关键。',
+      reason: '概念不清', tags: '马原, 劳动力商品, 剩余价值', status: 'review',
+      reviewCount: 2, correctStreak: 1, interval: 2, nextReview: t, createdAt: ago(5), updatedAt: ago(1)
+    }),
+    normalize({
+      id: 'ky_english_reading_1', subject: '英语一', topic: '阅读', source: '2024真题', type: '选择题', difficulty: 4,
+      question: "The author's attitude toward the proposal can best be described as ______.\nA. indifferent\nB. cautiously supportive\nC. strongly opposed\nD. mildly amused",
+      myAnswer: 'C', answer: 'B',
+      analysis: "转折处出现“useful, but risky”，作者承认方案的价值，同时提示风险，属于“谨慎支持”。态度题优先抓转折词和评价形容词。",
+      reason: '审题偏差', tags: '阅读, 态度题, 转折', starred: true, status: 'review',
+      reviewCount: 1, correctStreak: 0, interval: 1, nextReview: addDays(t, -2), createdAt: ago(9), updatedAt: ago(3)
+    }),
+    normalize({
+      id: 'ky_math_limit_1', subject: '数学一', topic: '高等数学', source: '880题', type: '填空题', difficulty: 3,
+      question: '求极限：lim(x→0) (e^x − 1 − x) / x²。',
+      myAnswer: '0', answer: '1/2',
+      analysis: 'e^x = 1 + x + x²/2 + o(x²)，代入后分子为 x²/2 + o(x²)，所以极限为 1/2。也可以用洛必达法则做两次。',
+      reason: '方法不会', tags: '极限, 泰勒公式, 等价无穷小', status: 'new',
+      reviewCount: 0, correctStreak: 0, interval: 0, nextReview: t, createdAt: ago(1), updatedAt: ago(1)
+    }),
+    normalize({
+      id: 'ky_math_prob_1', subject: '数学三', topic: '概率论与数理统计', source: '1000题', type: '解答题', difficulty: 4,
+      question: '设 X ~ N(0,1)，求 P(X≤0) 与 E(X²)。',
+      myAnswer: 'P(X≤0)=0，E(X²)=1', answer: 'P(X≤0)=1/2，E(X²)=1',
+      analysis: '标准正态分布关于 0 对称，所以 P(X≤0)=1/2；E(X²)=D(X)+[E(X)]²=1+0=1。',
+      reason: '记忆混淆', tags: '正态分布, 期望, 方差', status: 'review',
+      reviewCount: 3, correctStreak: 2, interval: 4, nextReview: addDays(t, 3), createdAt: ago(11), updatedAt: ago(2)
+    }),
+    normalize({
+      id: 'ky_408_os_1', subject: '专业课一', topic: '408·操作系统', source: '王道408', type: '选择题', difficulty: 3,
+      question: '进程从运行态进入阻塞态的原因通常是（ ）。\nA. 时间片用完\nB. 等待 I/O 完成\nC. 被高优先级进程抢占\nD. 进程调度程序选择',
+      myAnswer: 'A', answer: 'B',
+      analysis: '运行→阻塞是进程主动等待某个事件（如 I/O 完成）；时间片用完或被高优先级进程抢占，都是运行→就绪。',
+      reason: '概念不清', tags: '进程管理, 状态转换, 408', starred: true, status: 'review',
+      reviewCount: 2, correctStreak: 1, interval: 2, nextReview: t, createdAt: ago(7), updatedAt: ago(2)
+    }),
+    normalize({
+      id: 'ky_politics_history_1', subject: '政治', topic: '史纲', source: '背诵手册', type: '选择题', difficulty: 2,
+      question: '中国共产党首次提出“马克思主义中国化”命题的会议是（ ）。\nA. 遵义会议\nB. 六届六中全会\nC. 中共七大\nD. 七届二中全会',
+      myAnswer: 'C', answer: 'B',
+      analysis: '1938 年六届六中全会上，毛泽东提出“马克思主义中国化”的命题。遵义会议是生死攸关的转折点，中共七大确立毛泽东思想为指导思想。',
+      reason: '记忆混淆', tags: '史纲, 六届六中全会, 马克思主义中国化', status: 'new',
+      reviewCount: 0, correctStreak: 0, interval: 0, nextReview: t, createdAt: ago(2), updatedAt: ago(2)
+    }),
+    normalize({
+      id: 'ky_english_writing_1', subject: '英语二', topic: '写作', source: '模拟卷', type: '写作', difficulty: 3,
+      question: '写一句图表作文开头，描述“2018—2023 年某指标持续上升”。',
+      myAnswer: 'The number increased.', answer: 'The figure witnessed a steady upward trend from 2018 to 2023.',
+      analysis: '图表作文可积累“witness a steady/remarkable upward trend”“rise by X%”等表达；描述过去数据用一般过去时。',
+      reason: '记忆混淆', tags: '写作, 图表作文, 句型', status: 'review',
+      reviewCount: 1, correctStreak: 0, interval: 1, nextReview: addDays(t, 2), createdAt: ago(6), updatedAt: ago(3)
+    }),
+    normalize({
+      id: 'ky_management_logic_1', subject: '管综', topic: '逻辑', source: '模拟卷', type: '选择题', difficulty: 3,
+      question: '已知：如果小王参加考试，那么小李也参加。现在小李参加了考试，能否推出小王参加？',
+      myAnswer: '能，因为小李参加了。', answer: '不能。肯定后件不能肯定前件，只能推出“小王可能参加”。',
+      analysis: '设 P=小王参加，Q=小李参加。已知 P→Q 且 Q 为真，不能推出 P 为真；这是“肯定后件”的无效推理。',
+      reason: '方法不会', tags: '逻辑, 充分条件, 逆推', status: 'mastered',
+      reviewCount: 5, correctStreak: 3, interval: 21, nextReview: addDays(t, 16), createdAt: ago(14), updatedAt: ago(4)
+    })
+  ];
+}
+seedQuestions = kaoyanSeedQuestions;
+
+/* ---------- 倒计时 ---------- */
+function kyTargetText() {
+  const school = kyProfile.school.trim();
+  const major = kyProfile.major.trim();
+  if (school && major) return `${school} · ${major}`;
+  if (school) return school;
+  if (major) return major;
+  return '目标院校 / 专业待填写';
+}
+function kyDays() {
+  return diffDays(today(), kyProfile.examDate);
+}
+function kaoyanBanner() {
+  const days = kyDays();
+  const due = dueQuestions().length;
+  const total = state.questions.length;
+  const mastered = state.questions.filter((q) => q.status === 'mastered').length;
+  const label = days < 0 ? '初试已结束' : '考研初试倒计时';
+  const count = days < 0 ? '—' : String(days);
+  const unit = days < 0 ? '' : '天';
+  const advice = days < 0
+    ? '初试已经结束。把复试专业课和英语口语的错题单独归档，继续用起来。'
+    : due > 0
+      ? `今天有 ${due} 道到期错题。先清掉它们，再开新题；别用“再看一遍”代替“讲一遍”。`
+      : '今天没有到期错题。建议做一套真题或模拟卷，把新错题按“科目 + 模块 + 错因”归档。';
+  return `<section class="kaoyan-banner">
+    <div class="ky-main">
+      <div>
+        <div class="ky-label">${label}</div>
+        <div class="ky-count"><strong>${count}</strong><span>${unit}</span></div>
+      </div>
+      <div class="ky-copy">
+        <strong>${esc(kyTargetText())}</strong>
+        <p>${esc(fmtDate(kyProfile.examDate, true))} · 已掌握 ${mastered}/${total} 道</p>
+      </div>
+    </div>
+    <div class="ky-side">
+      <div class="ky-side-label">TODAY'S ADVICE</div>
+      <p>${esc(advice)}</p>
+      <button class="btn btn-ghost btn-sm" data-route="${due ? 'review' : 'questions'}">${due ? '去复习' : '去整理'} ${icon('arrow', 'icon-sm')}</button>
+    </div>
+  </section>`;
+}
+
+/* ---------- 首页包装 ---------- */
+const kyBaseDashboard = renderDashboard;
+renderDashboard = function () {
+  let html = kyBaseDashboard();
+  html = html.replace(
+    '不只抄题，更要归因。按学科、错因和掌握度整理，配合间隔复习，把错过变成会了。',
+    '按科目、模块和错因归档，配合间隔复习，把每一道错题变成考场上的分数。'
+  );
+  html = html.replace('学科分布', '科目分布').replace('个学科', '个科目');
+  return html.replace('<section class="hero">', kaoyanBanner() + '<section class="hero">');
+};
+
+const kyBaseQuestions = renderQuestions;
+renderQuestions = function () {
+  return kyBaseQuestions()
+    .replace('全部学科', '全部科目')
+    .replace('按学科和掌握度', '按科目和掌握度');
+};
+const kyBaseReview = renderReviewPage;
+renderReviewPage = function () {
+  return kyBaseReview().replace('今天的学科', '今天的科目');
+};
+const kyBaseStats = renderStats;
+renderStats = function () {
+  return kyBaseStats().replace('学科分布', '科目分布');
+};
+
+/* ---------- 设置页：目标院校 / 考试日期 ---------- */
+function kySettingsCard() {
+  return `<div class="card settings-card ky-settings">
+    <h3>${icon('target')}考研设置</h3>
+    <p>目标院校、专业和初试日期会显示在总览页的倒计时里。</p>
+    <div class="field-row">
+      <div class="field"><label for="kySchool">目标院校</label><input class="input" id="kySchool" value="${esc(kyProfile.school)}" placeholder="例：华中科技大学"></div>
+      <div class="field"><label for="kyMajor">目标专业</label><input class="input" id="kyMajor" value="${esc(kyProfile.major)}" placeholder="例：计算机技术"></div>
+    </div>
+    <div class="field"><label for="kyExamDate">初试日期</label><input class="input" id="kyExamDate" type="date" value="${esc(kyProfile.examDate)}"></div>
+    <button class="btn btn-primary btn-sm" data-kaoyan-action="save-profile">${icon('check', 'icon-sm')}保存考研设置</button>
+    <div class="ky-hint">默认 2026-12-26。请按你实际参加的考试日期修改；倒计时按当前设备日期计算。</div>
+  </div>`;
+}
+const kyBaseSettings = renderSettings;
+renderSettings = function () {
+  return kyBaseSettings().replace('<div class="settings-grid">', `<div class="settings-grid">${kySettingsCard()}`);
+};
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-kaoyan-action]');
+  if (!el) return;
+  event.preventDefault();
+  if (el.dataset.kaoyanAction === 'save-profile') {
+    const school = ($('#kySchool')?.value || '').trim().slice(0, 40);
+    const major = ($('#kyMajor')?.value || '').trim().slice(0, 40);
+    const date = $('#kyExamDate')?.value || '';
+    kyProfile = {
+      school,
+      major,
+      examDate: /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : KY_DEFAULT.examDate
+    };
+    saveKyProfile();
+    render();
+    toast('考研设置已保存');
+  }
+});
+
+/* ---------- 录入表单：模块与来源建议 ---------- */
+const kyBaseOpenForm = openForm;
+openForm = function (id = null) {
+  kyBaseOpenForm(id);
+  setTimeout(enhanceKaoyanForm, 0);
+};
+
+function ensureDatalist(id) {
+  let el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement('datalist');
+    el.id = id;
+    const body = $('.modal-body');
+    if (body) body.appendChild(el);
+    else document.body.appendChild(el);
+  }
+  return el;
+}
+
+function enhanceKaoyanForm() {
+  const topic = $('#qTopic');
+  const source = $('#qSource');
+  const subject = $('#qSubject');
+  if (!topic || !source || !subject) return;
+  topic.setAttribute('list', 'kyTopicList');
+  source.setAttribute('list', 'kySourceList');
+  topic.setAttribute('placeholder', '例：马原 / 阅读 / 高数');
+  source.setAttribute('placeholder', '例：2025真题');
+  const tags = $('#qTags');
+  if (tags) tags.setAttribute('placeholder', '例：马原, 剩余价值, 选择题');
+  const subjectLabel = document.querySelector('label[for="qSubject"]');
+  if (subjectLabel) subjectLabel.innerHTML = '科目 <span class="req">*</span>';
+  const topicList = ensureDatalist('kyTopicList');
+  const sourceList = ensureDatalist('kySourceList');
+  sourceList.innerHTML = KY_SOURCES.map((x) => `<option value="${esc(x)}"></option>`).join('');
+  const refresh = () => {
+    const mods = KY_MODULES[subject.value] || [];
+    topicList.innerHTML = mods.map((x) => `<option value="${esc(x)}"></option>`).join('');
+    if (mods.length && (!topic.value || Object.values(KY_MODULES).flat().includes(topic.value))) {
+      topic.placeholder = '例：' + mods[0];
+    }
+  };
+  subject.addEventListener('change', refresh);
+  refresh();
+}
+
+/* ---------- 标题与路由标题 ---------- */
+const kyBaseRender = render;
+render = function () {
+  kyBaseRender();
+  document.title = document.title.replace('错题拾遗', '错题拾遗 · 考研版');
+};
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 云端同步版
+   数据库：Supabase（RPC: cuoti_get / cuoti_put）
+   这个文件不依赖电脑上的 Node 服务。
+   ============================================================ */
+'use strict';
+
+if (new URLSearchParams(location.search).get('noanim') === '1') {
+  document.documentElement.classList.add('no-anim');
+}
+
+/* 云端版不自动塞示例数据。 */
+safeSet(LS_SEEDED, '1');
+
+/* 你的 Supabase 项目配置。anon key 是公开密钥。 */
+const CLOUD_URL = 'https://xdsuxlgskqyitbdgmira.supabase.co';
+const CLOUD_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhkc3V4bGdza3F5aXRiZGdtaXJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0NzI2OTQsImV4cCI6MjExMDA0ODY5NH0.lu7rvLW1KZqJqK6yTLCb1uzHui0i6eZsOOVDSb7O7xg';
+const CLOUD_ROOM = 'ky-3grc-2027';
+const CLOUD_SECRET_KEY = 'cuoti_cloud_secret_v1';
+
+/* 私密同步码只从带 #key= 的链接读取一次，然后存本机；不写进公开仓库。 */
+let cloudSecretValue = (() => {
+  try {
+    const params = new URLSearchParams(location.hash.replace(/^#/, ''));
+    const incoming = params.get('key');
+    if (incoming) {
+      safeSet(CLOUD_SECRET_KEY, incoming);
+      history.replaceState({}, '', location.pathname + location.search);
+      return incoming;
+    }
+  } catch {}
+  return safeGet(CLOUD_SECRET_KEY) || '';
+})();
+
+const CLOUD_META_KEY = 'cuoti_cloud_meta_v1';
+const PROFILE_TS_KEY = 'cuoti_ky_profile_ts_v1';
+
+let cloudMeta = { version: 0, lastSync: null, deleted: {}, resetAt: null };
+try {
+  const raw = JSON.parse(safeGet(CLOUD_META_KEY) || 'null');
+  if (raw && typeof raw === 'object') {
+    cloudMeta = {
+      version: Number(raw.version) || 0,
+      lastSync: raw.lastSync || null,
+      deleted: raw.deleted && typeof raw.deleted === 'object' ? raw.deleted : {},
+      resetAt: raw.resetAt || null
+    };
+  }
+} catch {}
+
+let cloudStatus = 'off';
+let cloudMessage = '';
+let cloudBusy = false;
+let cloudDirty = false;
+let cloudTimer = null;
+let pollTimer = null;
+let installPrompt = null;
+
+const rawPut = Store.put.bind(Store);
+const rawRemove = Store.remove.bind(Store);
+const rawClear = Store.clear.bind(Store);
+const rawBulk = Store.bulk.bind(Store);
+const rawSaveLogs = saveLogs;
+const rawSaveKyProfile = typeof saveKyProfile === 'function' ? saveKyProfile : null;
+
+function saveCloudMeta() {
+  safeSet(CLOUD_META_KEY, JSON.stringify(cloudMeta));
+}
+
+Store.put = async (q) => { await rawPut(q); scheduleCloud(); };
+Store.remove = async (id) => {
+  await rawRemove(id);
+  cloudMeta.deleted[id] = new Date().toISOString();
+  saveCloudMeta();
+  scheduleCloud();
+};
+Store.clear = async () => {
+  await rawClear();
+  cloudMeta.resetAt = new Date().toISOString();
+  cloudMeta.deleted = {};
+  saveCloudMeta();
+  scheduleCloud();
+};
+Store.bulk = async (items) => { await rawBulk(items); scheduleCloud(); };
+saveLogs = function () { rawSaveLogs(); scheduleCloud(); };
+if (rawSaveKyProfile) {
+  saveKyProfile = function () {
+    rawSaveKyProfile();
+    safeSet(PROFILE_TS_KEY, new Date().toISOString());
+    scheduleCloud();
+  };
+}
+
+async function rpc(name, body) {
+  const res = await fetch(`${CLOUD_URL}/rest/v1/rpc/${name}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: CLOUD_KEY,
+      Authorization: 'Bearer ' + CLOUD_KEY
+    },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.message || data.error || `云端返回 ${res.status}`);
+  }
+  return data;
+}
+
+function latest(a, b) {
+  if (!a) return b || null;
+  if (!b) return a;
+  return a > b ? a : b;
+}
+
+function emptyCloud() {
+  return { questions: [], deleted: {}, logs: [], profile: {}, profileUpdatedAt: null, resetAt: null };
+}
+
+function mergeCloud(local, remote) {
+  const r = remote && typeof remote === 'object' ? remote : emptyCloud();
+  const l = local && typeof local === 'object' ? local : emptyCloud();
+  const resetAt = latest(l.resetAt, r.resetAt);
+
+  const deleted = { ...(r.deleted || {}) };
+  for (const [id, at] of Object.entries(l.deleted || {})) {
+    if (!deleted[id] || at > deleted[id]) deleted[id] = at;
+  }
+  if (resetAt) {
+    for (const [id, at] of Object.entries(deleted)) {
+      if (!at || at <= resetAt) delete deleted[id];
+    }
+  }
+
+  const qmap = new Map();
+  for (const q of r.questions || []) {
+    if (q && q.id) qmap.set(q.id, q);
+  }
+  for (const q of l.questions || []) {
+    if (!q || !q.id) continue;
+    const old = qmap.get(q.id);
+    if (!old || (q.updatedAt || '') > (old.updatedAt || '')) qmap.set(q.id, q);
+  }
+  for (const [id, at] of Object.entries(deleted)) {
+    const q = qmap.get(id);
+    if (q && (!at || at >= (q.updatedAt || ''))) qmap.delete(id);
+  }
+  if (resetAt) {
+    for (const [id, q] of [...qmap.entries()]) {
+      if ((q.updatedAt || '') <= resetAt) qmap.delete(id);
+    }
+  }
+
+  const logs = new Map();
+  for (const item of [...(r.logs || []), ...(l.logs || [])]) {
+    if (item && item.id) logs.set(item.id, item);
+  }
+
+  let profile = r.profile || {};
+  let profileUpdatedAt = r.profileUpdatedAt || null;
+  if ((l.profileUpdatedAt || '') > (profileUpdatedAt || '')) {
+    profile = l.profile || {};
+    profileUpdatedAt = l.profileUpdatedAt;
+  }
+
+  return {
+    questions: [...qmap.values()],
+    deleted,
+    logs: [...logs.values()].sort((a, b) => String(a.at || '').localeCompare(String(b.at || ''))).slice(-1000),
+    profile,
+    profileUpdatedAt,
+    resetAt
+  };
+}
+
+function collectCloud() {
+  return {
+    questions: state.questions,
+    deleted: cloudMeta.deleted,
+    logs: state.logs,
+    profile: typeof kyProfile === 'object' ? kyProfile : {},
+    profileUpdatedAt: safeGet(PROFILE_TS_KEY),
+    resetAt: cloudMeta.resetAt
+  };
+}
+
+function canRenderNow() {
+  if (state.review) return false;
+  if ($('#modalRoot') && $('#modalRoot').innerHTML.trim()) return false;
+  const el = document.activeElement;
+  if (el && el.matches && el.matches('input, textarea, select')) return false;
+  return true;
+}
+
+function statusInfo() {
+  if (!cloudSecretValue) return { cls: 'err', label: '未配置', text: '请用带 #key= 的私密链接打开一次。' };
+  if (cloudStatus === 'on') return { cls: 'on', label: '已连接', text: '手机和电脑正在共享云端数据。' };
+  if (cloudStatus === 'syncing') return { cls: 'wait', label: '同步中', text: '正在和云端交换数据…' };
+  if (cloudStatus === 'error') return { cls: 'err', label: '连接失败', text: cloudMessage || '请检查 Supabase 配置和网络。' };
+  return { cls: '', label: '未连接', text: '点“立即同步”连接云端。' };
+}
+
+function updateCloudUI() {
+  const info = statusInfo();
+  const box = $('#cloudStatus');
+  if (box) {
+    box.innerHTML = `<span class="sync-dot ${info.cls}"></span><strong>${info.label}</strong><span>${esc(info.text)}</span><span class="sync-when">${cloudMeta.lastSync ? esc(fmtDateTime(cloudMeta.lastSync)) : ''}</span>`;
+  }
+  const meta = document.querySelector('.sidebar-meta span:last-child');
+  if (meta) {
+    meta.textContent = cloudStatus === 'on' ? '云端同步 · 已连接' : cloudStatus === 'error' ? '云端同步 · 连接失败' : '云端同步 · 可跨设备';
+  }
+  const dot = document.querySelector('.sidebar-meta .pulse-dot');
+  if (dot) dot.style.background = cloudStatus === 'on' ? '#74c0a4' : cloudStatus === 'error' ? '#d45a3e' : '#74a796';
+}
+
+function cloudCard() {
+  const info = statusInfo();
+  return `<div class="card settings-card sync-card">
+    <h3>${icon('repeat')}云端同步</h3>
+    <p>数据存在 Supabase。平板、电脑打开同一个网址，不用电脑常开，也不用同一个 Wi-Fi。</p>
+    <div class="sync-status" id="cloudStatus"><span class="sync-dot ${info.cls}"></span><strong>${info.label}</strong><span>${esc(info.text)}</span><span class="sync-when">${cloudMeta.lastSync ? esc(fmtDateTime(cloudMeta.lastSync)) : ''}</span></div>
+    <div class="setting-actions">
+      <button class="btn btn-primary" data-cloud-action="now">${icon('refresh')}立即同步</button>
+      <button class="btn btn-ghost" data-cloud-action="install">${icon('download')}安装到桌面</button>
+    </div>
+    <div class="sync-install-tip"><strong>同步房间：</strong>${esc(CLOUD_ROOM)}<br>第一次请用带 <strong>#key=</strong> 的私密链接打开一次；之后会自动记住。另一台设备也用同一个私密链接打开，等几秒或点“立即同步”。</div>
+  </div>`;
+}
+const baseSettingsCloud = renderSettings;
+renderSettings = function () {
+  return baseSettingsCloud().replace('<div class="settings-grid">', `<div class="settings-grid">${cloudCard()}`);
+};
+
+async function applyCloud(data, version) {
+  const d = data && typeof data === 'object' ? data : emptyCloud();
+  state.questions = Array.isArray(d.questions) ? d.questions.map(normalize) : [];
+  state.logs = Array.isArray(d.logs) ? d.logs.slice(-1000) : [];
+  cloudMeta.deleted = d.deleted && typeof d.deleted === 'object' ? d.deleted : {};
+  cloudMeta.resetAt = d.resetAt || null;
+  cloudMeta.version = Number(version) || 0;
+  cloudMeta.lastSync = new Date().toISOString();
+  saveCloudMeta();
+  try { localStorage.setItem(LS_LOGS, JSON.stringify(state.logs.slice(-800))); } catch {}
+  if (d.profile && typeof d.profile === 'object' && d.profileUpdatedAt) {
+    if (typeof kyProfile === 'object') {
+      kyProfile = { ...kyProfile, ...d.profile };
+      safeSet(KY_KEY, JSON.stringify(kyProfile));
+      safeSet(PROFILE_TS_KEY, d.profileUpdatedAt);
+    }
+  }
+  try { await rawBulk(state.questions); } catch (error) { console.warn('云端数据写本地失败', error); }
+  updateNav();
+  updateCloudUI();
+  if (canRenderNow()) render();
+}
+
+async function cloudSync(manual = false) {
+  if (!cloudSecretValue) {
+    cloudStatus = 'error';
+    cloudMessage = '缺少私密同步码，请用带 #key= 的完整链接打开一次。';
+    updateCloudUI();
+    if (manual) toast('缺少私密同步码，请用完整链接打开', 'error');
+    return;
+  }
+  if (cloudBusy) return;
+  cloudBusy = true;
+  cloudStatus = 'syncing';
+  updateCloudUI();
+  try {
+    const got = await rpc('cuoti_get', { p_room: CLOUD_ROOM, p_secret: cloudSecretValue });
+    const remote = got && got.found ? got.data : emptyCloud();
+    let baseVersion = got && got.found ? Number(got.version) || 0 : 0;
+    let merged = mergeCloud(collectCloud(), remote);
+    let result = null;
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      result = await rpc('cuoti_put', {
+        p_room: CLOUD_ROOM,
+        p_secret: cloudSecretValue,
+        p_data: merged,
+        p_base_version: baseVersion
+      });
+      if (result && result.ok) break;
+      if (result && result.conflict) {
+        merged = mergeCloud(merged, result.data);
+        baseVersion = Number(result.version) || 0;
+        continue;
+      }
+      throw new Error(result?.error === 'bad_secret' ? '同步码不正确' : '云端保存失败');
+    }
+    if (!result || !result.ok) throw new Error('云端写入冲突，请再试一次');
+
+    await applyCloud(result.data, result.version);
+    cloudDirty = false;
+    cloudStatus = 'on';
+    cloudMessage = '';
+    updateCloudUI();
+    if (manual) toast('云端同步完成');
+  } catch (error) {
+    console.warn('云端同步失败', error);
+    cloudDirty = true;
+    cloudStatus = 'error';
+    cloudMessage = error.message || '无法连接云端';
+    updateCloudUI();
+    if (manual) toast('云端同步失败：' + cloudMessage, 'error');
+  } finally {
+    cloudBusy = false;
+  }
+}
+
+async function cloudPull() {
+  if (!cloudSecretValue) return;
+  if (cloudBusy) return;
+  if (document.visibilityState !== 'visible') return;
+  if ($('#modalRoot') && $('#modalRoot').innerHTML.trim()) return;
+  if (cloudDirty) { await cloudSync(false); return; }
+  try {
+    const got = await rpc('cuoti_get', { p_room: CLOUD_ROOM, p_secret: cloudSecretValue });
+    if (got && got.found && Number(got.version) !== Number(cloudMeta.version)) {
+      await applyCloud(got.data, got.version);
+      cloudStatus = 'on';
+      cloudMessage = '';
+      updateCloudUI();
+    }
+  } catch (error) {
+    cloudStatus = 'error';
+    cloudMessage = error.message || '无法连接云端';
+    updateCloudUI();
+  }
+}
+
+function scheduleCloud() {
+  cloudDirty = true;
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(() => cloudSync(false), 800);
+}
+
+function installHelp() {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">INSTALL</div><h2 class="modal-title">把错题拾遗放到桌面</h2><p class="modal-sub">云端版是网页应用，添加到桌面即可。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">iPhone / Safari</div><p class="answer-text">打开这个网址 → 底部“分享” → “添加到主屏幕” → 添加。</p></div>
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">Android / Chrome / Edge</div><p class="answer-text">打开网址 → 右上角菜单 → “添加到主屏幕”或“安装应用”。</p></div>
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">华为浏览器</div><p class="answer-text">打开网址 → 右下角“∷” → 添加至 → 桌面。</p></div>
+    <div class="about-note"><strong>提示：</strong>云端版不需要电脑开机，也不需要和电脑同一个 Wi-Fi；只要平板能上网即可。</div>
+  </div><div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">知道了</button></div></div>`, true);
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-cloud-action]');
+  if (!el) return;
+  event.preventDefault();
+  if (el.dataset.cloudAction === 'now') cloudSync(true);
+  if (el.dataset.cloudAction === 'install') {
+    if (installPrompt) {
+      installPrompt.prompt();
+      installPrompt.userChoice.finally(() => { installPrompt = null; });
+    } else {
+      installHelp();
+    }
+  }
+});
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  installPrompt = event;
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') cloudSync(false);
+});
+window.addEventListener('online', () => cloudSync(false));
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(() => {
+    if (document.visibilityState === 'visible') cloudPull();
+  }, 12000);
+}
+
+function initCloud() {
+  updateCloudUI();
+  cloudSync(false);
+  startPolling();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    Promise.reject(new Error('single-file build')).catch((error) => console.warn('SW 注册失败', error));
+  }
+}
+
+function bootCloud(tries = 0) {
+  if (window.__CUOTI_READY__) { initCloud(); return; }
+  if (tries < 100) setTimeout(() => bootCloud(tries + 1), 150);
+}
+document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootCloud(), 300));
+window.__CUOTI_CLOUD__ = { cloudSync, cloudPull, cloudMeta };
+
+</script>
+</body>
+</html>
