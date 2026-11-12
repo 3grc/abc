@@ -4,8 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#172522">
-  <meta name="description" content="错题拾遗·云端版：考研错题按科目、模块和错因整理，手机和电脑云端同步。">
-  <title>错题拾遗 · 云端版</title>
+  <meta name="description" content="错题拾遗·本地版：考研错题按科目、模块和错因整理，数据只保存在本机。">
+  <title>错题拾遗 · 本地版</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1445,6 +1448,171 @@ kbd {
 
 
 
+/* ---------- 手机底部导航 / 设置分组 ---------- */
+.bottom-nav { display: none; }
+.settings-group-title {
+  grid-column: 1 / -1;
+  margin: 4px 0 -4px;
+  padding: 0 2px;
+  font: 700 11px/1.2 var(--sans);
+  letter-spacing: .14em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+@media (max-width: 900px) {
+  .sidebar .nav { display: none; }
+  .main { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 90;
+    padding: 7px 6px calc(7px + env(safe-area-inset-bottom));
+    background: rgba(23, 37, 34, .97);
+    border-top: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(14px);
+  }
+  .bottom-nav button {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: rgba(244,239,231,.62);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 5px 2px;
+    font: 500 10px/1.2 var(--sans);
+    border-radius: 9px;
+    cursor: pointer;
+  }
+  .bottom-nav button .icon { width: 19px; height: 19px; }
+  .bottom-nav button.active { color: #fff; background: rgba(255,255,255,.08); }
+  .bottom-nav button.active .icon { color: var(--gold); }
+}
+@media print { .bottom-nav { display: none !important; } }
+
+@media (max-width: 900px) {
+  .main { width: 100%; max-width: 100%; overflow-x: hidden; }
+  .hero, .card, .settings-card, .topbar { max-width: 100%; }
+  .hero-title { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 900px) {
+  .bottom-nav { width: 100%; max-width: 100vw; overflow: hidden; }
+  .bottom-nav button { flex: 1 1 0; min-width: 0; padding-left: 1px; padding-right: 1px; }
+  .bottom-nav button span { white-space: nowrap; }
+  .hero-main { max-width: 100%; }
+  .hero-title { max-width: 100%; word-break: break-word; }
+}
+
+@media (max-width: 900px) {
+  html, body, .app-shell { width: 100%; max-width: 100%; overflow-x: hidden; }
+  .main { width: 100vw; max-width: 100vw; }
+  .bottom-nav { left: 0; right: auto; width: 100vw; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .bottom-nav button { width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .bottom-nav { z-index: 95; }
+}
+
+/* 长表单必须能收缩并滚动，否则手机上看不到底部保存按钮 */
+.modal-body { flex: 1 1 auto; min-height: 0; -webkit-overflow-scrolling: touch; }
+.modal-foot { flex: 0 0 auto; }
+@media (max-width: 640px) {
+  .modal-body { padding-bottom: 22px; }
+  .modal-foot { position: sticky; bottom: 0; z-index: 2; background: var(--card); }
+}
+
+@media (max-width: 640px) {
+  .modal { width: 100vw; max-width: 100vw; }
+  .modal .field-row { flex-direction: column; gap: 12px; }
+  .modal .form-grid, .modal .form-col, .modal .field, .modal .field-row { min-width: 0; max-width: 100%; }
+  .modal-foot { flex-wrap: wrap; }
+  .modal-foot .foot-right { width: 100%; flex-wrap: wrap; }
+  .modal-foot .btn { min-width: 0; }
+}
+
+@media (max-width: 640px) {
+  .modal .field-row { grid-template-columns: 1fr; }
+  .modal .field-row > *, .modal .field, .modal input, .modal select, .modal textarea { min-width: 0; max-width: 100%; }
+}
+
+/* ---------- AI 聊天助手 ---------- */
+.ai-chat-fab {
+  position: fixed; right: 22px; bottom: 24px; z-index: 92;
+  display: flex; align-items: center; gap: 7px;
+  border: 0; border-radius: 999px; padding: 12px 16px;
+  background: var(--accent); color: #fff;
+  font: 700 12px/1 var(--sans); box-shadow: 0 12px 28px rgba(212,90,62,.3);
+  cursor: pointer;
+}
+.ai-chat-fab .icon { width: 18px; height: 18px; }
+.ai-chat-overlay { position: fixed; inset: 0; z-index: 1500; pointer-events: none; }
+.ai-chat-panel {
+  pointer-events: auto; position: absolute; right: 22px; bottom: 84px;
+  width: min(430px, calc(100vw - 28px)); height: min(660px, calc(100vh - 110px));
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.25); display: flex; flex-direction: column; overflow: hidden;
+}
+.ai-chat-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 15px 16px 12px; border-bottom: 1px solid var(--line); background: var(--card-soft); }
+.ai-chat-kicker { font: 700 8px/1 var(--sans); letter-spacing: .16em; color: var(--accent); }
+.ai-chat-head h2 { margin: 4px 0 0; font-family: var(--font-serif); font-size: 19px; }
+.ai-chat-head p { margin: 3px 0 0; color: var(--muted); font-size: 10px; }
+.ai-chat-head-actions { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.ai-chat-head-actions .btn { padding: 5px 8px; font-size: 10px; }
+.ai-chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: #fbf8f2; }
+.ai-msg { display: flex; }
+.ai-msg.user { justify-content: flex-end; }
+.ai-bubble { max-width: 88%; padding: 10px 12px; border-radius: 13px; font-size: 12.5px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+.ai-msg.bot .ai-bubble { background: #fff; border: 1px solid var(--line); color: var(--ink); border-bottom-left-radius: 4px; }
+.ai-msg.user .ai-bubble { background: var(--sidebar); color: var(--cream); border-bottom-right-radius: 4px; }
+.ai-chat-quick { display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; background: var(--card); border-top: 1px solid var(--line); }
+.ai-chat-quick button { flex: 0 0 auto; border: 1px solid var(--line); background: var(--card-soft); color: var(--muted); border-radius: 999px; padding: 6px 10px; font: 500 10px/1 var(--sans); cursor: pointer; }
+.ai-chat-input { display: flex; gap: 8px; padding: 10px 12px 6px; background: var(--card); align-items: flex-end; }
+.ai-chat-input textarea { flex: 1; resize: none; border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; font: 12px/1.5 var(--sans); background: #fff; color: var(--ink); outline: none; }
+.ai-chat-input textarea:focus { border-color: var(--accent); }
+.ai-chat-input .btn { flex: 0 0 auto; }
+.ai-chat-foot { padding: 0 12px 9px; background: var(--card); color: var(--muted); font-size: 9px; }
+body.chat-open { overflow: hidden; }
+@media (max-width: 900px) {
+  .ai-chat-fab { right: 14px; bottom: calc(78px + env(safe-area-inset-bottom)); padding: 10px 13px; }
+  .ai-chat-fab span { display: none; }
+  .ai-chat-panel { right: 0; bottom: 0; width: 100vw; height: 100dvh; max-height: none; border-radius: 0; border: 0; }
+  .ai-chat-head { padding-top: calc(13px + env(safe-area-inset-top)); }
+  .ai-chat-foot { padding-bottom: calc(9px + env(safe-area-inset-bottom)); }
+}
+
+.ai-chat-head > div:first-child { min-width: 0; flex: 1; }
+.ai-chat-head-actions { flex-shrink: 0; }
+.ai-chat-input { width: 100%; box-sizing: border-box; }
+.ai-chat-input textarea { min-width: 0; width: 100%; }
+.ai-chat-input .btn { flex: 0 0 auto; }
+@media (max-width: 420px) {
+  .ai-chat-head-actions .btn[data-chat-action="clear"] { display: none; }
+}
+
+.ai-chat-input textarea { flex: 1 1 auto; width: auto; }
+.ai-chat-head { position: relative; padding-right: 96px; }
+.ai-chat-head-actions { position: absolute; right: 12px; top: 14px; }
+@media (max-width: 900px) {
+  .ai-chat-head-actions .btn[data-chat-action="settings"] { display: none; }
+  .ai-chat-head { padding-right: 92px; }
+}
+
+.ai-chat-panel { overflow: hidden; }
+.ai-chat-head-actions { flex-wrap: nowrap; }
+.ai-chat-input { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+.ai-chat-input textarea { width: 100%; min-width: 0; }
+.ai-chat-input .btn { width: auto; white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .ai-chat-head { padding-right: 136px; }
+  .ai-chat-head-actions .btn[data-chat-action="settings"] { display: inline-flex; }
+  .ai-chat-head-actions .btn[data-chat-action="clear"] { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1456,7 +1624,7 @@ kbd {
           <strong>错题拾遗</strong>
           <small>MISTAKE ARCHIVE</small>
         </span>
-        <span class="kaoyan-badge">云端版</span>
+        <span class="kaoyan-badge">本地版</span>
       </a>
 
       <nav class="nav" aria-label="主导航">
@@ -1754,6 +1922,7 @@ function normalize(raw = {}) {
     id: raw.id || uid(),
     subject: SUBJECTS.includes(raw.subject) ? raw.subject : (raw.subject || '其他'),
     topic: String(raw.topic || '').trim(),
+    chapter: String(raw.chapter || '').trim(),
     source: String(raw.source || '').trim(),
     type: TYPES.includes(raw.type) ? raw.type : (raw.type || '其他'),
     difficulty: clamp(Number(raw.difficulty) || 3, 1, 5),
@@ -1765,6 +1934,8 @@ function normalize(raw = {}) {
     tags: tags.map((x) => String(x).trim()).filter(Boolean).slice(0, 8),
     images: images.filter((x) => typeof x === 'string' && x.startsWith('data:image/')).slice(0, 4),
     starred: Boolean(raw.starred),
+    aiGenerated: Boolean(raw.aiGenerated),
+    aiVerified: Boolean(raw.aiVerified),
     status,
     reviewCount: Number(raw.reviewCount) || 0,
     correctStreak: Number(raw.correctStreak) || 0,
@@ -2255,9 +2426,12 @@ async function saveForm(old) {
   const isNew = !old || !old.id;
   const now = new Date().toISOString();
   const base = old || normalize({ id: uid(), status: d.status || 'new' });
-  const q = normalize({ ...base, subject: d.subject, topic: d.topic, source: d.source, type: d.type, difficulty: d.difficulty,
+  const aiGenerated = d.aiGenerated !== undefined ? d.aiGenerated === '1' : Boolean(base.aiGenerated);
+  const aiVerified = d.aiVerified !== undefined ? d.aiVerified === '1' : Boolean(base.aiVerified);
+  const q = normalize({ ...base, subject: d.subject, topic: d.topic, chapter: d.chapter, source: d.source, type: d.type, difficulty: d.difficulty,
     question: d.question, myAnswer: d.myAnswer, answer: d.answer, analysis: d.analysis, reason: d.reason,
-    tags: d.tags, images: state.formImages, starred: d.starred === '1', status: d.status, updatedAt: now });
+    tags: d.tags, images: state.formImages, starred: d.starred === '1', status: d.status,
+    aiGenerated, aiVerified, updatedAt: now });
   if (isNew) {
     q.createdAt = now;
     q.reviewCount = 0;
@@ -2286,8 +2460,8 @@ function openDetail(id) {
   const q = state.questions.find((x) => x.id === id);
   if (!q) return;
   const history = state.logs.filter((l) => l.qid === q.id).slice(-6).reverse();
-  openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
-  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.chapter ? ' · ' + esc(q.chapter) : ''}${q.topic ? ' · ' + esc(q.topic) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}${q.aiGenerated ? `<span class="q-tag" style="color:var(--gold)">AI 生成${q.aiVerified ? ' · 已核对' : ' · 待核对'}</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
   <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
   <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '还没有写解析。编辑这道题，把“下次怎么做”写下来。')}</p></div>
   <div class="detail-tags">${q.tags.map(tagHTML).join('') || '<span class="q-tag">暂无标签</span>'}</div>
@@ -2388,7 +2562,7 @@ async function star(id) {
   } catch { toast('保存失败', 'error'); }
 }
 function exportJSON() {
-  const data = { app: '错题拾遗', version: APP_VERSION, exportedAt: new Date().toISOString(), questions: state.questions, logs: state.logs };
+  const data = { app: '错题拾遗', version: APP_VERSION, exportedAt: new Date().toISOString(), questions: state.questions, logs: state.logs, profile: typeof kyProfile === 'object' ? kyProfile : {}, profileUpdatedAt: safeGet('cuoti_ky_profile_ts_v1') || null };
   download(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' }), `错题拾遗-备份-${today()}.json`);
   toast('备份已导出');
 }
@@ -2409,9 +2583,17 @@ function importFile(file) {
       const list = Array.isArray(p) ? p : p.questions;
       if (!Array.isArray(list) || !list.length) throw new Error('no data');
       const normalized = list.map(normalize);
-      if (!confirm(`将导入 ${normalized.length} 道错题，合并到现有数据。继续吗？`)) return;
       const map = new Map(state.questions.map((q) => [q.id, q]));
-      normalized.forEach((q) => map.set(q.id, q));
+      let added = 0;
+      let updated = 0;
+      let kept = 0;
+      normalized.forEach((q) => {
+        const old = map.get(q.id);
+        if (!old) { map.set(q.id, q); added++; return; }
+        if ((q.updatedAt || '') > (old.updatedAt || '')) { map.set(q.id, q); updated++; }
+        else kept++;
+      });
+      if (!confirm(`导入 ${normalized.length} 道：新增 ${added} 道，更新 ${updated} 道，保留本机较新 ${kept} 道。\n不会删除现有错题。继续吗？`)) return;
       const merged = [...map.values()];
       await Store.bulk(merged);
       state.questions = merged;
@@ -2420,7 +2602,16 @@ function importFile(file) {
         p.logs.forEach((l) => { if (l?.qid && !ids.has(l.id)) state.logs.push({ id: l.id || uid('log'), qid: l.qid, date: String(l.date || today()).slice(0, 10), rating: l.rating || 'good', at: l.at || new Date().toISOString() }); });
         saveLogs();
       }
-      render(); toast(`已导入 ${normalized.length} 道错题`);
+      if (p.profile && typeof p.profile === 'object') {
+        const incoming = p.profileUpdatedAt || '';
+        const local = safeGet('cuoti_ky_profile_ts_v1') || '';
+        if (incoming > local) {
+          kyProfile = { ...kyProfile, ...p.profile };
+          safeSet(KY_KEY, JSON.stringify(kyProfile));
+          safeSet('cuoti_ky_profile_ts_v1', incoming || new Date().toISOString());
+        }
+      }
+      render(); toast(`导入完成：新增 ${added}，更新 ${updated}，保留 ${kept}`);
     } catch { toast('导入失败：请确认是有效的 JSON 备份', 'error'); }
   };
   r.readAsText(file, 'utf-8');
@@ -2905,129 +3096,125 @@ render = function () {
 </script>
   <script>
 /* ============================================================
-   错题拾遗 · 云端同步版
-   数据库：Supabase（RPC: cuoti_get / cuoti_put）
-   这个文件不依赖电脑上的 Node 服务。
+   错题拾遗 · 个人同步（GitHub secret Gist）
+   可选功能：只在你自己的设备之间同步；不配置时完全本地。
+   Token 只保存在浏览器 localStorage，不写进 GitHub Pages。
    ============================================================ */
 'use strict';
 
-if (new URLSearchParams(location.search).get('noanim') === '1') {
-  document.documentElement.classList.add('no-anim');
-}
+const GIST_ID_KEY = 'cuoti_gist_id_v1';
+const GIST_TOKEN_KEY = 'cuoti_gist_token_v1';
+const GIST_META_KEY = 'cuoti_gist_meta_v1';
+const GIST_FILE = 'cuoti.json';
+const GIST_API = 'https://api.github.com';
+const GIST_PROFILE_TS_KEY = 'cuoti_ky_profile_ts_v1';
 
-/* 云端版不自动塞示例数据。 */
-safeSet(LS_SEEDED, '1');
-
-/* 你的 Supabase 项目配置。anon key 是公开密钥。 */
-const CLOUD_URL = 'https://xdsuxlgskqyitbdgmira.supabase.co';
-const CLOUD_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhkc3V4bGdza3F5aXRiZGdtaXJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0NzI2OTQsImV4cCI6MjExMDA0ODY5NH0.lu7rvLW1KZqJqK6yTLCb1uzHui0i6eZsOOVDSb7O7xg';
-const CLOUD_ROOM = 'ky-3grc-2027';
-const CLOUD_SECRET_KEY = 'cuoti_cloud_secret_v1';
-
-/* 私密同步码只从带 #key= 的链接读取一次，然后存本机；不写进公开仓库。 */
-let cloudSecretValue = (() => {
-  try {
-    const params = new URLSearchParams(location.hash.replace(/^#/, ''));
-    const incoming = params.get('key');
-    if (incoming) {
-      safeSet(CLOUD_SECRET_KEY, incoming);
-      history.replaceState({}, '', location.pathname + location.search);
-      return incoming;
-    }
-  } catch {}
-  return safeGet(CLOUD_SECRET_KEY) || '';
-})();
-
-const CLOUD_META_KEY = 'cuoti_cloud_meta_v1';
-const PROFILE_TS_KEY = 'cuoti_ky_profile_ts_v1';
-
-let cloudMeta = { version: 0, lastSync: null, deleted: {}, resetAt: null };
+let gistIdValue = safeGet(GIST_ID_KEY) || '';
+let gistTokenValue = safeGet(GIST_TOKEN_KEY) || '';
+let gistMeta = { version: 0, lastSync: null, updatedAt: null, deleted: {}, resetAt: null };
 try {
-  const raw = JSON.parse(safeGet(CLOUD_META_KEY) || 'null');
+  const raw = JSON.parse(safeGet(GIST_META_KEY) || 'null');
   if (raw && typeof raw === 'object') {
-    cloudMeta = {
+    gistMeta = {
       version: Number(raw.version) || 0,
       lastSync: raw.lastSync || null,
+      updatedAt: raw.updatedAt || null,
       deleted: raw.deleted && typeof raw.deleted === 'object' ? raw.deleted : {},
       resetAt: raw.resetAt || null
     };
   }
 } catch {}
 
-let cloudStatus = 'off';
-let cloudMessage = '';
-let cloudBusy = false;
-let cloudDirty = false;
-let cloudTimer = null;
-let pollTimer = null;
-let installPrompt = null;
+let gistStatus = 'off';
+let gistMessage = '';
+let gistBusy = false;
+let gistDirty = false;
+let gistTimer = null;
+let gistPoll = null;
 
-const rawPut = Store.put.bind(Store);
-const rawRemove = Store.remove.bind(Store);
-const rawClear = Store.clear.bind(Store);
-const rawBulk = Store.bulk.bind(Store);
-const rawSaveLogs = saveLogs;
-const rawSaveKyProfile = typeof saveKyProfile === 'function' ? saveKyProfile : null;
+const gistRawPut = Store.put.bind(Store);
+const gistRawRemove = Store.remove.bind(Store);
+const gistRawClear = Store.clear.bind(Store);
+const gistRawBulk = Store.bulk.bind(Store);
+const gistRawSaveLogs = saveLogs;
+const gistRawSaveKyProfile = typeof saveKyProfile === 'function' ? saveKyProfile : null;
 
-function saveCloudMeta() {
-  safeSet(CLOUD_META_KEY, JSON.stringify(cloudMeta));
+function gistConfigured() { return Boolean(gistIdValue && gistTokenValue); }
+function saveGistConfig() {
+  if (gistIdValue) safeSet(GIST_ID_KEY, gistIdValue); else localStorage.removeItem(GIST_ID_KEY);
+  if (gistTokenValue) safeSet(GIST_TOKEN_KEY, gistTokenValue); else localStorage.removeItem(GIST_TOKEN_KEY);
 }
+function saveGistMeta() { safeSet(GIST_META_KEY, JSON.stringify(gistMeta)); }
 
-Store.put = async (q) => { await rawPut(q); scheduleCloud(); };
+Store.put = async (q) => { await gistRawPut(q); scheduleGist(); };
 Store.remove = async (id) => {
-  await rawRemove(id);
-  cloudMeta.deleted[id] = new Date().toISOString();
-  saveCloudMeta();
-  scheduleCloud();
+  await gistRawRemove(id);
+  gistMeta.deleted[id] = new Date().toISOString();
+  saveGistMeta();
+  scheduleGist();
 };
 Store.clear = async () => {
-  await rawClear();
-  cloudMeta.resetAt = new Date().toISOString();
-  cloudMeta.deleted = {};
-  saveCloudMeta();
-  scheduleCloud();
+  await gistRawClear();
+  gistMeta.resetAt = new Date().toISOString();
+  gistMeta.deleted = {};
+  saveGistMeta();
+  scheduleGist();
 };
-Store.bulk = async (items) => { await rawBulk(items); scheduleCloud(); };
-saveLogs = function () { rawSaveLogs(); scheduleCloud(); };
-if (rawSaveKyProfile) {
+Store.bulk = async (items) => { await gistRawBulk(items); scheduleGist(); };
+saveLogs = function () { gistRawSaveLogs(); scheduleGist(); };
+if (gistRawSaveKyProfile) {
   saveKyProfile = function () {
-    rawSaveKyProfile();
-    safeSet(PROFILE_TS_KEY, new Date().toISOString());
-    scheduleCloud();
+    gistRawSaveKyProfile();
+    safeSet(GIST_PROFILE_TS_KEY, new Date().toISOString());
+    scheduleGist();
   };
 }
 
-async function rpc(name, body) {
-  const res = await fetch(`${CLOUD_URL}/rest/v1/rpc/${name}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: CLOUD_KEY,
-      Authorization: 'Bearer ' + CLOUD_KEY
-    },
-    body: JSON.stringify(body)
-  });
-  const data = await res.json().catch(() => ({}));
+async function gistApi(path, options = {}) {
+  if (!gistTokenValue) throw new Error('还没有填写 GitHub Token');
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    Authorization: 'Bearer ' + gistTokenValue,
+    'X-GitHub-Api-Version': '2022-11-28',
+    ...(options.headers || {})
+  };
+  const res = await fetch(GIST_API + path, { ...options, headers });
   if (!res.ok) {
-    throw new Error(data.message || data.error || `云端返回 ${res.status}`);
+    let detail = '';
+    try { const j = await res.json(); detail = j.message || ''; } catch {}
+    if (res.status === 401) throw new Error('Token 无效或已过期');
+    if (res.status === 404) throw new Error('Gist 不存在，或 Token 没有 gist 权限');
+    if (res.status === 403) throw new Error(detail || 'GitHub 拒绝了请求，可能是 Token 权限不够');
+    throw new Error(detail || `GitHub 返回 ${res.status}`);
   }
-  return data;
+  return res.json();
 }
 
-function latest(a, b) {
+function gistEmpty() {
+  return { questions: [], deleted: {}, logs: [], profile: {}, profileUpdatedAt: null, resetAt: null };
+}
+function isDemoQuestion(q) { return q && String(q.id || '').startsWith('demo_'); }
+function hasRealQuestion(data) {
+  return Boolean(data && (data.questions || []).some((q) => q && !isDemoQuestion(q)));
+}
+function stripDemoQuestions(data) {
+  if (!data) return data;
+  return { ...data, questions: (data.questions || []).filter((q) => !isDemoQuestion(q)) };
+}
+function gistLatest(a, b) {
   if (!a) return b || null;
   if (!b) return a;
   return a > b ? a : b;
 }
-
-function emptyCloud() {
-  return { questions: [], deleted: {}, logs: [], profile: {}, profileUpdatedAt: null, resetAt: null };
-}
-
-function mergeCloud(local, remote) {
-  const r = remote && typeof remote === 'object' ? remote : emptyCloud();
-  const l = local && typeof local === 'object' ? local : emptyCloud();
-  const resetAt = latest(l.resetAt, r.resetAt);
+function mergeGist(local, remote) {
+  let l = local && typeof local === 'object' ? local : gistEmpty();
+  const r = remote && typeof remote === 'object' ? remote : gistEmpty();
+  // 新设备首次打开会自动生成 8 道示例题；如果云端已经有真实错题，
+  // 不要把示例题混进云端。
+  if (hasRealQuestion(r) && (l.questions || []).some(isDemoQuestion)) {
+    l = stripDemoQuestions(l);
+  }
+  const resetAt = gistLatest(l.resetAt, r.resetAt);
 
   const deleted = { ...(r.deleted || {}) };
   for (const [id, at] of Object.entries(l.deleted || {})) {
@@ -3040,9 +3227,7 @@ function mergeCloud(local, remote) {
   }
 
   const qmap = new Map();
-  for (const q of r.questions || []) {
-    if (q && q.id) qmap.set(q.id, q);
-  }
+  for (const q of r.questions || []) if (q && q.id) qmap.set(q.id, q);
   for (const q of l.questions || []) {
     if (!q || !q.id) continue;
     const old = qmap.get(q.id);
@@ -3059,17 +3244,13 @@ function mergeCloud(local, remote) {
   }
 
   const logs = new Map();
-  for (const item of [...(r.logs || []), ...(l.logs || [])]) {
-    if (item && item.id) logs.set(item.id, item);
-  }
-
+  for (const item of [...(r.logs || []), ...(l.logs || [])]) if (item && item.id) logs.set(item.id, item);
   let profile = r.profile || {};
   let profileUpdatedAt = r.profileUpdatedAt || null;
   if ((l.profileUpdatedAt || '') > (profileUpdatedAt || '')) {
     profile = l.profile || {};
     profileUpdatedAt = l.profileUpdatedAt;
   }
-
   return {
     questions: [...qmap.values()],
     deleted,
@@ -3079,19 +3260,60 @@ function mergeCloud(local, remote) {
     resetAt
   };
 }
-
-function collectCloud() {
+function collectGist() {
   return {
     questions: state.questions,
-    deleted: cloudMeta.deleted,
+    deleted: gistMeta.deleted,
     logs: state.logs,
     profile: typeof kyProfile === 'object' ? kyProfile : {},
-    profileUpdatedAt: safeGet(PROFILE_TS_KEY),
-    resetAt: cloudMeta.resetAt
+    profileUpdatedAt: safeGet(GIST_PROFILE_TS_KEY),
+    resetAt: gistMeta.resetAt
   };
 }
 
-function canRenderNow() {
+async function readGist() {
+  const data = await gistApi('/gists/' + encodeURIComponent(gistIdValue));
+  const file = data.files && data.files[GIST_FILE];
+  if (!file) return { version: 0, updatedAt: null, data: gistEmpty() };
+  let content = file.content || '';
+  if (file.truncated && file.raw_url) {
+    const r = await fetch(file.raw_url, { headers: { Authorization: 'Bearer ' + gistTokenValue } });
+    if (!r.ok) throw new Error('Gist 内容读取失败');
+    content = await r.text();
+  }
+  let parsed = {};
+  try { parsed = JSON.parse(content || '{}'); } catch { parsed = {}; }
+  if (parsed && parsed.data && typeof parsed.data === 'object') {
+    return { version: Number(parsed.version) || 0, updatedAt: parsed.updatedAt || null, data: parsed.data };
+  }
+  return { version: 0, updatedAt: null, data: parsed && typeof parsed === 'object' ? parsed : gistEmpty() };
+}
+
+async function writeGist(record) {
+  await gistApi('/gists/' + encodeURIComponent(gistIdValue), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify(record) } } })
+  });
+}
+
+async function createGist() {
+  if (!gistTokenValue) throw new Error('先填写 GitHub Token');
+  const record = { version: 0, updatedAt: new Date().toISOString(), data: gistEmpty() };
+  const data = await gistApi('/gists', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      description: '错题拾遗 · 个人同步',
+      public: false,
+      files: { [GIST_FILE]: { content: JSON.stringify(record) } }
+    })
+  });
+  gistIdValue = data.id;
+  saveGistConfig();
+}
+
+function canRenderGist() {
   if (state.review) return false;
   if ($('#modalRoot') && $('#modalRoot').innerHTML.trim()) return false;
   const el = document.activeElement;
@@ -3099,207 +3321,1903 @@ function canRenderNow() {
   return true;
 }
 
-function statusInfo() {
-  if (!cloudSecretValue) return { cls: 'err', label: '未配置', text: '请用带 #key= 的私密链接打开一次。' };
-  if (cloudStatus === 'on') return { cls: 'on', label: '已连接', text: '手机和电脑正在共享云端数据。' };
-  if (cloudStatus === 'syncing') return { cls: 'wait', label: '同步中', text: '正在和云端交换数据…' };
-  if (cloudStatus === 'error') return { cls: 'err', label: '连接失败', text: cloudMessage || '请检查 Supabase 配置和网络。' };
-  return { cls: '', label: '未连接', text: '点“立即同步”连接云端。' };
-}
-
-function updateCloudUI() {
-  const info = statusInfo();
-  const box = $('#cloudStatus');
-  if (box) {
-    box.innerHTML = `<span class="sync-dot ${info.cls}"></span><strong>${info.label}</strong><span>${esc(info.text)}</span><span class="sync-when">${cloudMeta.lastSync ? esc(fmtDateTime(cloudMeta.lastSync)) : ''}</span>`;
-  }
-  const meta = document.querySelector('.sidebar-meta span:last-child');
-  if (meta) {
-    meta.textContent = cloudStatus === 'on' ? '云端同步 · 已连接' : cloudStatus === 'error' ? '云端同步 · 连接失败' : '云端同步 · 可跨设备';
-  }
-  const dot = document.querySelector('.sidebar-meta .pulse-dot');
-  if (dot) dot.style.background = cloudStatus === 'on' ? '#74c0a4' : cloudStatus === 'error' ? '#d45a3e' : '#74a796';
-}
-
-function cloudCard() {
-  const info = statusInfo();
-  return `<div class="card settings-card sync-card">
-    <h3>${icon('repeat')}云端同步</h3>
-    <p>数据存在 Supabase。平板、电脑打开同一个网址，不用电脑常开，也不用同一个 Wi-Fi。</p>
-    <div class="sync-status" id="cloudStatus"><span class="sync-dot ${info.cls}"></span><strong>${info.label}</strong><span>${esc(info.text)}</span><span class="sync-when">${cloudMeta.lastSync ? esc(fmtDateTime(cloudMeta.lastSync)) : ''}</span></div>
-    <div class="setting-actions">
-      <button class="btn btn-primary" data-cloud-action="now">${icon('refresh')}立即同步</button>
-      <button class="btn btn-ghost" data-cloud-action="install">${icon('download')}安装到桌面</button>
-    </div>
-    <div class="sync-install-tip"><strong>同步房间：</strong>${esc(CLOUD_ROOM)}<br>第一次请用带 <strong>#key=</strong> 的私密链接打开一次；之后会自动记住。另一台设备也用同一个私密链接打开，等几秒或点“立即同步”。</div>
-  </div>`;
-}
-const baseSettingsCloud = renderSettings;
-renderSettings = function () {
-  return baseSettingsCloud().replace('<div class="settings-grid">', `<div class="settings-grid">${cloudCard()}`);
-};
-
-async function applyCloud(data, version) {
-  const d = data && typeof data === 'object' ? data : emptyCloud();
+async function applyGist(data, version, updatedAt) {
+  const d = data && typeof data === 'object' ? data : gistEmpty();
   state.questions = Array.isArray(d.questions) ? d.questions.map(normalize) : [];
   state.logs = Array.isArray(d.logs) ? d.logs.slice(-1000) : [];
-  cloudMeta.deleted = d.deleted && typeof d.deleted === 'object' ? d.deleted : {};
-  cloudMeta.resetAt = d.resetAt || null;
-  cloudMeta.version = Number(version) || 0;
-  cloudMeta.lastSync = new Date().toISOString();
-  saveCloudMeta();
+  gistMeta.deleted = d.deleted && typeof d.deleted === 'object' ? d.deleted : {};
+  gistMeta.resetAt = d.resetAt || null;
+  gistMeta.version = Number(version) || 0;
+  gistMeta.updatedAt = updatedAt || null;
+  gistMeta.lastSync = new Date().toISOString();
+  saveGistMeta();
   try { localStorage.setItem(LS_LOGS, JSON.stringify(state.logs.slice(-800))); } catch {}
   if (d.profile && typeof d.profile === 'object' && d.profileUpdatedAt) {
     if (typeof kyProfile === 'object') {
       kyProfile = { ...kyProfile, ...d.profile };
       safeSet(KY_KEY, JSON.stringify(kyProfile));
-      safeSet(PROFILE_TS_KEY, d.profileUpdatedAt);
+      safeSet(GIST_PROFILE_TS_KEY, d.profileUpdatedAt);
     }
   }
-  try { await rawBulk(state.questions); } catch (error) { console.warn('云端数据写本地失败', error); }
+  try { await gistRawBulk(state.questions); } catch (error) { console.warn('同步数据写本地失败', error); }
   updateNav();
-  updateCloudUI();
-  if (canRenderNow()) render();
+  updateGistUI();
+  if (canRenderGist()) render();
 }
 
-async function cloudSync(manual = false) {
-  if (!cloudSecretValue) {
-    cloudStatus = 'error';
-    cloudMessage = '缺少私密同步码，请用带 #key= 的完整链接打开一次。';
-    updateCloudUI();
-    if (manual) toast('缺少私密同步码，请用完整链接打开', 'error');
+async function gistSync(manual = false) {
+  if (!gistConfigured()) {
+    gistStatus = 'off';
+    updateGistUI();
     return;
   }
-  if (cloudBusy) return;
-  cloudBusy = true;
-  cloudStatus = 'syncing';
-  updateCloudUI();
+  if (gistBusy) return;
+  gistBusy = true;
+  gistStatus = 'syncing';
+  updateGistUI();
   try {
-    const got = await rpc('cuoti_get', { p_room: CLOUD_ROOM, p_secret: cloudSecretValue });
-    const remote = got && got.found ? got.data : emptyCloud();
-    let baseVersion = got && got.found ? Number(got.version) || 0 : 0;
-    let merged = mergeCloud(collectCloud(), remote);
-    let result = null;
-
-    for (let attempt = 0; attempt < 3; attempt++) {
-      result = await rpc('cuoti_put', {
-        p_room: CLOUD_ROOM,
-        p_secret: cloudSecretValue,
-        p_data: merged,
-        p_base_version: baseVersion
-      });
-      if (result && result.ok) break;
-      if (result && result.conflict) {
-        merged = mergeCloud(merged, result.data);
-        baseVersion = Number(result.version) || 0;
-        continue;
-      }
-      throw new Error(result?.error === 'bad_secret' ? '同步码不正确' : '云端保存失败');
-    }
-    if (!result || !result.ok) throw new Error('云端写入冲突，请再试一次');
-
-    await applyCloud(result.data, result.version);
-    cloudDirty = false;
-    cloudStatus = 'on';
-    cloudMessage = '';
-    updateCloudUI();
-    if (manual) toast('云端同步完成');
+    const remote = await readGist();
+    const merged = mergeGist(collectGist(), remote.data);
+    const record = {
+      version: (Number(remote.version) || 0) + 1,
+      updatedAt: new Date().toISOString(),
+      data: merged
+    };
+    await writeGist(record);
+    await applyGist(record.data, record.version, record.updatedAt);
+    gistDirty = false;
+    gistStatus = 'on';
+    gistMessage = '';
+    updateGistUI();
+    if (manual) toast('个人同步完成');
   } catch (error) {
-    console.warn('云端同步失败', error);
-    cloudDirty = true;
-    cloudStatus = 'error';
-    cloudMessage = error.message || '无法连接云端';
-    updateCloudUI();
-    if (manual) toast('云端同步失败：' + cloudMessage, 'error');
+    console.warn('个人同步失败', error);
+    gistDirty = true;
+    gistStatus = 'error';
+    gistMessage = error.message || '同步失败';
+    updateGistUI();
+    if (manual) toast('同步失败：' + gistMessage, 'error');
   } finally {
-    cloudBusy = false;
+    gistBusy = false;
   }
 }
 
-async function cloudPull() {
-  if (!cloudSecretValue) return;
-  if (cloudBusy) return;
+async function gistPull() {
+  if (!gistConfigured() || gistBusy) return;
   if (document.visibilityState !== 'visible') return;
   if ($('#modalRoot') && $('#modalRoot').innerHTML.trim()) return;
-  if (cloudDirty) { await cloudSync(false); return; }
+  if (gistDirty) { await gistSync(false); return; }
   try {
-    const got = await rpc('cuoti_get', { p_room: CLOUD_ROOM, p_secret: cloudSecretValue });
-    if (got && got.found && Number(got.version) !== Number(cloudMeta.version)) {
-      await applyCloud(got.data, got.version);
-      cloudStatus = 'on';
-      cloudMessage = '';
-      updateCloudUI();
+    const remote = await readGist();
+    if (Number(remote.version) !== Number(gistMeta.version) || (remote.updatedAt || '') !== (gistMeta.updatedAt || '')) {
+      await applyGist(remote.data, remote.version, remote.updatedAt);
+      gistStatus = 'on';
+      gistMessage = '';
+      updateGistUI();
     }
   } catch (error) {
-    cloudStatus = 'error';
-    cloudMessage = error.message || '无法连接云端';
-    updateCloudUI();
+    gistStatus = 'error';
+    gistMessage = error.message || '同步失败';
+    updateGistUI();
   }
 }
 
-function scheduleCloud() {
-  cloudDirty = true;
-  clearTimeout(cloudTimer);
-  cloudTimer = setTimeout(() => cloudSync(false), 800);
+function scheduleGist() {
+  if (!gistConfigured()) return;
+  gistDirty = true;
+  clearTimeout(gistTimer);
+  gistTimer = setTimeout(() => gistSync(false), 900);
 }
 
-function installHelp() {
-  openModal(`<div class="modal-head"><div><div class="modal-kicker">INSTALL</div><h2 class="modal-title">把错题拾遗放到桌面</h2><p class="modal-sub">云端版是网页应用，添加到桌面即可。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
-  <div class="modal-body">
-    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">iPhone / Safari</div><p class="answer-text">打开这个网址 → 底部“分享” → “添加到主屏幕” → 添加。</p></div>
-    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">Android / Chrome / Edge</div><p class="answer-text">打开网址 → 右上角菜单 → “添加到主屏幕”或“安装应用”。</p></div>
-    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">华为浏览器</div><p class="answer-text">打开网址 → 右下角“∷” → 添加至 → 桌面。</p></div>
-    <div class="about-note"><strong>提示：</strong>云端版不需要电脑开机，也不需要和电脑同一个 Wi-Fi；只要平板能上网即可。</div>
-  </div><div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">知道了</button></div></div>`, true);
+function gistStatusInfo() {
+  if (!gistConfigured()) return { cls: '', label: '未开启', text: '不配置时，数据只保存在本机。' };
+  if (gistStatus === 'on') return { cls: 'on', label: '已连接', text: '这台设备和你的其他设备已同步。' };
+  if (gistStatus === 'syncing') return { cls: 'wait', label: '同步中', text: '正在和 GitHub Gist 交换数据…' };
+  if (gistStatus === 'error') return { cls: 'err', label: '同步失败', text: gistMessage || '检查 Token 和 Gist ID。' };
+  return { cls: '', label: '已配置', text: '点“立即同步”连接。' };
+}
+
+function updateGistUI() {
+  const info = gistStatusInfo();
+  const box = $('#gistStatus');
+  if (box) {
+    box.innerHTML = `<span class="sync-dot ${info.cls}"></span><strong>${info.label}</strong><span>${esc(info.text)}</span><span class="sync-when">${gistMeta.lastSync ? esc(fmtDateTime(gistMeta.lastSync)) : ''}</span>`;
+  }
+  const meta = document.querySelector('.sidebar-meta span:last-child');
+  if (meta) {
+    meta.textContent = gistConfigured()
+      ? (gistStatus === 'on' ? '个人同步 · 已连接' : gistStatus === 'error' ? '个人同步 · 同步失败' : '个人同步 · 可多设备')
+      : '本地保存 · 离线可用';
+  }
+}
+
+function gistCard() {
+  const info = gistStatusInfo();
+  const configured = gistConfigured();
+  return `<div class="card settings-card sync-card">
+    <h3>${icon('repeat')}个人同步（可选）</h3>
+    <p>只在你自己的电脑、平板之间同步。不配置时，数据仍然只存本机，不影响别人使用。</p>
+    <div class="sync-status" id="gistStatus"><span class="sync-dot ${info.cls}"></span><strong>${info.label}</strong><span>${esc(info.text)}</span><span class="sync-when">${gistMeta.lastSync ? esc(fmtDateTime(gistMeta.lastSync)) : ''}</span></div>
+    ${configured ? `
+      <div class="setting-actions">
+        <button class="btn btn-primary" data-gist-action="now">${icon('refresh')}立即同步</button>
+        <button class="btn btn-ghost" data-gist-action="disconnect">${icon('x')}断开同步</button>
+      </div>
+      <div class="sync-install-tip"><strong>Gist：</strong>${esc(gistIdValue.slice(0, 8))}…（Token 已保存在本机）<br>另一台设备打开同一个网页，填同一个 Gist ID 和 Token 即可。</div>
+    ` : `
+      <div class="form-grid" style="margin-top:12px">
+        <label class="field"><span>GitHub Token</span><input id="gistTokenInput" type="password" autocomplete="off" placeholder="ghp_...（只勾 gist 权限）"></label>
+        <label class="field"><span>Gist ID（第二台设备填写）</span><input id="gistIdInput" type="text" autocomplete="off" placeholder="第一台设备点“创建新 Gist”"></label>
+      </div>
+      <div class="setting-actions">
+        <button class="btn btn-primary" data-gist-action="create">${icon('plus')}创建新 Gist 并连接</button>
+        <button class="btn btn-ghost" data-gist-action="connect">${icon('link')}连接已有 Gist</button>
+      </div>
+      <div class="sync-install-tip">Token 只保存在这台设备的浏览器里，不会写进网页代码。只勾选 <strong>gist</strong> 权限，不要勾 repo。创建后把 Gist ID 填到另一台设备。</div>
+    `}
+  </div>`;
+}
+const baseSettingsGist = renderSettings;
+renderSettings = function () {
+  return baseSettingsGist().replace('<div class="settings-grid">', `<div class="settings-grid">${gistCard()}`);
+};
+
+function readGistInputs() {
+  const tokenEl = $('#gistTokenInput');
+  const idEl = $('#gistIdInput');
+  if (tokenEl && tokenEl.value.trim()) gistTokenValue = tokenEl.value.trim();
+  if (idEl && idEl.value.trim()) {
+    const raw = idEl.value.trim();
+    const m = raw.match(/gist\.github\.com\/[^/]+\/([a-f0-9]+)/i);
+    gistIdValue = m ? m[1] : raw;
+  }
+}
+
+function startGistPolling() {
+  if (gistPoll) clearInterval(gistPoll);
+  gistPoll = setInterval(() => {
+    if (document.visibilityState === 'visible') gistPull();
+  }, 15000);
+}
+function stopGistPolling() {
+  if (gistPoll) clearInterval(gistPoll);
+  gistPoll = null;
+}
+
+async function connectGist(create) {
+  readGistInputs();
+  if (!gistTokenValue) { toast('先填写 GitHub Token', 'error'); return; }
+  if (!create && !gistIdValue) { toast('填写 Gist ID，或点“创建新 Gist”', 'error'); return; }
+  saveGistConfig();
+  gistStatus = 'syncing';
+  updateGistUI();
+  try {
+    if (create) await createGist();
+    await gistSync(true);
+    startGistPolling();
+    render();
+  } catch (error) {
+    gistStatus = 'error';
+    gistMessage = error.message || '连接失败';
+    updateGistUI();
+    toast('连接失败：' + gistMessage, 'error');
+    render();
+  }
+}
+
+function disconnectGist() {
+  if (!confirm('断开后，这台设备不再自动同步；GitHub 上的数据不会被删除。继续吗？')) return;
+  stopGistPolling();
+  gistIdValue = '';
+  gistTokenValue = '';
+  gistMeta = { version: 0, lastSync: null, updatedAt: null, deleted: {}, resetAt: null };
+  saveGistConfig();
+  saveGistMeta();
+  gistStatus = 'off';
+  gistMessage = '';
+  updateGistUI();
+  render();
+  toast('已断开个人同步');
 }
 
 document.addEventListener('click', (event) => {
-  const el = event.target.closest('[data-cloud-action]');
+  const el = event.target.closest('[data-gist-action]');
   if (!el) return;
   event.preventDefault();
-  if (el.dataset.cloudAction === 'now') cloudSync(true);
-  if (el.dataset.cloudAction === 'install') {
-    if (installPrompt) {
-      installPrompt.prompt();
-      installPrompt.userChoice.finally(() => { installPrompt = null; });
-    } else {
-      installHelp();
-    }
-  }
+  if (el.dataset.gistAction === 'create') connectGist(true);
+  if (el.dataset.gistAction === 'connect') connectGist(false);
+  if (el.dataset.gistAction === 'now') gistSync(true);
+  if (el.dataset.gistAction === 'disconnect') disconnectGist();
 });
 
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  installPrompt = event;
-});
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') cloudSync(false);
+  if (document.visibilityState === 'visible' && gistConfigured()) gistSync(false);
 });
-window.addEventListener('online', () => cloudSync(false));
+window.addEventListener('online', () => { if (gistConfigured()) gistSync(false); });
 
-function startPolling() {
-  if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(() => {
-    if (document.visibilityState === 'visible') cloudPull();
-  }, 12000);
-}
-
-function initCloud() {
-  updateCloudUI();
-  cloudSync(false);
-  startPolling();
-  if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    Promise.reject(new Error('single-file build')).catch((error) => console.warn('SW 注册失败', error));
+function initGist() {
+  updateGistUI();
+  if (gistConfigured()) {
+    gistSync(false);
+    startGistPolling();
   }
 }
-
-function bootCloud(tries = 0) {
-  if (window.__CUOTI_READY__) { initCloud(); return; }
-  if (tries < 100) setTimeout(() => bootCloud(tries + 1), 150);
+function bootGist(tries = 0) {
+  if (window.__CUOTI_READY__) { initGist(); return; }
+  if (tries < 100) setTimeout(() => bootGist(tries + 1), 150);
 }
-document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootCloud(), 300));
-window.__CUOTI_CLOUD__ = { cloudSync, cloudPull, cloudMeta };
+document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootGist(), 300));
+window.__CUOTI_GIST__ = { gistSync, gistPull };
 
 </script>
+  <script>
+/* ============================================================
+   错题拾遗 · 考研大纲知识点树
+   在录入表单里提供“科目 → 章节 → 知识点”选择；
+   统计页按章节汇总掌握度。
+   ============================================================ */
+'use strict';
+
+const SYLLABUS = {
+  '政治': {
+    '马原': ['唯物论', '辩证法', '认识论', '历史唯物主义', '政治经济学', '科学社会主义'],
+    '毛中特': ['新民主主义革命', '社会主义改造', '改革开放', '新时代', '中国式现代化'],
+    '史纲': ['近代史', '党史', '抗战', '新中国成立', '社会主义建设'],
+    '思修法基': ['人生观', '价值观', '道德', '法治'],
+    '时政': ['国内时政', '国际时政']
+  },
+  '英语一': {
+    '完形': ['逻辑衔接', '词汇辨析', '固定搭配'],
+    '阅读': ['主旨题', '细节题', '推理题', '态度题', '词义句意题'],
+    '新题型': ['七选五', '排序题', '小标题'],
+    '翻译': ['长难句', '词义选择', '语序调整'],
+    '写作': ['小作文', '大作文', '图表描述', '观点论证'],
+    '词汇语法': ['核心词汇', '语法结构', '长难句']
+  },
+  '英语二': {
+    '完形': ['逻辑衔接', '词汇辨析', '固定搭配'],
+    '阅读': ['主旨题', '细节题', '推理题', '态度题', '词义句意题'],
+    '新题型': ['多项对应', '小标题'],
+    '翻译': ['段落翻译', '长难句'],
+    '写作': ['小作文', '大作文', '图表描述', '观点论证'],
+    '词汇语法': ['核心词汇', '语法结构', '长难句']
+  },
+  '数学一': {
+    '高等数学': ['函数极限连续', '一元微分学', '一元积分学', '多元微分学', '多元积分学', '无穷级数', '常微分方程'],
+    '线性代数': ['行列式', '矩阵', '向量', '线性方程组', '特征值与特征向量', '二次型'],
+    '概率论与数理统计': ['随机事件与概率', '随机变量', '多维随机变量', '数字特征', '大数定律与中心极限定理', '参数估计']
+  },
+  '数学二': {
+    '高等数学': ['函数极限连续', '一元微分学', '一元积分学', '多元微分学', '多元积分学', '常微分方程'],
+    '线性代数': ['行列式', '矩阵', '向量', '线性方程组', '特征值与特征向量', '二次型']
+  },
+  '数学三': {
+    '高等数学': ['函数极限连续', '一元微分学', '一元积分学', '多元微分学', '多元积分学', '无穷级数', '常微分方程'],
+    '线性代数': ['行列式', '矩阵', '向量', '线性方程组', '特征值与特征向量', '二次型'],
+    '概率论与数理统计': ['随机事件与概率', '随机变量', '多维随机变量', '数字特征', '大数定律与中心极限定理', '参数估计']
+  },
+  '专业课一': {
+    '408·数据结构': ['线性表', '栈与队列', '树', '图', '查找', '排序'],
+    '408·计算机组成': ['数据表示', '运算器', '存储系统', '指令系统', 'CPU', '总线与IO'],
+    '408·操作系统': ['进程管理', '内存管理', '文件系统', 'IO管理'],
+    '408·计算机网络': ['体系结构', '物理层', '数据链路层', '网络层', '传输层', '应用层'],
+    '自命题章节': ['自定义']
+  },
+  '专业课二': { '自命题章节': ['自定义'] },
+  '管综': {
+    '数学基础': ['算术', '代数', '几何', '数据分析'],
+    '逻辑': ['形式逻辑', '论证逻辑', '综合推理'],
+    '写作': ['论证有效性分析', '论说文']
+  },
+  '其他': { '自定义': ['自定义'] }
+};
+
+function syllabusChapters(subject) {
+  if (SYLLABUS[subject]) return Object.keys(SYLLABUS[subject]);
+  const mods = (typeof KY_MODULES !== 'undefined' && KY_MODULES[subject]) || [];
+  return mods.length ? mods : ['自定义'];
+}
+function syllabusPoints(subject, chapter) {
+  return (SYLLABUS[subject] && SYLLABUS[subject][chapter]) || ['自定义'];
+}
+function inferChapter(subject, topic) {
+  if (!topic) return '';
+  for (const ch of syllabusChapters(subject)) {
+    if (ch === topic || syllabusPoints(subject, ch).includes(topic)) return ch;
+  }
+  return '';
+}
+
+function injectSyllabusPicker() {
+  const topicInput = $('#qTopic');
+  const subjectSelect = $('#qSubject');
+  if (!topicInput || !subjectSelect || $('#sylChapter')) return;
+  const host = topicInput.closest('.field');
+  if (!host) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'field';
+  wrap.innerHTML = `<label>考研大纲 <span class="hint">先选章节，再选知识点</span></label>
+    <div class="field-row"><select class="select input" id="sylChapter"></select><select class="select input" id="sylPoint"></select></div>
+    <input type="hidden" name="chapter" id="qChapter">
+    <div class="hint">选了知识点会自动填入下面的“知识点”；也可以选“自定义”手填。</div>`;
+  host.parentNode.insertBefore(wrap, host);
+
+  const chapterSel = $('#sylChapter');
+  const pointSel = $('#sylPoint');
+  const chapterHidden = $('#qChapter');
+  const form = $('#questionForm');
+  const editing = form && form.dataset.id ? state.questions.find((q) => q.id === form.dataset.id) : null;
+  const initialTopic = (editing ? editing.topic : topicInput.value).trim();
+  let initialChapter = (editing ? editing.chapter : '') || inferChapter(subjectSelect.value, initialTopic);
+
+  function fillPoints(preferred) {
+    const points = syllabusPoints(subjectSelect.value, chapterSel.value);
+    pointSel.innerHTML = points.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join('') + '<option value="__custom__">自定义</option>';
+    if (preferred && points.includes(preferred)) pointSel.value = preferred;
+    else pointSel.value = '__custom__';
+    chapterHidden.value = chapterSel.value === '自定义' ? '' : chapterSel.value;
+    if (pointSel.value !== '__custom__') topicInput.value = pointSel.value;
+  }
+  function fillChapters(preferredChapter, preferredPoint) {
+    const chapters = syllabusChapters(subjectSelect.value);
+    chapterSel.innerHTML = chapters.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    if (preferredChapter && chapters.includes(preferredChapter)) chapterSel.value = preferredChapter;
+    fillPoints(preferredPoint);
+  }
+
+  fillChapters(initialChapter, initialTopic);
+  chapterSel.addEventListener('change', () => {
+    fillPoints('');
+    chapterHidden.value = chapterSel.value === '自定义' ? '' : chapterSel.value;
+  });
+  pointSel.addEventListener('change', () => {
+    chapterHidden.value = chapterSel.value === '自定义' ? '' : chapterSel.value;
+    if (pointSel.value === '__custom__') { topicInput.focus(); }
+    else topicInput.value = pointSel.value;
+  });
+  subjectSelect.addEventListener('change', () => {
+    fillChapters('', '');
+    chapterHidden.value = '';
+  });
+  topicInput.addEventListener('input', () => {
+    const ch = inferChapter(subjectSelect.value, topicInput.value.trim());
+    if (ch && chapterSel.value !== ch) {
+      chapterSel.value = ch;
+      fillPoints(topicInput.value.trim());
+    }
+  });
+}
+
+const baseOpenFormSyllabus = openForm;
+openForm = function (id = null) {
+  baseOpenFormSyllabus(id);
+  setTimeout(injectSyllabusPicker, 20);
+};
+
+function chapterOf(q) {
+  return q.chapter || inferChapter(q.subject, q.topic) || q.topic || '未分类';
+}
+
+function syllabusCard() {
+  const active = state.questions.filter((q) => q.status !== 'mastered');
+  const map = {};
+  for (const q of active) {
+    const ch = chapterOf(q);
+    const key = q.subject + ' · ' + ch;
+    map[key] = (map[key] || 0) + 1;
+  }
+  const rows = Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const max = Math.max(1, ...rows.map((x) => x[1]));
+  return `<div class="card card-pad" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">大纲章节掌握度</h2><p class="card-sub">按“科目 · 章节”汇总未掌握和复习中的题。</p></div><button class="btn btn-ghost btn-sm" data-syllabus-action="browse">${icon('book', 'icon-sm')}浏览大纲</button></div>
+    <div class="subject-bars">${rows.length ? rows.map(([n, v]) => `<div class="subject-row"><span class="subject-name" title="${esc(n)}">${esc(n)}</span><span class="subject-track"><span class="subject-fill" style="width:${Math.round(v / max * 100)}%"></span></span><span class="subject-num">${v}</span></div>`).join('') : '<div class="empty-mini">还没有章节数据，录题时选一下大纲即可。</div>'}</div>
+  </div>`;
+}
+const baseRenderStatsSyllabus = renderStats;
+renderStats = function () {
+  return baseRenderStatsSyllabus() + syllabusCard();
+};
+
+function openSyllabus() {
+  const subjects = Object.keys(SYLLABUS);
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">SYLLABUS</div><h2 class="modal-title">考研大纲知识点</h2><p class="modal-sub">录题时可以直接选；这里用来对照复习范围。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">${subjects.map((s) => `<details class="answer-block accent" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700">${esc(s)}</summary>${Object.entries(SYLLABUS[s]).map(([ch, pts]) => `<div style="margin-top:8px"><strong>${esc(ch)}</strong><div class="detail-tags" style="margin-top:4px">${pts.map((p) => `<span class="q-tag">${esc(p)}</span>`).join('')}</div></div>`).join('')}</details>`).join('')}</div>
+  <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
+}
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-syllabus-action="browse"]');
+  if (el) { event.preventDefault(); openSyllabus(); }
+});
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · AI 错题教练（DeepSeek API）
+   Key 只保存在本机浏览器；不写进 GitHub Pages。
+   文字题直接分析；图片题需要先把题干补成文字。
+   ============================================================ */
+'use strict';
+
+const AI_KEY = 'cuoti_ai_key_v1';
+const AI_URL = 'https://api.deepseek.com/chat/completions';
+const AI_MODEL = 'deepseek-chat';
+const AI_MAX_CHARS = 5000;
+const AI_CACHE_KEY = 'cuoti_ai_cache_v1';
+const AI_HINT_KEY = 'cuoti_ai_hint_v1';
+
+let aiKeyValue = safeGet(AI_KEY) || '';
+let aiHintMode = safeGet(AI_HINT_KEY) !== '0';
+let aiBusy = false;
+let aiCache = {};
+try { aiCache = JSON.parse(safeGet(AI_CACHE_KEY) || '{}') || {}; } catch { aiCache = {}; }
+let lastAnalysis = null;
+let lastSimilar = null;
+let lastSimilarSource = null;
+
+function aiFingerprint(q) {
+  return [q.id, q.question, q.answer, q.myAnswer, q.reason, q.topic].join('|').slice(0, 4000);
+}
+function aiCacheGet(q, mode = 'full') {
+  const item = aiCache[aiFingerprint(q) + '|' + mode];
+  return item && item.result ? item : null;
+}
+function aiCacheSet(q, result, mode = 'full') {
+  aiCache[aiFingerprint(q) + '|' + mode] = { result, at: new Date().toISOString() };
+  const keys = Object.keys(aiCache);
+  if (keys.length > 120) {
+    keys.sort((a, b) => String(aiCache[a].at || '').localeCompare(String(aiCache[b].at || '')));
+    for (const k of keys.slice(0, keys.length - 120)) delete aiCache[k];
+  }
+  safeSet(AI_CACHE_KEY, JSON.stringify(aiCache));
+}
+
+function aiConfigured() { return Boolean(aiKeyValue); }
+
+async function callDeepSeek(messages, maxTokens = 1400, json = true) {
+  if (!aiKeyValue) throw new Error('还没有填写 DeepSeek API Key');
+  const makeBody = (jsonMode) => {
+    const body = {
+      model: AI_MODEL,
+      messages,
+      temperature: 0.35,
+      max_tokens: maxTokens
+    };
+    if (jsonMode) body.response_format = { type: 'json_object' };
+    return body;
+  };
+  const send = (jsonMode) => fetch(AI_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + aiKeyValue
+    },
+    body: JSON.stringify(makeBody(jsonMode))
+  });
+  let res = await send(json);
+  let data = await res.json().catch(() => ({}));
+  // 个别账号/模型不支持 JSON mode 时，退回普通文本，再按 JSON 解析。
+  if (!res.ok && res.status === 400 && json) {
+    res = await send(false);
+    data = await res.json().catch(() => ({}));
+  }
+  if (!res.ok) {
+    const msg = data.error?.message || data.message || '';
+    if (res.status === 401) throw new Error('API Key 无效');
+    if (res.status === 402) throw new Error('DeepSeek 余额不足，请充值');
+    if (res.status === 429) throw new Error('请求太频繁，稍后再试');
+    throw new Error(msg || `DeepSeek 返回 ${res.status}`);
+  }
+  return data.choices?.[0]?.message?.content || '';
+}
+
+function parseAIJson(text) {
+  let s = String(text || '').trim();
+  s = s.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+  try { return JSON.parse(s); } catch {}
+  const a = s.indexOf('{');
+  const b = s.lastIndexOf('}');
+  if (a >= 0 && b > a) {
+    try { return JSON.parse(s.slice(a, b + 1)); } catch {}
+  }
+  return null;
+}
+
+function qText(q) {
+  const parts = [
+    '学科：' + q.subject,
+    '章节：' + (q.chapter || '未填写'),
+    '知识点：' + (q.topic || '未填写'),
+    '题型：' + (q.type || '未填写'),
+    '难度：' + '★'.repeat(q.difficulty || 3),
+    '错因：' + (q.reason || '未填写'),
+    '题干：' + (q.question || ''),
+    '我的答案/思路：' + (q.myAnswer || '未填写'),
+    '正确答案：' + (q.answer || '未填写'),
+    '我的解析：' + (q.analysis || '未填写')
+  ];
+  return parts.join('\n').slice(0, AI_MAX_CHARS);
+}
+
+function aiLoading(title, text) {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">AI COACH</div><h2 class="modal-title">${esc(title)}</h2><p class="modal-sub">DeepSeek 正在思考，通常几秒钟。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="answer-block accent"><p class="answer-text">${esc(text)}</p></div></div>`, false);
+}
+
+function aiErrorModal(error) {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">AI COACH</div><h2 class="modal-title">AI 暂时不可用</h2><p class="modal-sub">${esc(error.message || '请求失败')}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="answer-block warn"><div class="answer-label">可以这样处理</div><p class="answer-text">1. 到设置里检查 DeepSeek API Key。<br>2. 确认账号有余额。<br>3. 如果题目只有图片，请先在“编辑错题”里把题干补成文字。</p></div></div>
+  <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">知道了</button></div></div>`, false);
+}
+
+function renderHintResult(q, r, fromCache = false) {
+  const get = (k) => r && (r[k] || '');
+  const tips = get('提示') || [];
+  const traps = get('易错点') || [];
+  const list = (v) => Array.isArray(v) ? v.map((x) => `<li>${esc(x)}</li>`).join('') : `<li>${esc(v || '')}</li>`;
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">AI HINT</div><h2 class="modal-title">先别急着看答案</h2><p class="modal-sub">${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}${fromCache ? ' · 上次提示（未扣费）' : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">考点</div><p class="answer-text">${esc(get('考点') || '未识别')}</p></div>
+    <div class="answer-block warn" style="margin-bottom:12px"><div class="answer-label">你卡在哪</div><p class="answer-text">${esc(get('错因') || '未识别')}</p></div>
+    <div class="answer-block" style="margin-bottom:12px"><div class="answer-label">提示（不直接给答案）</div><ul class="answer-text" style="margin:0;padding-left:20px">${list(tips)}</ul></div>
+    <div class="answer-block" style="margin-bottom:12px"><div class="answer-label">易错点</div><ul class="answer-text" style="margin:0;padding-left:20px">${list(traps)}</ul></div>
+    <div class="answer-block accent"><div class="answer-label">下一步</div><p class="answer-text">${esc(get('下一步') || '先自己写出第一步，再点“看完整解析”。')}</p></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-ghost" data-ai-action="full-analyze" data-id="${esc(q.id)}">${icon('eye')}看完整解析</button><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">我再想想</button></div></div>`, false);
+}
+
+function renderAnalyzeResult(q, r, fromCache = false) {
+  const get = (k) => r && (r[k] || r[k.replace('：', '')]);
+  const points = get('正确思路') || get('思路') || [];
+  const traps = get('易错点') || [];
+  const pointHtml = Array.isArray(points) ? points.map((x) => `<li>${esc(x)}</li>`).join('') : `<li>${esc(points)}</li>`;
+  const trapHtml = Array.isArray(traps) ? traps.map((x) => `<li>${esc(x)}</li>`).join('') : `<li>${esc(traps)}</li>`;
+  lastAnalysis = {
+    id: q.id,
+    text: [
+      '【考点】' + (get('考点') || ''),
+      '【错因】' + (get('错因') || ''),
+      '【正确思路】',
+      ...(Array.isArray(points) ? points : [points]),
+      '【易错点】',
+      ...(Array.isArray(traps) ? traps : [traps]),
+      '【下次建议】' + (get('下次建议') || get('建议') || '')
+    ].filter(Boolean).join('\n')
+  };
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">AI ANALYSIS</div><h2 class="modal-title">这道题在考什么</h2><p class="modal-sub">${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}${fromCache ? ' · 上次分析（未扣费）' : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">考点</div><p class="answer-text">${esc(get('考点') || '未识别')}</p></div>
+    <div class="answer-block warn" style="margin-bottom:12px"><div class="answer-label">错因判断</div><p class="answer-text">${esc(get('错因') || '未识别')}</p></div>
+    <div class="answer-block" style="margin-bottom:12px"><div class="answer-label">正确思路</div><ul class="answer-text" style="margin:0;padding-left:20px">${pointHtml}</ul></div>
+    <div class="answer-block" style="margin-bottom:12px"><div class="answer-label">易错点</div><ul class="answer-text" style="margin:0;padding-left:20px">${trapHtml}</ul></div>
+    <div class="answer-block accent"><div class="answer-label">下次建议</div><p class="answer-text">${esc(get('下次建议') || get('建议') || '')}</p></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-ghost" data-ai-action="save-analysis">${icon('check')}写入解析</button><div class="foot-right">${fromCache ? `<button class="btn btn-ghost" data-ai-action="reanalyze-full" data-id="${esc(q.id)}">${icon('refresh')}重新生成</button>` : ''}<button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
+}
+
+async function aiAnalyze(id, force = false, full = false) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q) return;
+  if (!aiConfigured()) return aiNeedKey();
+  if (!q.question && !q.images.length) return toast('这道题没有文字题干', 'info');
+  if (!q.question) return toast('图片题请先在“编辑”里补一句题干，AI 才能分析', 'info');
+  const hintOnly = aiHintMode && !full;
+  const mode = hintOnly ? 'hint' : 'full';
+  if (!force) {
+    const cached = aiCacheGet(q, mode);
+    if (cached) return hintOnly ? renderHintResult(q, cached.result, true) : renderAnalyzeResult(q, cached.result, true);
+  }
+  if (aiBusy) return;
+  aiBusy = true;
+  aiLoading(hintOnly ? '正在给提示' : '正在分析错题', hintOnly ? '只给下一步，不直接给答案…' : '读懂题干和你的答案，定位考点与错因…');
+  try {
+    const prompt = hintOnly
+      ? `请分析下面这道考研错题，但只给提示，不要给出最终答案或完整解法。输出 JSON：\n{"考点":"一句话","错因":"一句话，指出卡在哪","提示":["第一步做什么","关键公式/定理"],"易错点":["..."],"下一步":"一句可执行的话"}\n\n${qText(q)}`
+      : `请分析下面这道考研错题。输出 JSON，字段固定为：\n{"考点":"一句话","错因":"一句话，指出具体哪一步错了","正确思路":["步骤1","步骤2"],"易错点":["..."],"下次建议":"一句可执行的话"}\n\n${qText(q)}`;
+    const content = await callDeepSeek([
+      { role: 'system', content: hintOnly ? '你是考研错题教练。先引导学生自己走一步，不直接给最终答案。只输出一个 JSON 对象，不要 markdown。' : '你是考研错题教练。回答务实、具体、不空泛。只输出一个 JSON 对象，不要 markdown。' },
+      { role: 'user', content: prompt }
+    ], hintOnly ? 800 : 1300, true);
+    const r = parseAIJson(content);
+    if (!r) throw new Error('AI 返回格式异常，请再试一次');
+    aiCacheSet(q, r, mode);
+    if (hintOnly) renderHintResult(q, r, false);
+    else renderAnalyzeResult(q, r, false);
+  } catch (error) {
+    aiErrorModal(error);
+  } finally {
+    aiBusy = false;
+  }
+}
+
+function renderSimilarResult(q, r) {
+  lastSimilar = {
+    question: r.question || '',
+    answer: r.answer || '',
+    analysis: r.analysis || '',
+    topic: r.topic || q.topic || '',
+    difficulty: Number(r.difficulty) || q.difficulty || 3,
+    verified: r.verified === true,
+    issues: Array.isArray(r.issues) ? r.issues : [],
+    correctedAnswer: r.correctedAnswer || '',
+    correctedAnalysis: r.correctedAnalysis || ''
+  };
+  lastSimilarSource = q;
+  const issueHtml = lastSimilar.issues.length
+    ? `<ul class="answer-text" style="margin:6px 0 0;padding-left:20px">${lastSimilar.issues.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`
+    : '';
+  const corrected = lastSimilar.correctedAnswer && lastSimilar.correctedAnswer !== lastSimilar.answer
+    ? `<div class="answer-block warn" style="margin-top:10px"><div class="answer-label">复核给出的修正答案</div><p class="answer-text" style="white-space:pre-wrap">${esc(lastSimilar.correctedAnswer)}</p><button class="btn btn-ghost btn-sm" style="margin-top:8px" data-ai-action="use-corrected">采用修正答案</button></div>`
+    : '';
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">SIMILAR QUESTION</div><h2 class="modal-title">一道同考点新题</h2><p class="modal-sub">先自己做，再看答案</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">题目</div><p class="answer-text" style="white-space:pre-wrap">${esc(lastSimilar.question)}</p></div>
+    <div class="answer-block ${lastSimilar.verified ? 'accent' : 'warn'}" style="margin-bottom:12px"><div class="answer-label">${lastSimilar.verified ? 'AI 复核：一致' : '尚未复核'}</div><p class="answer-text">${lastSimilar.verified ? 'DeepSeek 独立算了一遍，答案与解析一致。仍建议你自己核对。' : 'AI 可能算错或抄错数字。点下面“AI 复核答案”，或自己算一遍再勾选。'}${issueHtml}</p>${corrected}</div>
+    <details class="answer-block" style="margin-bottom:12px"><summary style="cursor:pointer;font-weight:700">显示答案与解析</summary><p class="answer-text" style="white-space:pre-wrap;margin-top:8px">${esc(lastSimilar.answer)}\n\n${esc(lastSimilar.analysis)}</p></details>
+    <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-ai-action="verify-similar">${icon('check')}${lastSimilar.verified ? '重新复核' : 'AI 复核答案'}</button></div>
+    <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.6"><input type="checkbox" id="aiVerifyCheck" style="margin-top:3px"><span>我已核对题干、答案和解析，确认没有明显错误。</span></label>
+  </div>
+  <div class="modal-foot"><button class="btn btn-primary" id="aiAddBtn" data-ai-action="add-similar" disabled>${icon('plus')}核对后加入错题本</button><div class="foot-right"><button class="btn btn-ghost" data-action="close-modal">关闭</button></div></div>`, false);
+  const check = $('#aiVerifyCheck');
+  if (check) check.addEventListener('change', () => {
+    const btn = $('#aiAddBtn');
+    if (btn) btn.disabled = !check.checked;
+  });
+}
+
+async function verifySimilar() {
+  if (!lastSimilar) return;
+  if (!aiConfigured()) return aiNeedKey();
+  if (aiBusy) return;
+  aiBusy = true;
+  aiLoading('正在复核答案', '让 AI 独立算一遍，再和原答案对照…');
+  try {
+    const content = await callDeepSeek([
+      { role: 'system', content: '你是严谨的考研阅卷老师。独立解题，核对答案和解析是否一致。只输出 JSON，不要 markdown。' },
+      { role: 'user', content: `请独立核对下面这道题、答案和解析。输出 JSON：\n{"consistent":true或false,"issues":["具体问题"],"correctedAnswer":"如果答案有误，给出正确答案；否则空字符串","correctedAnalysis":"如果解析有误，给出修正解析；否则空字符串"}\n\n题目：${lastSimilar.question}\n答案：${lastSimilar.answer}\n解析：${lastSimilar.analysis}` }
+    ], 1400, true);
+    const r = parseAIJson(content);
+    if (!r) throw new Error('AI 复核格式异常，请再试一次');
+    const verified = r.consistent === true || r.consistent === 'true';
+    const next = {
+      ...lastSimilar,
+      verified,
+      issues: Array.isArray(r.issues) ? r.issues : [],
+      correctedAnswer: r.correctedAnswer || '',
+      correctedAnalysis: r.correctedAnalysis || ''
+    };
+    renderSimilarResult(lastSimilarSource, next);
+    toast(verified ? '复核完成：答案与解析一致' : '复核发现问题，请查看提示');
+  } catch (error) {
+    aiErrorModal(error);
+  } finally {
+    aiBusy = false;
+  }
+}
+
+async function aiSimilar(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q) return;
+  if (!aiConfigured()) return aiNeedKey();
+  if (!q.question) return toast('图片题请先在“编辑”里补一句题干', 'info');
+  if (aiBusy) return;
+  aiBusy = true;
+  aiLoading('正在出相似题', '保持考点和难度，换一个情境…');
+  try {
+    const content = await callDeepSeek([
+      { role: 'system', content: '你是考研命题老师。只输出一个 JSON 对象，不要 markdown。' },
+      { role: 'user', content: `根据下面这道错题，生成一道同考点、同难度、但题干和数字都不同的新题。不要照抄原题。输出 JSON：\n{"question":"完整题干","answer":"答案","analysis":"简要解析","topic":"知识点","difficulty":3}\n\n${qText(q)}` }
+    ], 1600, true);
+    const r = parseAIJson(content);
+    if (!r || !r.question) throw new Error('AI 没有返回题目，请再试一次');
+    renderSimilarResult(q, r);
+  } catch (error) {
+    aiErrorModal(error);
+  } finally {
+    aiBusy = false;
+  }
+}
+
+async function aiAdvice() {
+  if (!aiConfigured()) return aiNeedKey();
+  if (aiBusy) return;
+  aiBusy = true;
+  aiLoading('正在生成学习建议', '根据错题分布、错因和掌握情况给建议…');
+  try {
+    const stats = SUBJECTS.map((s) => ({ subject: s, count: state.questions.filter((q) => q.subject === s).length })).filter((x) => x.count);
+    const reasons = {};
+    for (const q of state.questions) reasons[q.reason] = (reasons[q.reason] || 0) + 1;
+    const mastered = state.questions.filter((q) => q.status === 'mastered').length;
+    const content = await callDeepSeek([
+      { role: 'system', content: '你是考研学习规划师。只输出一个 JSON 对象，不要 markdown。建议必须具体、可执行。' },
+      { role: 'user', content: `根据这些错题数据，给出本周复习建议。输出 JSON：\n{"总结":"...","优先复习":["..."],"训练建议":["..."],"风险":"..."}\n\n总错题：${state.questions.length}\n已掌握：${mastered}\n学科分布：${JSON.stringify(stats)}\n错因分布：${JSON.stringify(reasons)}\n目标：${kyProfile.school || '未填'} ${kyProfile.major || ''}，初试 ${kyProfile.examDate || ''}` }
+    ], 1100, true);
+    const r = parseAIJson(content);
+    if (!r) throw new Error('AI 返回格式异常');
+    const list = (v) => Array.isArray(v) ? v.map((x) => `<li>${esc(x)}</li>`).join('') : `<li>${esc(v || '')}</li>`;
+    openModal(`<div class="modal-head"><div><div class="modal-kicker">WEEKLY COACH</div><h2 class="modal-title">本周学习建议</h2><p class="modal-sub">根据你当前的错题数据生成</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+    <div class="modal-body">
+      <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">总结</div><p class="answer-text">${esc(r.总结 || '')}</p></div>
+      <div class="answer-block" style="margin-bottom:12px"><div class="answer-label">优先复习</div><ul class="answer-text" style="margin:0;padding-left:20px">${list(r.优先复习)}</ul></div>
+      <div class="answer-block" style="margin-bottom:12px"><div class="answer-label">训练建议</div><ul class="answer-text" style="margin:0;padding-left:20px">${list(r.训练建议)}</ul></div>
+      <div class="answer-block warn"><div class="answer-label">风险提醒</div><p class="answer-text">${esc(r.风险 || '')}</p></div>
+    </div>
+    <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
+  } catch (error) {
+    aiErrorModal(error);
+  } finally {
+    aiBusy = false;
+  }
+}
+
+async function aiSiteAdvice() {
+  if (!aiConfigured()) return aiNeedKey();
+  if (aiBusy) return;
+  aiBusy = true;
+  aiLoading('正在想网站改进', '从用户、复习流程和数据三个角度提建议…');
+  try {
+    const content = await callDeepSeek([
+      { role: 'system', content: '你是教育类产品顾问。只输出一个 JSON 对象，不要 markdown。建议要能落地，不要泛泛而谈。' },
+      { role: 'user', content: '这是一个考研错题本网页应用：本地优先、可导出 JSON、支持按学科/知识点/错因整理、复习评分、统计、搜索、AI 分析错题、AI 出相似题。请提出 5 条最值得做的改进。输出 JSON：{"建议":[{"标题":"...","理由":"...","做法":"..."}]}' }
+    ], 1200, true);
+    const r = parseAIJson(content);
+    if (!r || !Array.isArray(r.建议)) throw new Error('AI 返回格式异常');
+    openModal(`<div class="modal-head"><div><div class="modal-kicker">PRODUCT IDEAS</div><h2 class="modal-title">网站改进建议</h2><p class="modal-sub">AI 根据当前功能生成</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+    <div class="modal-body">${r.建议.map((x, i) => `<div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">${i + 1}. ${esc(x.标题 || '')}</div><p class="answer-text"><strong>理由：</strong>${esc(x.理由 || '')}<br><strong>做法：</strong>${esc(x.做法 || '')}</p></div>`).join('')}</div>
+    <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
+  } catch (error) {
+    aiErrorModal(error);
+  } finally {
+    aiBusy = false;
+  }
+}
+
+function aiNeedKey() {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">AI COACH</div><h2 class="modal-title">先配置 DeepSeek API Key</h2><p class="modal-sub">只保存在这台设备，不会写进网页代码。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">
+    <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">怎么获取</div><p class="answer-text">打开 platform.deepseek.com → 注册/登录 → API Keys → 创建 Key。按量计费，分析一道题通常几分钱。</p></div>
+    <div class="answer-block warn"><div class="answer-label">注意</div><p class="answer-text">图片题需要先在“编辑错题”里把题干补成文字；AI 不会直接识别图片。</p></div>
+  </div>
+  <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-ghost" data-action="close-modal">取消</button><button class="btn btn-primary" data-ai-action="go-settings">去设置</button></div></div>`, false);
+}
+
+function aiCard() {
+  if (!aiConfigured()) {
+    return `<div class="card settings-card"><h3>${icon('spark')}AI 错题教练（可选）</h3><p>接 DeepSeek API：分析错题、出相似题、生成学习建议。Key 只保存在本机。</p>
+      <div class="field"><label for="aiKeyInput">DeepSeek API Key</label><input class="input" id="aiKeyInput" type="password" autocomplete="off" placeholder="sk-..."></div>
+      <div class="setting-actions"><button class="btn btn-primary" data-ai-action="save-key">${icon('check')}保存并测试</button><a class="btn btn-ghost" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">${icon('link')}获取 Key</a></div>
+      <div class="sync-install-tip">按量计费，不订阅；不填 Key 时，其他功能完全不受影响。</div>
+    </div>`;
+  }
+  return `<div class="card settings-card"><h3>${icon('spark')}AI 错题教练</h3><p>DeepSeek 已配置。打开一道错题，详情页会出现“AI 分析”和“AI 相似题”。</p>
+    <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.6;margin:6px 0 12px"><input type="checkbox" id="aiHintToggle" ${aiHintMode ? 'checked' : ''} style="margin-top:3px"><span><strong>只给提示，不直接给答案</strong><br><span class="muted">默认开启。先看提示自己走一步，需要时再点“看完整解析”。</span></span></label>
+    <div class="setting-actions"><button class="btn btn-primary" data-ai-action="advice">${icon('spark')}本周学习建议</button><button class="btn btn-ghost" data-ai-action="site-advice">${icon('settings')}网站改进建议</button></div>
+    <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-ai-action="test-key">${icon('refresh')}测试连接</button><button class="btn btn-ghost btn-sm" data-ai-action="change-key">修改 Key</button></div>
+    <div class="sync-install-tip">Key 只保存在本机。调用会消耗 DeepSeek 余额；失败时先检查余额和 Key。</div>
+  </div>`;
+}
+const baseSettingsAI = renderSettings;
+renderSettings = function () {
+  return baseSettingsAI().replace('<div class="settings-grid">', `<div class="settings-grid">${aiCard()}`);
+};
+
+/* 本地薄弱点分析：不调用 AI，也能看出该先补哪里。 */
+function weaknessCard() {
+  const active = state.questions.filter((q) => q.status !== 'mastered');
+  const topics = {};
+  for (const q of active) {
+    const t = q.topic || '未填知识点';
+    topics[t] = (topics[t] || 0) + 1;
+  }
+  const topTopics = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const maxT = Math.max(1, ...topTopics.map((x) => x[1]));
+  const start = new Date(Date.now() - 6 * 86400000).toISOString().slice(0, 10);
+  const qmap = new Map(state.questions.map((q) => [q.id, q]));
+  const weakReasons = {};
+  for (const l of state.logs) {
+    if ((l.date || '') < start || Number(l.rating) > 2) continue;
+    const q = qmap.get(l.qid);
+    if (q) weakReasons[q.reason] = (weakReasons[q.reason] || 0) + 1;
+  }
+  const topReasons = Object.entries(weakReasons).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const maxR = Math.max(1, ...topReasons.map((x) => x[1]));
+  const newCount = state.questions.filter((q) => (q.createdAt || '').slice(0, 10) >= start).length;
+  return `<div class="chart-grid">
+    <div class="card card-pad"><div class="card-head"><div><h2 class="card-title">薄弱知识点</h2><p class="card-sub">只统计未掌握和复习中的题；同知识点错得越多，越该先补。</p></div><button class="btn btn-ghost btn-sm" data-ai-action="advice">${icon('spark', 'icon-sm')}AI 建议</button></div>
+      <div class="subject-bars">${topTopics.length ? topTopics.map(([n, v]) => `<div class="subject-row"><span class="subject-name" title="${esc(n)}">${esc(n)}</span><span class="subject-track"><span class="subject-fill" style="width:${Math.round(v / maxT * 100)}%"></span></span><span class="subject-num">${v}</span></div>`).join('') : '<div class="empty-mini">还没有未掌握的错题。</div>'}</div>
+      <div class="stat-foot" style="margin-top:14px">近 7 天新增 <strong>${newCount}</strong> 道 · 待掌握 <strong>${active.length}</strong> 道</div>
+    </div>
+    <div class="card card-pad"><div class="card-head"><div><h2 class="card-title">近 7 天低分错因</h2><p class="card-sub">只统计评了“又忘了”或“有点难”的复习。</p></div></div>
+      <div class="reason-list">${topReasons.length ? topReasons.map(([n, v]) => `<div class="reason-row"><span class="reason-name">${esc(n)}</span><span class="reason-track"><span class="reason-fill" style="width:${Math.round(v / maxR * 100)}%"></span></span><span class="reason-num">${v}</span></div>`).join('') : '<div class="empty-mini">近 7 天还没有低分复习记录。</div>'}</div>
+      <div class="stat-foot" style="margin-top:14px">低分复习越集中，越说明那个错因还没改掉。</div>
+    </div>
+  </div>`;
+}
+const baseRenderStatsAI = renderStats;
+renderStats = function () {
+  return baseRenderStatsAI() + weaknessCard();
+};
+
+function injectAIButtons(id) {
+  const foot = document.querySelector('#modalRoot .modal-foot .foot-right');
+  if (!foot || foot.querySelector('[data-ai-action="analyze"]')) return;
+  foot.insertAdjacentHTML('afterbegin', `<button class="btn btn-ghost" data-ai-action="analyze" data-id="${esc(id)}">${icon('spark')}AI 分析</button><button class="btn btn-ghost" data-ai-action="similar" data-id="${esc(id)}">${icon('plus')}AI 相似题</button>`);
+}
+const baseOpenDetailAI = openDetail;
+openDetail = function (id) {
+  baseOpenDetailAI(id);
+  injectAIButtons(id);
+};
+
+async function saveAIKey() {
+  const el = $('#aiKeyInput');
+  const key = el ? el.value.trim() : '';
+  if (!key) { toast('先填写 API Key', 'error'); return; }
+  aiKeyValue = key;
+  safeSet(AI_KEY, key);
+  toast('Key 已保存，正在测试…');
+  try {
+    const content = await callDeepSeek([{ role: 'user', content: '只回复：OK' }], 10, false);
+    toast(content.includes('OK') ? 'AI 连接成功' : '已保存，但返回异常');
+    render();
+  } catch (error) {
+    toast('Key 已保存，但测试失败：' + error.message, 'error');
+    render();
+  }
+}
+
+async function testAIKey() {
+  if (!aiConfigured()) return aiNeedKey();
+  try {
+    await callDeepSeek([{ role: 'user', content: '只回复：OK' }], 10, false);
+    toast('AI 连接正常');
+  } catch (error) {
+    toast('连接失败：' + error.message, 'error');
+  }
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-ai-action]');
+  if (!el) return;
+  const action = el.dataset.aiAction;
+  if (action === 'analyze') { event.preventDefault(); aiAnalyze(el.dataset.id); }
+  if (action === 'reanalyze') { event.preventDefault(); aiAnalyze(el.dataset.id, true); }
+  if (action === 'reanalyze-full') { event.preventDefault(); aiAnalyze(el.dataset.id, true, true); }
+  if (action === 'full-analyze') { event.preventDefault(); aiAnalyze(el.dataset.id, false, true); }
+  if (action === 'similar') { event.preventDefault(); aiSimilar(el.dataset.id); }
+  if (action === 'verify-similar') { event.preventDefault(); verifySimilar(); }
+  if (action === 'use-corrected') {
+    event.preventDefault();
+    if (lastSimilar && lastSimilar.correctedAnswer) {
+      lastSimilar.answer = lastSimilar.correctedAnswer;
+      lastSimilar.analysis = lastSimilar.correctedAnalysis || lastSimilar.analysis;
+      lastSimilar.correctedAnswer = '';
+      lastSimilar.correctedAnalysis = '';
+      lastSimilar.verified = false;
+      renderSimilarResult(lastSimilarSource, lastSimilar);
+      toast('已采用修正答案，请再核对一次');
+    }
+  }
+  if (action === 'advice') { event.preventDefault(); aiAdvice(); }
+  if (action === 'site-advice') { event.preventDefault(); aiSiteAdvice(); }
+  if (action === 'save-key') { event.preventDefault(); saveAIKey(); }
+  if (action === 'test-key') { event.preventDefault(); testAIKey(); }
+  if (action === 'change-key') { event.preventDefault(); aiKeyValue = ''; localStorage.removeItem(AI_KEY); render(); }
+  if (action === 'go-settings') { event.preventDefault(); closeModal(); navigate('settings'); }
+  if (action === 'save-analysis') {
+    event.preventDefault();
+    if (lastAnalysis && lastAnalysis.id) {
+      const q = state.questions.find((x) => x.id === lastAnalysis.id);
+      if (q) {
+        q.analysis = (q.analysis ? q.analysis + '\n\n' : '') + lastAnalysis.text;
+        q.updatedAt = new Date().toISOString();
+        Store.put(q);
+        state.questions = state.questions.map((x) => x.id === q.id ? q : x);
+        closeModal(); render(); toast('AI 分析已写入解析');
+      }
+    }
+  }
+  if (action === 'add-similar') {
+    event.preventDefault();
+    if (!lastSimilar) return;
+    const check = $('#aiVerifyCheck');
+    if (!check || !check.checked) return toast('先勾选“我已核对”再加入', 'error');
+    const src = lastSimilarSource;
+    openForm();
+    setTimeout(() => {
+      const set = (id, v) => { const e = $(id); if (e) e.value = v; };
+      set('#qQuestion', lastSimilar.question);
+      set('#qAnswer', lastSimilar.answer);
+      set('#qAnalysis', lastSimilar.analysis);
+      set('#qTopic', lastSimilar.topic);
+      if (src) set('#qSubject', src.subject);
+      const d = document.querySelector(`input[name="difficulty"][value="${lastSimilar.difficulty}"]`);
+      if (d) d.checked = true;
+      const form = $('#questionForm');
+      if (form) form.insertAdjacentHTML('beforeend', '<input type="hidden" name="aiGenerated" value="1"><input type="hidden" name="aiVerified" value="1">');
+    }, 30);
+  }
+});
+document.addEventListener('change', (event) => {
+  if (event.target.id !== 'aiHintToggle') return;
+  aiHintMode = event.target.checked;
+  safeSet(AI_HINT_KEY, aiHintMode ? '1' : '0');
+  toast(aiHintMode ? '已开启：先给提示' : '已关闭：直接给完整解析');
+});
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 备份
+   - 本地自动快照：防误删/误导入，保留最近 3 份
+   - 电脑 Chrome/Edge：可授权自动写入一个备份文件
+   - 手机浏览器不允许静默写文件，仍以提醒 + 手动导出为主
+   ============================================================ */
+'use strict';
+
+const BACKUP_KEY = 'cuoti_last_backup_v1';
+const BACKUP_SNOOZE_KEY = 'cuoti_backup_snooze_v1';
+const SNAP_DB = 'cuoti_snapshot_db_v1';
+const SNAP_STORE = 'snapshots';
+const FS_DB = 'cuoti_backup_fs_v1';
+const FS_STORE = 'handle';
+const SNAP_FALLBACK_KEY = 'cuoti_snapshot_fallback_v1';
+
+let lastSnapshotAt = null;
+let lastSnapshotHash = '';
+let snapshotTimer = null;
+let autoBackupHandle = null;
+let autoBackupTimer = null;
+let autoBackupAt = null;
+
+function backupDate() {
+  const v = safeGet(BACKUP_KEY);
+  return v ? new Date(v) : null;
+}
+function backupDays() {
+  const d = backupDate();
+  if (!d) return null;
+  return Math.floor((Date.now() - d.getTime()) / 86400000);
+}
+function markBackup() {
+  safeSet(BACKUP_KEY, new Date().toISOString());
+  const banner = $('#backupBanner');
+  if (banner) banner.remove();
+  render();
+}
+
+function openDb(name, storeName) {
+  return new Promise((resolve, reject) => {
+    let done = false;
+    const timer = setTimeout(() => {
+      if (done) return;
+      done = true;
+      reject(new Error('IndexedDB 超时'));
+    }, 1500);
+    const req = indexedDB.open(name, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(storeName)) db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+    };
+    req.onsuccess = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      resolve(req.result);
+    };
+    req.onerror = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      reject(req.error);
+    };
+    req.onblocked = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      reject(new Error('IndexedDB 被阻塞'));
+    };
+  });
+}
+async function idbAll(db, store) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbAdd(db, store, value) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).add(value);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function idbDelete(db, store, key) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).delete(key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function idbPut(db, store, value) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).put(value);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function dataSnapshot() {
+  return {
+    at: new Date().toISOString(),
+    questions: state.questions,
+    logs: state.logs,
+    profile: typeof kyProfile === 'object' ? kyProfile : {},
+    profileUpdatedAt: safeGet('cuoti_ky_profile_ts_v1') || null
+  };
+}
+function snapshotHash() {
+  const q = state.questions.map((x) => x.id + ':' + x.updatedAt).join('|');
+  const l = state.logs.length + ':' + (state.logs[state.logs.length - 1]?.at || '');
+  return state.questions.length + '|' + q + '|' + l;
+}
+
+async function saveSnapshot(force = false) {
+  if (!state.questions.length) return;
+  const hash = snapshotHash();
+  if (!force && hash === lastSnapshotHash) return;
+  try {
+    const db = await openDb(SNAP_DB, SNAP_STORE);
+    await idbAdd(db, SNAP_STORE, dataSnapshot());
+    const all = await idbAll(db, SNAP_STORE);
+    all.sort((a, b) => String(a.at).localeCompare(String(b.at)));
+    while (all.length > 3) {
+      const old = all.shift();
+      await idbDelete(db, SNAP_STORE, old.id);
+    }
+  } catch (e) {
+    // 某些浏览器/隐私模式没有 IndexedDB，退回 localStorage 只保留一份。
+    try { safeSet(SNAP_FALLBACK_KEY, JSON.stringify(dataSnapshot())); } catch {}
+  }
+  lastSnapshotHash = hash;
+  lastSnapshotAt = new Date().toISOString();
+  const el = $('#snapshotStatus');
+  if (el) el.textContent = '最近快照：' + fmtDateTime(lastSnapshotAt);
+}
+
+async function latestSnapshot() {
+  try {
+    const db = await openDb(SNAP_DB, SNAP_STORE);
+    const all = await idbAll(db, SNAP_STORE);
+    all.sort((a, b) => String(a.at).localeCompare(String(b.at)));
+    if (all.length) {
+      lastSnapshotAt = all[all.length - 1].at;
+      return all[all.length - 1];
+    }
+  } catch {}
+  try {
+    const raw = safeGet(SNAP_FALLBACK_KEY);
+    if (raw) {
+      const snap = JSON.parse(raw);
+      lastSnapshotAt = snap.at || null;
+      return snap;
+    }
+  } catch {}
+  return null;
+}
+
+async function restoreLatestSnapshot() {
+  const snap = await latestSnapshot();
+  if (!snap) return toast('还没有可恢复的快照', 'error');
+  if (!confirm(`恢复 ${fmtDateTime(snap.at)} 的快照？\n当前未保存的修改会被覆盖，建议先导出当前数据。`)) return;
+  try {
+    const qs = Array.isArray(snap.questions) ? snap.questions.map(normalize) : [];
+    await Store.bulk(qs);
+    state.questions = qs;
+    state.logs = Array.isArray(snap.logs) ? snap.logs : [];
+    saveLogs();
+    if (snap.profile && typeof snap.profile === 'object') {
+      kyProfile = { ...kyProfile, ...snap.profile };
+      safeSet(KY_KEY, JSON.stringify(kyProfile));
+      if (snap.profileUpdatedAt) safeSet('cuoti_ky_profile_ts_v1', snap.profileUpdatedAt);
+    }
+    toast('快照已恢复，正在刷新…');
+    setTimeout(() => location.reload(), 500);
+  } catch (e) {
+    toast('恢复失败：' + (e.message || ''), 'error');
+  }
+}
+
+/* ---------- 电脑端自动写入文件 ---------- */
+function supportsFileBackup() {
+  return typeof window.showSaveFilePicker === 'function';
+}
+async function loadAutoHandle() {
+  if (!supportsFileBackup()) return;
+  try {
+    const db = await openDb(FS_DB, FS_STORE);
+    const all = await idbAll(db, FS_STORE);
+    const item = all.find((x) => x.id === 'auto' || x.key === 'auto');
+    if (item && item.handle) {
+      autoBackupHandle = item.handle;
+      const perm = await autoBackupHandle.queryPermission({ mode: 'readwrite' });
+      if (perm === 'granted') autoBackupAt = '已授权';
+      else autoBackupAt = '需要重新授权';
+    }
+  } catch {}
+}
+async function saveAutoHandle(handle) {
+  const db = await openDb(FS_DB, FS_STORE);
+  await idbPut(db, FS_STORE, { id: 'auto', handle });
+}
+async function enableFileBackup() {
+  if (!supportsFileBackup()) return toast('这个浏览器不支持自动写文件，请用导出备份', 'error');
+  try {
+    const handle = await window.showSaveFilePicker({
+      suggestedName: '错题拾遗-自动备份.json',
+      types: [{ description: 'JSON 备份', accept: { 'application/json': ['.json'] } }]
+    });
+    const perm = await handle.requestPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') return toast('没有获得文件写入权限', 'error');
+    autoBackupHandle = handle;
+    autoBackupAt = '已授权';
+    await saveAutoHandle(handle);
+    await writeAutoBackup();
+    render();
+    toast('自动备份已开启，之后修改会自动写入这个文件');
+  } catch (e) {
+    if (e.name !== 'AbortError') toast('开启失败：' + (e.message || ''), 'error');
+  }
+}
+async function writeAutoBackup() {
+  if (!autoBackupHandle) return;
+  try {
+    const perm = await autoBackupHandle.queryPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') { autoBackupAt = '需要重新授权'; return; }
+    const writable = await autoBackupHandle.createWritable();
+    await writable.write(JSON.stringify({ ...dataSnapshot(), app: '错题拾遗', version: APP_VERSION }, null, 2));
+    await writable.close();
+    autoBackupAt = '已自动写入';
+    safeSet(BACKUP_KEY, new Date().toISOString());
+    const el = $('#autoBackupStatus');
+    if (el) el.textContent = '自动备份：' + fmtDateTime(new Date().toISOString());
+  } catch (e) {
+    autoBackupAt = '写入失败';
+    console.warn('自动备份失败', e);
+  }
+}
+function scheduleAutoBackup() {
+  if (!autoBackupHandle) return;
+  clearTimeout(autoBackupTimer);
+  autoBackupTimer = setTimeout(writeAutoBackup, 3500);
+}
+
+const baseExportJSONBackup = exportJSON;
+exportJSON = function () {
+  baseExportJSONBackup();
+  markBackup();
+  toast('已导出备份，建议把文件放到网盘或发给自己');
+};
+
+function backupCard() {
+  const days = backupDays();
+  const text = days === null ? '还没有导出过备份' : days === 0 ? '今天导出过' : `${days} 天前导出过`;
+  const snapText = lastSnapshotAt ? fmtDateTime(lastSnapshotAt) : '还没有快照';
+  const fileText = !supportsFileBackup() ? '手机浏览器不支持，请用个人同步或手动导出' : autoBackupHandle ? (autoBackupAt || '已授权') : '未开启（仅电脑 Chrome/Edge）';
+  return `<div class="card settings-card"><h3>${icon('download')}备份与恢复</h3><p>数据可能因清理缓存、换设备而丢失。建议每周导出一次 JSON。</p>
+    <div class="sync-status"><span class="sync-dot ${days === null || days > 7 ? 'err' : 'on'}"></span><strong>${esc(text)}</strong><span>${state.questions.length} 道错题</span></div>
+    <div class="sync-status"><span class="sync-dot on"></span><strong>自动快照</strong><span id="snapshotStatus">最近快照：${esc(snapText)}</span></div>
+    <div class="sync-status"><span class="sync-dot ${autoBackupHandle ? 'on' : ''}"></span><strong>自动备份文件</strong><span id="autoBackupStatus">${esc(fileText)}</span></div>
+    <div class="setting-actions"><button class="btn btn-primary" data-backup-action="now">${icon('download')}立即导出备份</button><button class="btn btn-ghost" data-backup-action="snapshot">${icon('refresh')}立即快照</button><button class="btn btn-ghost" data-backup-action="restore">${icon('upload')}恢复快照</button></div>
+    ${supportsFileBackup() ? `<div class="setting-actions"><button class="btn btn-ghost btn-sm" data-backup-action="enable-file">${icon('download')}${autoBackupHandle ? '重新授权自动备份' : '开启自动备份到文件'}</button></div>` : ''}
+    <div class="sync-install-tip">快照保存在本机，防误删/误导入，但不能防“清理浏览器数据”。真正换设备请用导出 JSON 或个人同步。</div>
+  </div>`;
+}
+const baseSettingsBackup = renderSettings;
+renderSettings = function () {
+  return baseSettingsBackup().replace('<div class="settings-grid">', `<div class="settings-grid">${backupCard()}`);
+};
+
+function showBackupBanner() {
+  if ($('#backupBanner') || !state.questions.length) return;
+  const days = backupDays();
+  if (days !== null && days <= 7) return;
+  if (safeGet(BACKUP_SNOOZE_KEY) === today()) return;
+  const div = document.createElement('div');
+  div.id = 'backupBanner';
+  div.style.cssText = 'position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:85;max-width:min(92vw,560px);background:#172522;color:#f4efe7;border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:13px 16px;box-shadow:0 16px 40px rgba(0,0,0,.25);display:flex;gap:12px;align-items:center;font-size:13px;line-height:1.5';
+  div.innerHTML = `<div style="flex:1"><strong>该备份了</strong><br><span style="opacity:.78">${days === null ? '还没有导出过备份。' : `上次备份是 ${days} 天前。`}清理浏览器数据会丢失错题。</span></div><button class="btn btn-primary btn-sm" data-backup-action="now">立即备份</button><button class="btn btn-ghost btn-sm" data-backup-action="later" style="color:#f4efe7;border-color:rgba(255,255,255,.25)">稍后</button>`;
+  document.body.appendChild(div);
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-backup-action]');
+  if (!el) return;
+  event.preventDefault();
+  const action = el.dataset.backupAction;
+  if (action === 'now') exportJSON();
+  if (action === 'later') {
+    safeSet(BACKUP_SNOOZE_KEY, today());
+    const b = $('#backupBanner');
+    if (b) b.remove();
+    toast('已稍后提醒，建议今天内备份');
+  }
+  if (action === 'snapshot') saveSnapshot(true).then(() => toast('快照已保存'));
+  if (action === 'restore') restoreLatestSnapshot();
+  if (action === 'enable-file') enableFileBackup();
+});
+
+async function initBackup() {
+  await latestSnapshot();
+  await loadAutoHandle();
+  setTimeout(showBackupBanner, 1600);
+  setTimeout(() => saveSnapshot(false), 4000);
+  snapshotTimer = setInterval(() => {
+    saveSnapshot(false);
+    scheduleAutoBackup();
+  }, 30000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      saveSnapshot(false);
+      scheduleAutoBackup();
+    }
+  });
+}
+function bootBackup(tries = 0) {
+  if (window.__CUOTI_READY__) { initBackup(); return; }
+  if (tries < 100) setTimeout(() => bootBackup(tries + 1), 150);
+}
+document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootBackup(), 300));
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 图片识题（可选，阿里云百炼 Qwen-VL）
+   把题目截图/照片转成文字，减少录入摩擦。
+   ============================================================ */
+'use strict';
+
+const VISION_KEY = 'cuoti_vision_key_v1';
+const VISION_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
+const VISION_MODEL = 'qwen-vl-plus';
+
+let visionKeyValue = safeGet(VISION_KEY) || '';
+let visionBusy = false;
+let liveStream = null;
+
+function visionConfigured() { return Boolean(visionKeyValue); }
+
+async function callVision(dataUrl) {
+  if (!visionKeyValue) throw new Error('还没有填写百炼 API Key');
+  const res = await fetch(VISION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + visionKeyValue
+    },
+    body: JSON.stringify({
+      model: VISION_MODEL,
+      temperature: 0.1,
+      max_tokens: 1400,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image_url', image_url: { url: dataUrl } },
+          { type: 'text', text: '请提取这张图片里的题目文字，保留题号、选项和数学公式（公式用 LaTeX），不要解答，不要解释，只输出题目原文。' }
+        ]
+      }]
+    })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = data.error?.message || data.message || '';
+    if (res.status === 401) throw new Error('百炼 API Key 无效');
+    if (res.status === 429) throw new Error('请求太频繁，稍后再试');
+    throw new Error(msg || `百炼返回 ${res.status}`);
+  }
+  const content = data.choices?.[0]?.message?.content;
+  if (Array.isArray(content)) return content.map((x) => x.text || '').join('\n').trim();
+  return String(content || '').trim();
+}
+
+function visionNeedKey() {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">IMAGE OCR</div><h2 class="modal-title">先配置图片识别</h2><p class="modal-sub">图片识别用阿里云百炼 Qwen-VL，和 DeepSeek 是两个不同的 Key。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">怎么获取</div><p class="answer-text">打开 bailian.console.aliyun.com → 开通百炼 → API-KEY → 创建 Key。新用户通常有免费额度。</p></div><div class="answer-block warn"><div class="answer-label">说明</div><p class="answer-text">不配置也能用其他功能；图片识别是可选的，按量计费。</p></div></div>
+  <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-ghost" data-action="close-modal">取消</button><button class="btn btn-primary" data-vision-action="go-settings">去设置</button></div></div>`, false);
+}
+
+function visionCard() {
+  if (!visionConfigured()) {
+    return `<div class="card settings-card"><h3>${icon('image')}图片识题（可选）</h3><p>拍照/截图转文字，用阿里云百炼 Qwen-VL。和 DeepSeek Key 不通用。</p>
+      <div class="field"><label for="visionKeyInput">百炼 API Key</label><input class="input" id="visionKeyInput" type="password" autocomplete="off" placeholder="sk-..."></div>
+      <div class="setting-actions"><button class="btn btn-primary" data-vision-action="save-key">${icon('check')}保存 Key</button><a class="btn btn-ghost" href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">${icon('link')}获取 Key</a></div>
+      <div class="sync-install-tip">按量计费；不配置时，仍可手动上传图片和输入题干。</div>
+    </div>`;
+  }
+  return `<div class="card settings-card"><h3>${icon('image')}图片识题</h3><p>Qwen-VL 已配置。录入错题时，上传图片后点“识别图片文字”即可。</p>
+    <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-vision-action="change-key">修改 Key</button></div>
+    <div class="sync-install-tip">识别结果会填入题干，公式用 LaTeX 表示；识别后请自己核对一遍。</div>
+  </div>`;
+}
+const baseSettingsVision = renderSettings;
+renderSettings = function () {
+  return baseSettingsVision().replace('<div class="settings-grid">', `<div class="settings-grid">${visionCard()}`);
+};
+
+function injectOCRButton() {
+  const drop = $('#imageDropzone');
+  if (!drop || $('#ocrImageBtn')) return;
+  drop.insertAdjacentHTML('afterend', `<div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <button type="button" class="btn btn-ghost btn-sm" data-camera-action="live">${icon('image', 'icon-sm')}打开相机拍照</button>
+    <button type="button" class="btn btn-ghost btn-sm" data-camera-action="take">${icon('image', 'icon-sm')}从相册选</button>
+    <button type="button" class="btn btn-ghost btn-sm" id="ocrImageBtn" data-vision-action="ocr">${icon('image', 'icon-sm')}识别图片文字</button>
+    <span class="hint">相机窗口需要 HTTPS 和相机权限</span>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+  </div>`);
+  const body = document.querySelector('#questionForm .modal-body');
+  if (body && !$('#liveCameraTopBtn')) {
+    body.insertAdjacentHTML('afterbegin', `<div style="margin-bottom:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card-soft);display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button type="button" class="btn btn-primary btn-sm" id="liveCameraTopBtn" data-camera-action="live">${icon('image', 'icon-sm')}拍照录题</button>
+      <span class="hint">直接调用手机相机，拍完自动加入题目图片</span>
+    </div>`);
+  }
+}
+const baseOpenFormVision = openForm;
+openForm = function (id = null) {
+  baseOpenFormVision(id);
+  setTimeout(injectOCRButton, 30);
+};
+
+function stopLiveCamera() {
+  if (liveStream) {
+    liveStream.getTracks().forEach((t) => t.stop());
+    liveStream = null;
+  }
+  const overlay = $('#liveCameraOverlay');
+  if (overlay) overlay.remove();
+}
+
+async function openLiveCamera() {
+  if (liveStream || $('#liveCameraOverlay')) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    toast('这个浏览器不支持直接开相机，改从相册选', 'info');
+    const input = $('#cameraInput');
+    if (input) input.click();
+    return;
+  }
+  const overlay = document.createElement('div');
+  overlay.id = 'liveCameraOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:2000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px';
+  overlay.innerHTML = `<div style="color:#fff;font-size:13px;text-align:center">把题目放进取景框，尽量拍正、拍清楚</div>
+    <video id="liveVideo" autoplay playsinline muted style="width:100%;max-width:720px;max-height:70vh;border-radius:14px;background:#111;object-fit:contain"></video>
+    <div style="display:flex;gap:12px"><button type="button" class="btn btn-primary" data-camera-action="capture">${icon('check')}拍下这道题</button><button type="button" class="btn btn-ghost" data-camera-action="close-live" style="color:#fff;border-color:rgba(255,255,255,.35)">取消</button></div>`;
+  document.body.appendChild(overlay);
+  try {
+    liveStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    const video = $('#liveVideo');
+    if (video) { video.srcObject = liveStream; await video.play().catch(() => {}); }
+  } catch (error) {
+    stopLiveCamera();
+    const msg = error.name === 'NotAllowedError' ? '相机权限被拒绝，请在浏览器设置里允许相机' : '相机打不开，改从相册选';
+    toast(msg, 'error');
+    const input = $('#cameraInput');
+    if (input) input.click();
+  }
+}
+
+function captureLiveCamera() {
+  const video = $('#liveVideo');
+  if (!video || !video.videoWidth) return toast('相机还没准备好，再等一下', 'info');
+  const canvas = document.createElement('canvas');
+  const max = 1400;
+  const k = Math.min(1, max / Math.max(video.videoWidth, video.videoHeight));
+  canvas.width = Math.round(video.videoWidth * k);
+  canvas.height = Math.round(video.videoHeight * k);
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  canvas.toBlob(async (blob) => {
+    if (!blob) return toast('拍照失败，再试一次', 'error');
+    const file = new File([blob], `camera-${Date.now()}.jpg`, { type: 'image/jpeg' });
+    stopLiveCamera();
+    await addImages([file]);
+  }, 'image/jpeg', 0.9);
+}
+
+async function runOCR() {
+  if (!visionConfigured()) return visionNeedKey();
+  if (!state.formImages.length) return toast('先在表单里上传一张题目图片', 'error');
+  if (visionBusy) return;
+  visionBusy = true;
+  const btn = $('#ocrImageBtn');
+  const old = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.textContent = '识别中…'; }
+  try {
+    const text = await callVision(state.formImages[0]);
+    if (!text) throw new Error('没有识别到文字，换一张清晰的图片试试');
+    const q = $('#qQuestion');
+    if (q && q.value.trim() && !confirm('题干已有内容，识别结果会覆盖它。继续吗？')) return;
+    if (q) q.value = text;
+    toast('识别完成，请核对公式和选项');
+  } catch (error) {
+    openModal(`<div class="modal-head"><div><div class="modal-kicker">IMAGE OCR</div><h2 class="modal-title">识别失败</h2><p class="modal-sub">${esc(error.message || '')}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div><div class="modal-body"><div class="answer-block warn"><p class="answer-text">检查百炼 Key、余额和图片清晰度；公式题建议识别后手动核对。</p></div></div><div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">知道了</button></div></div>`, false);
+  } finally {
+    visionBusy = false;
+    if (btn) { btn.disabled = false; btn.innerHTML = old || '识别图片文字'; }
+  }
+}
+
+document.addEventListener('click', (event) => {
+  const cam = event.target.closest('[data-camera-action]');
+  if (cam) {
+    event.preventDefault();
+    const action = cam.dataset.cameraAction;
+    if (action === 'live') openLiveCamera();
+    else if (action === 'capture') captureLiveCamera();
+    else if (action === 'close-live') stopLiveCamera();
+    else {
+      const input = $('#cameraInput');
+      if (input) input.click();
+    }
+    return;
+  }
+  const el = event.target.closest('[data-vision-action]');
+  if (!el) return;
+  const action = el.dataset.visionAction;
+  if (action === 'ocr') { event.preventDefault(); runOCR(); }
+  if (action === 'save-key') {
+    event.preventDefault();
+    const input = $('#visionKeyInput');
+    const key = input ? input.value.trim() : '';
+    if (!key) return toast('先填写百炼 API Key', 'error');
+    visionKeyValue = key;
+    safeSet(VISION_KEY, key);
+    render();
+    toast('图片识别 Key 已保存');
+  }
+  if (action === 'change-key') {
+    event.preventDefault();
+    visionKeyValue = '';
+    localStorage.removeItem(VISION_KEY);
+    render();
+  }
+  if (action === 'go-settings') {
+    event.preventDefault();
+    closeModal();
+    navigate('settings');
+  }
+});
+document.addEventListener('change', (event) => {
+  if (event.target.id !== 'cameraInput') return;
+  const files = event.target.files;
+  if (files && files.length) addImages(files);
+  event.target.value = '';
+});
+window.addEventListener('pagehide', stopLiveCamera);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && liveStream) stopLiveCamera();
+});
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 今日计划 / 连续复习
+   ============================================================ */
+'use strict';
+
+function planStreak() {
+  const dates = new Set(state.logs.map((l) => l.date).filter(Boolean));
+  let d = today();
+  if (!dates.has(d)) d = addDays(d, -1);
+  let n = 0;
+  while (dates.has(d) && n < 3650) {
+    n++;
+    d = addDays(d, -1);
+  }
+  return n;
+}
+
+function planWeekActive() {
+  const dates = new Set(state.logs.map((l) => l.date).filter(Boolean));
+  let n = 0;
+  for (let i = 0; i < 7; i++) if (dates.has(addDays(today(), -i))) n++;
+  return n;
+}
+
+function planCard() {
+  const due = dueQuestions().length;
+  const reviewed = new Set(state.logs.filter((l) => l.date === today()).map((l) => l.qid)).size;
+  const total = due + reviewed;
+  const progress = total ? Math.round(reviewed / total * 100) : 100;
+  const streak = planStreak();
+  const week = planWeekActive();
+  return `<div class="card card-pad" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">今日计划</h2><p class="card-sub">先清待复习，再看新错题；连续天数比一次刷很多更重要。</p></div><span class="q-tag" style="color:var(--gold)">${icon('spark', 'icon-sm')}连续 ${streak} 天</span></div>
+    <div class="stats-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px">
+      <div class="stat-card"><div class="stat-label">今日待复习</div><div class="stat-value">${due}<small>道</small></div><div class="stat-foot">按到期和逾期计算</div></div>
+      <div class="stat-card"><div class="stat-label">今日已复习</div><div class="stat-value">${reviewed}<small>道</small></div><div class="stat-foot">今天已经回看过的题</div></div>
+      <div class="stat-card"><div class="stat-label">本周活跃</div><div class="stat-value">${week}<small>/7 天</small></div><div class="stat-foot">有复习记录的天数</div></div>
+    </div>
+    <div class="storage-box" style="margin-top:14px"><div class="storage-top"><span>今日进度</span><strong>${progress}%</strong></div><div class="storage-track"><div class="storage-fill" style="width:${Math.max(2, progress)}%"></div></div><div class="storage-top" style="margin-top:7px"><span>${reviewed} 已复习 · ${due} 待复习</span><span>${streak ? '保持住' : '今天开始'}</span></div></div>
+    <div class="setting-actions" style="margin-top:14px">${due ? `<button class="btn btn-primary" data-route="review">${icon('play')}开始今日复习</button>` : `<button class="btn btn-primary" data-action="start-review" data-mode="random">${icon('play')}随机复习一道</button>`}<button class="btn btn-ghost" data-route="questions">${icon('book')}看错题本</button></div>
+  </div>`;
+}
+const baseRenderDashboardPlan = renderDashboard;
+renderDashboard = function () {
+  return baseRenderDashboardPlan() + planCard();
+};
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 公式渲染（KaTeX，CDN 加载；失败时保留原文）
+   ============================================================ */
+'use strict';
+
+const KATEX_VERSION = '0.16.11';
+const KATEX_CSS = [
+  `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/katex.min.css`,
+  `https://unpkg.com/katex@${KATEX_VERSION}/dist/katex.min.css`
+];
+const KATEX_JS = [
+  `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/katex.min.js`,
+  `https://unpkg.com/katex@${KATEX_VERSION}/dist/katex.min.js`
+];
+const KATEX_AUTO = [
+  `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/contrib/auto-render.min.js`,
+  `https://unpkg.com/katex@${KATEX_VERSION}/dist/contrib/auto-render.min.js`
+];
+
+let mathReady = false;
+let mathTimer = null;
+
+function addCss(href) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+}
+function loadScript(urls, index = 0) {
+  return new Promise((resolve, reject) => {
+    if (index >= urls.length) return reject(new Error('KaTeX 加载失败'));
+    const s = document.createElement('script');
+    s.src = urls[index];
+    s.onload = resolve;
+    s.onerror = () => loadScript(urls, index + 1).then(resolve, reject);
+    document.head.appendChild(s);
+  });
+}
+function scheduleMath() {
+  if (!mathReady) return;
+  clearTimeout(mathTimer);
+  mathTimer = setTimeout(() => {
+    try {
+      window.renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\[', right: '\\]', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false,
+        strict: false,
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        ignoredClasses: ['katex', 'katex-display']
+      });
+    } catch (e) { console.warn('公式渲染失败', e); }
+  }, 120);
+}
+
+const baseRenderMath = render;
+render = function () {
+  baseRenderMath();
+  scheduleMath();
+};
+const baseOpenModalMath = openModal;
+openModal = function (...args) {
+  baseOpenModalMath(...args);
+  scheduleMath();
+};
+
+function initMath() {
+  addCss(KATEX_CSS[0]);
+  loadScript(KATEX_JS)
+    .then(() => loadScript(KATEX_AUTO))
+    .then(() => { mathReady = true; scheduleMath(); })
+    .catch(() => console.warn('KaTeX 未加载，公式将保留为文本'));
+}
+if (typeof window.renderMathInElement === 'function') {
+  mathReady = true;
+  scheduleMath();
+} else {
+  initMath();
+}
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 手机底部导航 + 设置页分组
+   ============================================================ */
+'use strict';
+
+const BOTTOM_ITEMS = [
+  ['dashboard', 'grid', '总览'],
+  ['questions', 'book', '错题本'],
+  ['review', 'repeat', '复习'],
+  ['stats', 'chart', '统计'],
+  ['settings', 'settings', '设置']
+];
+
+function ensureBottomNav() {
+  if ($('#bottomNav')) return;
+  const nav = document.createElement('nav');
+  nav.id = 'bottomNav';
+  nav.className = 'bottom-nav';
+  nav.innerHTML = BOTTOM_ITEMS.map(([route, ic, label]) => `<button type="button" data-route="${route}" data-bottom-route="${route}">${icon(ic)}<span>${label}</span></button>`).join('');
+  document.body.appendChild(nav);
+}
+
+function updateBottomNav() {
+  const nav = $('#bottomNav');
+  if (!nav) return;
+  nav.querySelectorAll('[data-bottom-route]').forEach((b) => {
+    b.classList.toggle('active', b.dataset.bottomRoute === state.route);
+  });
+}
+
+function settingsGroupOf(card) {
+  const t = card.querySelector('h3')?.textContent || '';
+  if (t.includes('图片识题') || t.includes('AI 错题教练')) return 0;
+  if (t.includes('个人同步') || t.includes('备份与恢复')) return 1;
+  if (t.includes('考研设置')) return 2;
+  if (t.includes('数据备份') || t.includes('示例与重置')) return 3;
+  return 4;
+}
+
+function groupSettings() {
+  const grid = document.querySelector('.settings-grid');
+  if (!grid || grid.dataset.grouped === '1') return;
+  const cards = [...grid.querySelectorAll(':scope > .settings-card')];
+  if (!cards.length) return;
+  const groups = ['AI 工具', '同步与备份', '学习设置', '数据管理', '其他'];
+  const buckets = groups.map(() => []);
+  cards.forEach((c) => buckets[settingsGroupOf(c)].push(c));
+  grid.innerHTML = '';
+  buckets.forEach((list, i) => {
+    if (!list.length) return;
+    const title = document.createElement('div');
+    title.className = 'settings-group-title';
+    title.textContent = groups[i];
+    grid.appendChild(title);
+    list.forEach((c) => grid.appendChild(c));
+  });
+  grid.dataset.grouped = '1';
+}
+
+const baseRenderUI = render;
+render = function () {
+  baseRenderUI();
+  requestAnimationFrame(() => {
+    ensureBottomNav();
+    updateBottomNav();
+    groupSettings();
+  });
+};
+
+/* 手机上先填学科/题型/错因，再写长题干，避免一直往下滚。 */
+function reorderFormForMobile() {
+  if (!window.matchMedia('(max-width: 640px)').matches) return;
+  const grid = document.querySelector('#questionForm .form-grid');
+  if (!grid) return;
+  const cols = [...grid.querySelectorAll(':scope > .form-col')];
+  if (cols.length === 2 && grid.firstElementChild === cols[0]) grid.insertBefore(cols[1], cols[0]);
+}
+const baseOpenFormUI = openForm;
+openForm = function (id = null) {
+  baseOpenFormUI(id);
+  setTimeout(reorderFormForMobile, 40);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  ensureBottomNav();
+  updateBottomNav();
+  setTimeout(groupSettings, 500);
+});
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · AI 学习助手（聊天）
+   使用设置里的 DeepSeek Key；只在本机保存对话。
+   ============================================================ */
+'use strict';
+
+const CHAT_KEY = 'cuoti_ai_chat_v1';
+let chatHistory = [];
+try { chatHistory = JSON.parse(safeGet(CHAT_KEY) || '[]') || []; } catch { chatHistory = []; }
+if (!Array.isArray(chatHistory)) chatHistory = [];
+chatHistory = chatHistory.filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string').slice(-30);
+
+let chatBusy = false;
+
+function chatContext() {
+  const active = state.questions.filter((q) => q.status !== 'mastered');
+  const topics = {};
+  active.forEach((q) => {
+    const k = q.chapter || q.topic || '未分类';
+    topics[k] = (topics[k] || 0) + 1;
+  });
+  const weak = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k, v]) => `${k}(${v}道)`).join('、') || '暂无';
+  const mastered = state.questions.filter((q) => q.status === 'mastered').length;
+  return `学生当前有 ${state.questions.length} 道错题，已掌握 ${mastered} 道，未掌握/复习中 ${active.length} 道。薄弱章节：${weak}。目标：${kyProfile.school || '未填'} ${kyProfile.major || ''}，初试日期 ${kyProfile.examDate || '未填'}。`;
+}
+
+function chatMath(el) {
+  if (!el || typeof window.renderMathInElement !== 'function') return;
+  try {
+    window.renderMathInElement(el, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\[', right: '\\]', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false }
+      ],
+      throwOnError: false,
+      strict: false,
+      ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      ignoredClasses: ['katex', 'katex-display']
+    });
+  } catch {}
+}
+
+function chatBubble(role, text) {
+  const wrap = document.createElement('div');
+  wrap.className = 'ai-msg ' + (role === 'user' ? 'user' : 'bot');
+  const bubble = document.createElement('div');
+  bubble.className = 'ai-bubble';
+  bubble.textContent = text;
+  wrap.appendChild(bubble);
+  return wrap;
+}
+
+function chatScroll() {
+  const box = $('#aiChatMessages');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function saveChat() {
+  try { safeSet(CHAT_KEY, JSON.stringify(chatHistory.slice(-30))); } catch {}
+}
+
+function renderChatMessages() {
+  const box = $('#aiChatMessages');
+  if (!box) return;
+  box.innerHTML = '';
+  if (!chatHistory.length) {
+    box.appendChild(chatBubble('assistant', '我是你的考研学习助手。可以问我：\n\n· 分析我的薄弱点\n· 帮我制定今天的复习计划\n· 解释一个知识点\n· 这道题为什么错\n\n我会结合你错题本里的数据回答。'));
+  } else {
+    chatHistory.forEach((m) => box.appendChild(chatBubble(m.role, m.content)));
+  }
+  chatMath(box);
+  chatScroll();
+}
+
+function setChatBusy(on) {
+  chatBusy = on;
+  const btn = $('#aiChatSend');
+  const input = $('#aiChatInput');
+  if (btn) { btn.disabled = on; btn.textContent = on ? '思考中…' : '发送'; }
+  if (input) input.disabled = on;
+}
+
+async function sendChat(text) {
+  const content = String(text || '').trim();
+  if (!content || chatBusy) return;
+  if (!aiConfigured()) {
+    chatHistory.push({ role: 'user', content });
+    chatHistory.push({ role: 'assistant', content: '还没有配置 DeepSeek API Key。请点左下角“去设置”，到“AI 错题教练”里填入 Key。' });
+    saveChat(); renderChatMessages();
+    return;
+  }
+  chatHistory.push({ role: 'user', content });
+  saveChat(); renderChatMessages();
+  setChatBusy(true);
+  const box = $('#aiChatMessages');
+  const loading = chatBubble('assistant', '正在结合你的错题数据思考…');
+  loading.id = 'aiChatLoading';
+  if (box) { box.appendChild(loading); chatScroll(); }
+  try {
+    const recent = chatHistory.slice(-12).map((m) => ({ role: m.role, content: m.content }));
+    const answer = await callDeepSeek([
+      { role: 'system', content: '你是考研学习助手，中文回答，务实、具体、不空泛。可以结合学生的错题数据，但不要编造数据。数学公式用 LaTeX（$...$）。回答控制在 300 字以内，必要时分点。' },
+      { role: 'system', content: chatContext() },
+      ...recent
+    ], 1200, false);
+    chatHistory.push({ role: 'assistant', content: answer || '我没有生成内容，请再问一次。' });
+    saveChat();
+    renderChatMessages();
+  } catch (error) {
+    const msg = error.message || '请求失败';
+    chatHistory.push({ role: 'assistant', content: '请求失败：' + msg + '\n\n请检查 DeepSeek Key、余额和网络。' });
+    saveChat();
+    renderChatMessages();
+  } finally {
+    setChatBusy(false);
+  }
+}
+
+function openChat() {
+  if ($('#aiChatOverlay')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'aiChatOverlay';
+  overlay.className = 'ai-chat-overlay';
+  overlay.innerHTML = `<div class="ai-chat-panel" role="dialog" aria-label="AI 学习助手">
+    <div class="ai-chat-head"><div><div class="ai-chat-kicker">AI COACH</div><h2>AI 学习助手</h2><p>会结合你的错题数据回答</p></div><div class="ai-chat-head-actions"><button type="button" class="btn btn-ghost btn-sm" data-chat-action="clear">清空</button><button type="button" class="btn btn-ghost btn-sm" data-chat-action="settings">去设置</button><button type="button" class="icon-btn" data-chat-action="close" aria-label="关闭">${icon('x')}</button></div></div>
+    <div class="ai-chat-messages" id="aiChatMessages"></div>
+    <div class="ai-chat-quick"><button type="button" data-chat-quick="分析一下我的薄弱点，并给出本周优先级">分析薄弱点</button><button type="button" data-chat-quick="根据我的错题，制定今天的学习计划">今日计划</button><button type="button" data-chat-quick="帮我总结最近最常见的错因，并给出改进方法">总结错因</button></div>
+    <div class="ai-chat-input"><textarea id="aiChatInput" rows="2" placeholder="问一个学习问题…（Enter 发送，Shift+Enter 换行）"></textarea><button type="button" class="btn btn-primary" id="aiChatSend">发送</button></div>
+    <div class="ai-chat-foot">AI 可能出错，答案请核对；对话只保存在本机。</div>
+  </div>`;
+  document.body.appendChild(overlay);
+  document.body.classList.add('chat-open');
+  renderChatMessages();
+  const input = $('#aiChatInput');
+  if (input) {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(input.value); input.value = ''; }
+    });
+    setTimeout(() => input.focus(), 100);
+  }
+  const send = $('#aiChatSend');
+  if (send) send.addEventListener('click', () => {
+    const i = $('#aiChatInput');
+    sendChat(i ? i.value : '');
+    if (i) i.value = '';
+  });
+}
+
+function closeChat() {
+  const overlay = $('#aiChatOverlay');
+  if (overlay) overlay.remove();
+  document.body.classList.remove('chat-open');
+}
+
+function injectChatFab() {
+  if ($('#aiChatFab')) return;
+  const btn = document.createElement('button');
+  btn.id = 'aiChatFab';
+  btn.className = 'ai-chat-fab';
+  btn.type = 'button';
+  btn.innerHTML = `${icon('spark')}<span>AI 助手</span>`;
+  btn.addEventListener('click', openChat);
+  document.body.appendChild(btn);
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-chat-action], [data-chat-quick]');
+  if (!el) return;
+  if (el.dataset.chatQuick) { sendChat(el.dataset.chatQuick); return; }
+  const action = el.dataset.chatAction;
+  if (action === 'close') closeChat();
+  if (action === 'settings') { closeChat(); navigate('settings'); }
+  if (action === 'clear') {
+    if (!confirm('清空本机的 AI 对话记录？')) return;
+    chatHistory = [];
+    saveChat();
+    renderChatMessages();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(injectChatFab, 600));
+window.addEventListener('pagehide', () => { if ($('#aiChatOverlay')) closeChat(); });
+
+</script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function (e) { console.warn('SW', e); });
+      });
+    }
+  </script>
 </body>
 </html>
