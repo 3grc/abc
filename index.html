@@ -1859,6 +1859,12 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   body.auto-landscape .main { width: calc(100vw - 200px) !important; max-width: calc(100vw - 200px) !important; }
 }
 
+/* 手动横屏入口 */
+.promo-top-btn.landscape-entry { border-color: #e5d2a8; background: #f4ead4; color: var(--gold); }
+.promo-top-btn.landscape-entry:hover { border-color: var(--gold); color: #9a6f2f; }
+.promo-top-btn.is-on,
+.promo-top-btn.landscape-entry.is-on { color: #fff; background: var(--accent); border-color: var(--accent); }
+
 </style>
 </head>
 <body>
@@ -5985,6 +5991,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const DENSITY_KEY = 'cuoti_density_v1';
 const LAYOUT_KEY = 'cuoti_layout_v1';
+const MANUAL_LANDSCAPE_KEY = 'cuoti_manual_landscape_v1';
 let installPromptEvent = null;
 
 function isStandaloneApp() {
@@ -5997,24 +6004,35 @@ function applyDensity() {
   const compact = safeGet(DENSITY_KEY) === 'compact';
   document.body.classList.toggle('compact-ui', compact);
 }
-function applyLayout() {
-  const landscape = window.innerWidth > window.innerHeight && window.innerWidth >= 900;
-  document.body.classList.toggle('force-desktop', landscape);
-  document.body.classList.toggle('auto-landscape', landscape);
-  const info = $('#viewportInfo');
-  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${landscape ? '横屏已启用' : '竖屏'}`;
+function manualLandscapeOn() {
+  return safeGet(MANUAL_LANDSCAPE_KEY) === '1';
 }
-if (window.matchMedia) {
-  const layoutMq = window.matchMedia('(orientation: landscape) and (min-width: 700px)');
-  if (layoutMq.addEventListener) layoutMq.addEventListener('change', applyLayout);
-  else if (layoutMq.addListener) layoutMq.addListener(applyLayout);
+function updateLandscapeButtons() {
+  const on = manualLandscapeOn();
+  document.querySelectorAll('[data-promo-action="landscape"]').forEach((b) => {
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('[data-display-action="landscape"]').forEach((b) => {
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+function applyLayout() {
+  const on = manualLandscapeOn();
+  document.body.classList.toggle('force-desktop', on);
+  document.body.classList.toggle('auto-landscape', on);
+  const info = $('#viewportInfo');
+  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${on ? '手动横屏布局' : '普通布局'}`;
+  updateLandscapeButtons();
+}
+function toggleManualLandscape() {
+  const on = !manualLandscapeOn();
+  safeSet(MANUAL_LANDSCAPE_KEY, on ? '1' : '0');
+  applyLayout();
+  toast(on ? '已切换横屏布局' : '已恢复普通布局');
 }
 window.addEventListener('resize', applyLayout);
-window.addEventListener('orientationchange', () => {
-  setTimeout(applyLayout, 120);
-  setTimeout(applyLayout, 420);
-  setTimeout(applyLayout, 900);
-});
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') setTimeout(applyLayout, 150);
 });
@@ -6045,21 +6063,8 @@ async function desktopFullscreen() {
   await toggleFullscreen();
 }
 
-async function landscapeMode() {
-  applyLayout();
-  try {
-    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-      await document.documentElement.requestFullscreen();
-    }
-    if (screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock('landscape');
-      toast('已请求横屏');
-    } else {
-      toast('这个浏览器不支持锁定横屏，请手动把平板横过来', 'info');
-    }
-  } catch (e) {
-    toast('横屏失败：' + (e.message || '请手动旋转平板'), 'error');
-  }
+function landscapeMode() {
+  toggleManualLandscape();
 }
 
 function reapplyFullscreenLayout() {
@@ -6097,7 +6102,7 @@ function displayCard() {
     <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="desktop-fullscreen">${icon('eye')}桌面全屏</button><button type="button" class="btn btn-ghost" data-display-action="landscape">${icon('repeat')}横屏模式</button><button type="button" class="btn btn-ghost" data-display-action="fullscreen">普通全屏</button></div>
     <div class="setting-actions"><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
     <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
-    <div class="field" style="margin-top:10px"><label>布局模式</label><div class="sync-install-tip">自动识别：横屏左侧栏 + 双栏，竖屏跟随屏幕。无需手动切换。</div><div class="sync-install-tip" id="viewportInfo" style="margin-top:6px"></div></div>
+    <div class="field" style="margin-top:10px"><label>横屏布局</label><div class="sync-install-tip">不再自动切换。点右上角或上面的“横屏模式”按钮手动进入；再点一次恢复。</div><div class="sync-install-tip" id="viewportInfo" style="margin-top:6px"></div></div>
     <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
   </div>`;
 }
@@ -6258,7 +6263,7 @@ function injectPromo() {
   if (!document.querySelector('.promo-top-btn')) {
     const right = document.querySelector('.topbar-right');
     if (right) {
-      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
+      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn landscape-entry" data-promo-action="landscape">${icon('repeat', 'icon-sm')}<span>横屏模式</span></button><button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
     }
   }
 
@@ -6281,6 +6286,7 @@ function injectPromo() {
     removePromoBanner();
     hidePromoInstallButtons();
   }
+  if (typeof applyLayout === 'function') applyLayout();
 }
 
 document.addEventListener('click', (event) => {
@@ -6290,6 +6296,7 @@ document.addEventListener('click', (event) => {
   const action = el.dataset.promoAction;
   if (action === 'install') promoInstall();
   if (action === 'help') window.open('./使用说明.html', '_blank');
+  if (action === 'landscape' && typeof toggleManualLandscape === 'function') toggleManualLandscape();
   if (action === 'dismiss') {
     safeSet(PROMO_DISMISS_KEY, '1');
     removePromoBanner();
