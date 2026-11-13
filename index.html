@@ -1865,6 +1865,21 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
 .promo-top-btn.is-on,
 .promo-top-btn.landscape-entry.is-on { color: #fff; background: var(--accent); border-color: var(--accent); }
 
+/* ---------- 拍照框选 ---------- */
+.crop-overlay { position: fixed; inset: 0; z-index: 2200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px; background: rgba(8,14,12,.96); color: #fff; }
+.crop-title { font-size: 13px; color: #e7ded0; text-align: center; }
+.crop-stage { position: relative; display: inline-block; max-width: 100%; max-height: 72vh; touch-action: none; }
+.crop-stage img { display: block; max-width: 100%; max-height: 72vh; width: auto; height: auto; border-radius: 8px; user-select: none; -webkit-user-drag: none; }
+.crop-box { position: absolute; box-sizing: border-box; border: 2px solid #fff; box-shadow: 0 0 0 9999px rgba(0,0,0,.55); touch-action: none; cursor: move; }
+.crop-handle { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 5px rgba(0,0,0,.35); touch-action: none; }
+.crop-handle[data-handle="nw"] { left: -11px; top: -11px; cursor: nwse-resize; }
+.crop-handle[data-handle="ne"] { right: -11px; top: -11px; cursor: nesw-resize; }
+.crop-handle[data-handle="sw"] { left: -11px; bottom: -11px; cursor: nesw-resize; }
+.crop-handle[data-handle="se"] { right: -11px; bottom: -11px; cursor: nwse-resize; }
+.crop-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.crop-actions .btn { height: 36px; padding: 0 12px; font-size: 11.5px; }
+@media (max-width: 640px) { .crop-stage img { max-height: 64vh; } .crop-title { font-size: 12px; } }
+
 </style>
 </head>
 <body>
@@ -1993,7 +2008,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.15';
+const APP_VERSION = '1.5.20';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -5018,16 +5033,18 @@ function injectOCRButton() {
   if (!drop || $('#ocrImageBtn')) return;
   drop.insertAdjacentHTML('afterend', `<div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <button type="button" class="btn btn-ghost btn-sm" data-camera-action="live">${icon('image', 'icon-sm')}打开相机拍照</button>
-    <button type="button" class="btn btn-ghost btn-sm" data-camera-action="take">${icon('image', 'icon-sm')}从相册选</button>
+    <button type="button" class="btn btn-primary btn-sm" data-camera-action="gallery">${icon('image', 'icon-sm')}从相册选</button>
     <button type="button" class="btn btn-ghost btn-sm" id="ocrImageBtn" data-vision-action="ocr">${icon('image', 'icon-sm')}识别图片文字</button>
-    <span class="hint">相机窗口需要 HTTPS 和相机权限</span>
+    <span class="hint">相机需要 HTTPS 和权限；相册不需要</span>
     <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+    <input type="file" id="galleryInput" accept="image/*" multiple hidden>
   </div>`);
   const body = document.querySelector('#questionForm .modal-body');
   if (body && !$('#liveCameraTopBtn')) {
     body.insertAdjacentHTML('afterbegin', `<div style="margin-bottom:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card-soft);display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button type="button" class="btn btn-primary btn-sm" id="liveCameraTopBtn" data-camera-action="live">${icon('image', 'icon-sm')}拍照录题</button>
-      <span class="hint">直接调用手机相机，拍完自动加入题目图片</span>
+      <button type="button" class="btn btn-ghost btn-sm" data-camera-action="gallery">${icon('image', 'icon-sm')}从相册选</button>
+      <span class="hint">拍完或选完都可以框选题目区域</span>
     </div>`);
   }
 }
@@ -5057,7 +5074,7 @@ async function openLiveCamera() {
   const overlay = document.createElement('div');
   overlay.id = 'liveCameraOverlay';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:2000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px';
-  overlay.innerHTML = `<div style="color:#fff;font-size:13px;text-align:center">把题目放进取景框，尽量拍正、拍清楚</div>
+  overlay.innerHTML = `<div style="color:#fff;font-size:13px;text-align:center">把题目放进取景框，尽量拍正、拍清楚；拍完可以框选题目区域</div>
     <video id="liveVideo" autoplay playsinline muted style="width:100%;max-width:720px;max-height:70vh;border-radius:14px;background:#111;object-fit:contain"></video>
     <div style="display:flex;gap:12px"><button type="button" class="btn btn-primary" data-camera-action="capture">${icon('check')}拍下这道题</button><button type="button" class="btn btn-ghost" data-camera-action="close-live" style="color:#fff;border-color:rgba(255,255,255,.35)">取消</button></div>`;
   document.body.appendChild(overlay);
@@ -5074,7 +5091,160 @@ async function openLiveCamera() {
   }
 }
 
-function captureLiveCamera() {
+function cropImageFile(file) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const overlay = document.createElement('div');
+    overlay.className = 'crop-overlay';
+    overlay.innerHTML = `<div class="crop-title">拖动方框，框住题目区域；拖四角可以缩放</div>
+      <div class="crop-stage" id="cropStage">
+        <img id="cropImg" src="${url}" alt="待框选的题目照片">
+        <div class="crop-box" id="cropBox">
+          <span class="crop-handle" data-handle="nw"></span>
+          <span class="crop-handle" data-handle="ne"></span>
+          <span class="crop-handle" data-handle="sw"></span>
+          <span class="crop-handle" data-handle="se"></span>
+        </div>
+      </div>
+      <div class="crop-actions">
+        <button type="button" class="btn btn-ghost" data-crop-action="cancel">取消</button>
+        <button type="button" class="btn btn-ghost" data-crop-action="skip">整张使用</button>
+        <button type="button" class="btn btn-primary" data-crop-action="confirm">${icon('check')}使用框选区域</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const stage = $('#cropStage');
+    const img = $('#cropImg');
+    const box = $('#cropBox');
+    let drag = null;
+
+    const close = (result) => {
+      if (overlay.parentNode) overlay.remove();
+      URL.revokeObjectURL(url);
+      document.body.style.overflow = prevOverflow;
+      resolve(result);
+    };
+
+    const initBox = () => {
+      if (!img.clientWidth) return;
+      const w = img.clientWidth;
+      const h = img.clientHeight;
+      box.style.left = Math.round(w * .08) + 'px';
+      box.style.top = Math.round(h * .08) + 'px';
+      box.style.width = Math.round(w * .84) + 'px';
+      box.style.height = Math.round(h * .84) + 'px';
+    };
+    if (img.complete && img.naturalWidth) setTimeout(initBox, 0);
+    else img.addEventListener('load', () => setTimeout(initBox, 0), { once: true });
+
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const geo = () => {
+      const s = stage.getBoundingClientRect();
+      return { s, w: s.width, h: s.height };
+    };
+
+    const onDown = (event) => {
+      if (!event.target.closest('#cropBox')) return;
+      event.preventDefault();
+      const r = box.getBoundingClientRect();
+      const g = geo();
+      drag = {
+        handle: event.target.dataset.handle || 'move',
+        startX: event.clientX,
+        startY: event.clientY,
+        left: r.left - g.s.left,
+        top: r.top - g.s.top,
+        right: r.right - g.s.left,
+        bottom: r.bottom - g.s.top,
+      };
+      try { box.setPointerCapture(event.pointerId); } catch (e) {}
+    };
+
+    const onMove = (event) => {
+      if (!drag) return;
+      event.preventDefault();
+      const g = geo();
+      let dx = event.clientX - drag.startX;
+      let dy = event.clientY - drag.startY;
+      let left = drag.left;
+      let top = drag.top;
+      let right = drag.right;
+      let bottom = drag.bottom;
+
+      if (drag.handle === 'move') {
+        left = clamp(left + dx, 0, g.w - (right - left));
+        top = clamp(top + dy, 0, g.h - (bottom - top));
+        right = left + (drag.right - drag.left);
+        bottom = top + (drag.bottom - drag.top);
+      } else {
+        if (drag.handle.includes('w')) left = clamp(drag.left + dx, 0, drag.right - 60);
+        if (drag.handle.includes('e')) right = clamp(drag.right + dx, drag.left + 60, g.w);
+        if (drag.handle.includes('n')) top = clamp(drag.top + dy, 0, drag.bottom - 60);
+        if (drag.handle.includes('s')) bottom = clamp(drag.bottom + dy, drag.top + 60, g.h);
+      }
+
+      box.style.left = left + 'px';
+      box.style.top = top + 'px';
+      box.style.width = Math.max(60, right - left) + 'px';
+      box.style.height = Math.max(60, bottom - top) + 'px';
+    };
+
+    const onUp = () => { drag = null; };
+
+    box.addEventListener('pointerdown', onDown);
+    document.addEventListener('pointermove', onMove, { passive: false });
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', onUp);
+
+    const cleanup = () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      document.removeEventListener('pointercancel', onUp);
+    };
+
+    overlay.addEventListener('click', async (event) => {
+      const btn = event.target.closest('[data-crop-action]');
+      if (!btn) return;
+      const action = btn.dataset.cropAction;
+      if (action === 'cancel') { cleanup(); close(null); return; }
+      if (action === 'skip') { cleanup(); close(file); return; }
+      if (action !== 'confirm') return;
+      if (!img.naturalWidth) { toast('图片还没加载好', 'info'); return; }
+      try {
+        const ir = img.getBoundingClientRect();
+        const br = box.getBoundingClientRect();
+        const sx = Math.max(0, (br.left - ir.left) / ir.width * img.naturalWidth);
+        const sy = Math.max(0, (br.top - ir.top) / ir.height * img.naturalHeight);
+        const sw = Math.max(1, br.width / ir.width * img.naturalWidth);
+        const sh = Math.max(1, br.height / ir.height * img.naturalHeight);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(sw));
+        canvas.height = Math.max(1, Math.round(sh));
+        canvas.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+        const blob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', .92));
+        cleanup();
+        if (!blob) { close(file); return; }
+        close(new File([blob], `crop-${Date.now()}.jpg`, { type: 'image/jpeg' }));
+      } catch (e) {
+        cleanup();
+        close(file);
+      }
+    });
+  });
+}
+
+async function addImagesFromFiles(files) {
+  const list = [...files].filter((f) => f.type && f.type.startsWith('image/'));
+  if (!list.length) return;
+  for (const file of list) {
+    const result = typeof cropImageFile === 'function' ? await cropImageFile(file) : file;
+    if (!result) continue;
+    await addImages([result]);
+  }
+}
+async function captureLiveCamera() {
   const video = $('#liveVideo');
   if (!video || !video.videoWidth) return toast('相机还没准备好，再等一下', 'info');
   const canvas = document.createElement('canvas');
@@ -5083,12 +5253,12 @@ function captureLiveCamera() {
   canvas.width = Math.round(video.videoWidth * k);
   canvas.height = Math.round(video.videoHeight * k);
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-  canvas.toBlob(async (blob) => {
-    if (!blob) return toast('拍照失败，再试一次', 'error');
-    const file = new File([blob], `camera-${Date.now()}.jpg`, { type: 'image/jpeg' });
-    stopLiveCamera();
-    await addImages([file]);
-  }, 'image/jpeg', 0.9);
+  const blob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', 0.9));
+  if (!blob) return toast('拍照失败，再试一次', 'error');
+  const file = new File([blob], `camera-${Date.now()}.jpg`, { type: 'image/jpeg' });
+  stopLiveCamera();
+  const cropped = await cropImageFile(file);
+  if (cropped) await addImages([cropped]);
 }
 
 async function runOCR() {
@@ -5122,7 +5292,10 @@ document.addEventListener('click', (event) => {
     if (action === 'live') openLiveCamera();
     else if (action === 'capture') captureLiveCamera();
     else if (action === 'close-live') stopLiveCamera();
-    else {
+    else if (action === 'gallery') {
+      const input = $('#galleryInput');
+      if (input) input.click();
+    } else {
       const input = $('#cameraInput');
       if (input) input.click();
     }
@@ -5154,10 +5327,10 @@ document.addEventListener('click', (event) => {
     navigate('settings');
   }
 });
-document.addEventListener('change', (event) => {
-  if (event.target.id !== 'cameraInput') return;
+document.addEventListener('change', async (event) => {
+  if (event.target.id !== 'cameraInput' && event.target.id !== 'galleryInput') return;
   const files = event.target.files;
-  if (files && files.length) addImages(files);
+  if (files && files.length) await addImagesFromFiles(files);
   event.target.value = '';
 });
 window.addEventListener('pagehide', stopLiveCamera);
