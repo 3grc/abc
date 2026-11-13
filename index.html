@@ -6267,7 +6267,7 @@ function injectPromo() {
   if (!document.querySelector('.promo-top-btn')) {
     const right = document.querySelector('.topbar-right');
     if (right) {
-      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
+      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn landscape-entry" data-promo-action="landscape">${icon('repeat', 'icon-sm')}<span>横屏模式</span></button><button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
     }
   }
 
@@ -6290,6 +6290,7 @@ function injectPromo() {
     removePromoBanner();
     hidePromoInstallButtons();
   }
+  if (typeof applyLayout === 'function') applyLayout();
 }
 
 document.addEventListener('click', (event) => {
@@ -6299,6 +6300,7 @@ document.addEventListener('click', (event) => {
   const action = el.dataset.promoAction;
   if (action === 'install') promoInstall();
   if (action === 'help') window.open('./使用说明.html', '_blank');
+  if (action === 'landscape' && typeof toggleManualLandscape === 'function') toggleManualLandscape();
   if (action === 'dismiss') {
     safeSet(PROMO_DISMISS_KEY, '1');
     removePromoBanner();
