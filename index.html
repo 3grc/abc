@@ -1816,6 +1816,15 @@ body.force-desktop .bottom-nav { display: none !important; }
   .nav-item.nav-help { display: none; }
 }
 
+/* 平板横屏 / 强制桌面布局下的卡片防挤压 */
+@media (max-width: 1180px) {
+  .dash-two, .dash-bottom-grid { grid-template-columns: 1fr !important; }
+  .dash-two .card, .dash-bottom-grid .card { min-width: 0; }
+  .dash-two .card-head, .dash-bottom-grid .card-head { flex-wrap: wrap; }
+  .dash-recent-title, .dash-recent-meta { white-space: normal; overflow-wrap: anywhere; }
+  .dash-weak-label span { min-width: 0; overflow-wrap: anywhere; }
+}
+
 </style>
 </head>
 <body>
