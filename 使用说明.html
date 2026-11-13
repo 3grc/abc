@@ -92,8 +92,12 @@ td:first-child{white-space:nowrap}
       <li><strong>iPhone / iPad</strong>：必须用 Safari → 分享 → 添加到主屏幕。</li>
       <li><strong>华为浏览器</strong>：通常只能创建快捷方式，仍可能显示地址栏；想真正全屏建议用 Edge。</li>
     </ul>
-    <p>设置 → <strong>显示与安装</strong> 里有“进入全屏”和“安装到桌面”。全屏只是临时隐藏；安装后从桌面打开才是长期无地址栏。</p>
-    <div class="note gold">如果一进全屏就变回手机布局：设置 → 显示与安装 → <strong>布局模式 → 桌面布局</strong>，再进全屏。这样左侧栏会保留。</div>
+    <p>设置 → <strong>显示与安装</strong> 里有“桌面全屏”“普通全屏”和“安装到桌面”。桌面全屏会先锁定左侧栏再全屏；普通全屏只隐藏地址栏。</p>
+    <div class="note gold">如果一进全屏就变回手机布局：点 <strong>桌面全屏</strong>，不要点普通全屏。它会先切到桌面布局再全屏。</div>
+    <h3>平板横屏入口</h3>
+    <p>平板用这个地址添加到桌面，会使用横屏 manifest：</p>
+    <pre>https://3grc.github.io/abc/?tablet=1&amp;v=1.5</pre>
+    <p>如果华为浏览器仍然锁竖屏，进设置 → 显示与安装 → 点 <strong>横屏模式</strong>。</p>
     <div class="note">如果安装后仍显示地址栏：卸载旧快捷方式，用 Edge 重新“安装应用”，不要用“添加到桌面”的网页快捷方式。</div>
     <h3>想要 APK</h3>
     <p>网页本身可以用 PWABuilder 打包成 APK，但 AI、同步仍需要网络。当前电脑没有 Android 构建环境，不能直接产出 APK。</p>

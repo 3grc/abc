@@ -1,9 +1,10 @@
 /* 错题拾遗 · 离线缓存 */
-const CACHE = 'cuoti-local-1.5.1';
+const CACHE = 'cuoti-local-1.5.3';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './manifest-landscape.webmanifest',
   './favicon.svg',
   './使用说明.html',
   './icons/icon-180.png',

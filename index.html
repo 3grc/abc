@@ -7,7 +7,20 @@
   <meta name="description" content="错题拾遗 1.5：考研错题按科目、知识点和具体考题项目整理，本地保存，可选云端同步与 AI 教练。">
   <title>错题拾遗 · 1.5</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest">
+  <script>
+    (function () {
+      try {
+        var p = new URLSearchParams(location.search);
+        var tablet = p.get('tablet') === '1' || (window.matchMedia && matchMedia('(min-width: 900px)').matches && p.get('phone') !== '1');
+        var l = document.createElement('link');
+        l.rel = 'manifest';
+        l.href = tablet ? 'manifest-landscape.webmanifest' : 'manifest.webmanifest';
+        document.head.appendChild(l);
+      } catch (e) {
+        var l = document.createElement('link'); l.rel = 'manifest'; l.href = 'manifest.webmanifest'; document.head.appendChild(l);
+      }
+    })();
+  </script>
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -1761,6 +1774,14 @@ body.force-desktop .bottom-nav { display: none !important; }
   body.force-desktop .dash-top-grid { grid-template-columns: minmax(0,1.35fr) minmax(230px,.65fr); }
   body.force-desktop .dash-two, body.force-desktop .dash-bottom-grid { grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); }
   body.force-desktop .topbar { margin-bottom: 20px; }
+}
+
+/* 全屏时浏览器可能重新套用移动端样式，强制桌面布局优先级 */
+body.force-desktop .sidebar { position: fixed !important; width: 244px !important; display: flex !important; flex-direction: column !important; }
+body.force-desktop .main { margin-left: 244px !important; width: auto !important; max-width: none !important; }
+body.force-desktop .bottom-nav { display: none !important; }
+@media (max-width: 900px) {
+  body.force-desktop .main { width: calc(100vw - 244px) !important; max-width: calc(100vw - 244px) !important; }
 }
 
 </style>
@@ -5921,6 +5942,37 @@ async function toggleFullscreen() {
   }
 }
 
+async function desktopFullscreen() {
+  safeSet(LAYOUT_KEY, 'desktop');
+  applyLayout();
+  await new Promise((r) => setTimeout(r, 80));
+  await toggleFullscreen();
+}
+
+async function landscapeMode() {
+  safeSet(LAYOUT_KEY, 'desktop');
+  applyLayout();
+  try {
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+    }
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock('landscape');
+      toast('已请求横屏');
+    } else {
+      toast('这个浏览器不支持锁定横屏，请手动把平板横过来', 'info');
+    }
+  } catch (e) {
+    toast('横屏失败：' + (e.message || '请手动旋转平板'), 'error');
+  }
+}
+
+function reapplyFullscreenLayout() {
+  applyLayout();
+  setTimeout(applyLayout, 80);
+  setTimeout(applyLayout, 350);
+}
+
 function installHelp() {
   openModal(`<div class="modal-head"><div><div class="modal-kicker">INSTALL</div><h2 class="modal-title">安装到桌面</h2><p class="modal-sub">安装后从桌面打开，不显示地址栏。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
   <div class="modal-body">
@@ -5947,7 +5999,8 @@ function displayCard() {
   const sync = typeof gistConfigured === 'function' && gistConfigured();
   return `<div class="card settings-card"><h3>${icon('grid')}显示与安装</h3><p>解决“每次打开上面都有网页”和“不同浏览器内容不一样”。</p>
     <div class="sync-status"><span class="sync-dot ${standalone ? 'on' : ''}"></span><strong>${standalone ? '独立应用窗口' : '浏览器标签页'}</strong><span>${standalone ? '没有地址栏' : '安装到桌面后不显示地址栏'}</span></div>
-    <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="fullscreen">${icon('eye')}进入全屏</button><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
+    <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="desktop-fullscreen">${icon('eye')}桌面全屏</button><button type="button" class="btn btn-ghost" data-display-action="landscape">${icon('repeat')}横屏模式</button><button type="button" class="btn btn-ghost" data-display-action="fullscreen">普通全屏</button></div>
+    <div class="setting-actions"><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
     <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
     <div class="field" style="margin-top:10px"><label for="layoutMode">布局模式 <span class="hint">全屏后想保留电脑版，选“桌面”</span></label><select class="select input" id="layoutMode"><option value="auto" ${(safeGet(LAYOUT_KEY) || 'auto') === 'auto' ? 'selected' : ''}>自动（跟随屏幕宽度）</option><option value="desktop" ${safeGet(LAYOUT_KEY) === 'desktop' ? 'selected' : ''}>桌面布局（左侧栏）</option></select></div>
     <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
@@ -5983,8 +6036,13 @@ document.addEventListener('click', (event) => {
   event.preventDefault();
   const action = el.dataset.displayAction;
   if (action === 'fullscreen') toggleFullscreen();
+  if (action === 'desktop-fullscreen') desktopFullscreen();
+  if (action === 'landscape') landscapeMode();
   if (action === 'install') installApp();
   if (action === 'pair-link') copyPairLink();
+});
+['fullscreenchange', 'webkitfullscreenchange'].forEach((ev) => {
+  document.addEventListener(ev, reapplyFullscreenLayout);
 });
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
