@@ -1880,6 +1880,19 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
 .crop-actions .btn { height: 36px; padding: 0 12px; font-size: 11.5px; }
 @media (max-width: 640px) { .crop-stage img { max-height: 64vh; } .crop-title { font-size: 12px; } }
 
+/* 横屏录入：让弹窗始终跟着可视高度，输入法和底栏都不挡保存 */
+.modal-body { flex: 1 1 auto; min-height: 0; }
+.modal-foot { flex: 0 0 auto; }
+@media (orientation: landscape) and (max-height: 1100px) {
+  .modal-backdrop { padding: 8px; }
+  .modal { width: min(1100px, 100%); max-height: calc(var(--app-vvh, 100dvh) - 16px); }
+  .modal-head { padding: 12px 18px 10px; }
+  .modal-title { font-size: 20px; }
+  .modal-sub { margin-top: 3px; }
+  .modal-body { padding: 12px 18px; }
+  .modal-foot { padding: 9px 18px; }
+}
+
 </style>
 </head>
 <body>
@@ -2008,7 +2021,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.20';
+const APP_VERSION = '1.5.22';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -5799,10 +5812,24 @@ openForm = function (id = null) {
   setTimeout(reorderFormForMobile, 40);
 };
 
+/* 跟随输入法/浏览器可视高度，横屏录入时弹窗不会被键盘挡住 */
+function syncAppViewportHeight() {
+  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  if (h) document.documentElement.style.setProperty('--app-vvh', Math.round(h) + 'px');
+}
+syncAppViewportHeight();
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', syncAppViewportHeight);
+  window.visualViewport.addEventListener('scroll', syncAppViewportHeight);
+}
+window.addEventListener('resize', syncAppViewportHeight);
+window.addEventListener('orientationchange', () => setTimeout(syncAppViewportHeight, 200));
+
 document.addEventListener('DOMContentLoaded', () => {
   ensureBottomNav();
   updateBottomNav();
   setTimeout(groupSettings, 500);
+  syncAppViewportHeight();
 });
 
 </script>
@@ -6181,17 +6208,28 @@ function manualLandscapeOn() {
   return safeGet(MANUAL_LANDSCAPE_KEY) === '1';
 }
 function applyLayout() {
-  const on = manualLandscapeOn();
+  const manual = manualLandscapeOn();
+  const auto = window.innerWidth > window.innerHeight && window.innerWidth >= 900;
+  const on = manual || auto;
   document.body.classList.toggle('force-desktop', on);
   document.body.classList.toggle('auto-landscape', on);
   const info = $('#viewportInfo');
-  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${on ? '手动横屏布局' : '普通布局'}`;
+  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${manual ? '手动横屏布局' : auto ? '自动横屏布局' : '普通布局'}`;
   const btn = document.querySelector('[data-display-action="landscape"]');
   if (btn) {
     btn.classList.toggle('is-on', on);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
 }
+window.addEventListener('resize', applyLayout);
+window.addEventListener('orientationchange', () => {
+  setTimeout(applyLayout, 120);
+  setTimeout(applyLayout, 450);
+  setTimeout(applyLayout, 900);
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') setTimeout(applyLayout, 150);
+});
 async function toggleManualLandscape() {
   const on = !manualLandscapeOn();
   safeSet(MANUAL_LANDSCAPE_KEY, on ? '1' : '0');
@@ -6220,10 +6258,6 @@ async function toggleManualLandscape() {
     toast('已切换横屏布局；浏览器不允许自动旋转', 'info');
   }
 }
-window.addEventListener('resize', applyLayout);
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') setTimeout(applyLayout, 150);
-});
 function displayCopy(text, msg) {
   if (typeof wizCopy === 'function') return wizCopy(text, msg);
   if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast(msg || '已复制')).catch(() => {});
