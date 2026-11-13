@@ -1836,6 +1836,29 @@ body.force-desktop .bottom-nav { display: none !important; }
   body.auto-landscape .dash-weak-label span { min-width: 0; overflow-wrap: anywhere; }
 }
 
+/* 不依赖 orientation 媒体查询的自动横屏类 */
+body.auto-landscape .dash-two,
+body.auto-landscape .dash-bottom-grid { grid-template-columns: minmax(0, 1.15fr) minmax(250px, .85fr) !important; }
+body.auto-landscape .settings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+body.auto-landscape .card-head { flex-wrap: wrap; }
+body.auto-landscape .dash-recent-title,
+body.auto-landscape .dash-recent-meta { white-space: normal; overflow-wrap: anywhere; }
+body.auto-landscape .dash-weak-label span { min-width: 0; overflow-wrap: anywhere; }
+
+/* 平板自动横屏：左侧栏 200px */
+body.auto-landscape .sidebar { width: 200px !important; flex: 0 0 200px !important; padding-left: 12px !important; padding-right: 12px !important; }
+body.auto-landscape .main { margin-left: 200px !important; width: auto !important; max-width: none !important; }
+body.auto-landscape .brand { gap: 8px; padding-left: 5px !important; padding-right: 5px !important; flex-wrap: nowrap; }
+body.auto-landscape .brand .seal { width: 38px; height: 38px; font-size: 21px; }
+body.auto-landscape .brand strong { font-size: 15.5px; white-space: nowrap; }
+body.auto-landscape .brand small { font-size: 6.5px; letter-spacing: .14em; }
+body.auto-landscape .kaoyan-badge { font-size: 8px; padding: 3px 5px; }
+body.auto-landscape .nav-item { padding-left: 9px !important; padding-right: 9px !important; gap: 8px !important; }
+body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right: 5px !important; }
+@media (max-width: 900px) {
+  body.auto-landscape .main { width: calc(100vw - 200px) !important; max-width: calc(100vw - 200px) !important; }
+}
+
 </style>
 </head>
 <body>
@@ -5976,10 +5999,12 @@ function applyDensity() {
 }
 function applyLayout() {
   const mode = safeGet(LAYOUT_KEY) || 'auto';
-  const landscape = window.matchMedia && window.matchMedia('(orientation: landscape) and (min-width: 700px)').matches;
+  const landscape = window.innerWidth > window.innerHeight && window.innerWidth >= 700;
   const autoLandscape = mode === 'auto' && landscape;
   document.body.classList.toggle('force-desktop', mode === 'desktop' || autoLandscape);
   document.body.classList.toggle('auto-landscape', autoLandscape);
+  const info = $('#viewportInfo');
+  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${landscape ? '横屏' : '竖屏'} · ${mode === 'auto' ? '自动' : '桌面'}`;
 }
 if (window.matchMedia) {
   const layoutMq = window.matchMedia('(orientation: landscape) and (min-width: 700px)');
@@ -5987,6 +6012,14 @@ if (window.matchMedia) {
   else if (layoutMq.addListener) layoutMq.addListener(applyLayout);
 }
 window.addEventListener('resize', applyLayout);
+window.addEventListener('orientationchange', () => {
+  setTimeout(applyLayout, 120);
+  setTimeout(applyLayout, 420);
+  setTimeout(applyLayout, 900);
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') setTimeout(applyLayout, 150);
+});
 function displayCopy(text, msg) {
   if (typeof wizCopy === 'function') return wizCopy(text, msg);
   if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast(msg || '已复制')).catch(() => {});
@@ -6068,7 +6101,7 @@ function displayCard() {
     <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="desktop-fullscreen">${icon('eye')}桌面全屏</button><button type="button" class="btn btn-ghost" data-display-action="landscape">${icon('repeat')}横屏模式</button><button type="button" class="btn btn-ghost" data-display-action="fullscreen">普通全屏</button></div>
     <div class="setting-actions"><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
     <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
-    <div class="field" style="margin-top:10px"><label for="layoutMode">布局模式 <span class="hint">全屏后想保留电脑版，选“桌面”</span></label><select class="select input" id="layoutMode"><option value="auto" ${(safeGet(LAYOUT_KEY) || 'auto') === 'auto' ? 'selected' : ''}>自动（横屏桌面 / 竖屏跟随）</option><option value="desktop" ${safeGet(LAYOUT_KEY) === 'desktop' ? 'selected' : ''}>桌面布局（左侧栏）</option></select></div>
+    <div class="field" style="margin-top:10px"><label for="layoutMode">布局模式 <span class="hint">全屏后想保留电脑版，选“桌面”</span></label><select class="select input" id="layoutMode"><option value="auto" ${(safeGet(LAYOUT_KEY) || 'auto') === 'auto' ? 'selected' : ''}>自动（横屏桌面 / 竖屏跟随）</option><option value="desktop" ${safeGet(LAYOUT_KEY) === 'desktop' ? 'selected' : ''}>桌面布局（左侧栏）</option></select><div class="sync-install-tip" id="viewportInfo" style="margin-top:6px"></div></div>
     <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
   </div>`;
 }
