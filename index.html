@@ -2006,6 +2006,83 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   .modal.form-modal .textarea { font-size: 14px; }
 }
 
+/* ---------- 复习增强：草稿纸 / 提示 / 进度恢复 ---------- */
+.review-scratch { margin: 14px 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; background: #fbf7ef; }
+.review-scratch-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; color: var(--soft); font-size: 10px; font-weight: 700; }
+.review-scratch-head button { border: 0; background: transparent; color: var(--muted); font-size: 9.5px; cursor: pointer; }
+.review-scratch textarea { width: 100%; min-height: 72px; resize: vertical; border: 1px solid var(--line); border-radius: 8px; padding: 8px 9px; background: var(--card); color: var(--ink); font: 12px/1.7 var(--font-sans); outline: none; }
+.review-scratch textarea:focus { border-color: var(--accent); }
+.review-hint-row { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+.review-hint-row .hint { font-size: 9.5px; color: var(--muted); }
+.review-hint-panel { margin: 0 0 10px; padding: 9px 11px; border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; background: #fbf5e8; color: var(--soft); font-size: 11.5px; line-height: 1.7; white-space: pre-wrap; }
+.review-resume-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding: 12px 14px; border: 1px solid #e5d2a8; border-radius: 12px; background: #fbf5e8; }
+.review-resume-card strong { display: block; color: var(--ink); font: 700 13px/1.4 var(--font-serif); }
+.review-resume-card span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+.review-resume-card > div:last-child { display: flex; gap: 6px; }
+@media (max-width: 640px) {
+  .review-scratch { padding: 8px 9px; }
+  .review-scratch textarea { min-height: 60px; font-size: 12px; }
+  .review-hint-row { flex-wrap: wrap; }
+  .review-resume-card { align-items: flex-start; }
+}
+
+/* 复习作答照片 */
+.review-answer-photo { margin: 12px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; background: #fbf7ef; }
+.review-answer-photo-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; color: var(--soft); font-size: 10px; font-weight: 700; }
+.review-answer-photo-head > div { display: flex; gap: 5px; flex-wrap: wrap; }
+.review-answer-photo-head .btn { height: 30px; padding: 0 8px; font-size: 10px; }
+.review-answer-photo-body { position: relative; margin-top: 8px; }
+.review-answer-photo-body img { display: block; max-width: 100%; max-height: 260px; object-fit: contain; border: 1px solid var(--line); border-radius: 8px; background: var(--card); }
+.review-answer-remove { margin-top: 6px; border: 0; background: transparent; color: var(--muted); font-size: 9.5px; cursor: pointer; padding: 2px 0; }
+.review-answer-photo-empty { margin-top: 7px; color: var(--muted); font-size: 10.5px; }
+
+/* 复习前筛选 */
+.review-filter-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); box-shadow: var(--shadow-sm); }
+.review-filter-card strong { display: block; color: var(--ink); font: 700 14px/1.4 var(--font-serif); }
+.review-filter-card span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+.review-filter-controls { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; }
+.review-filter-controls label { display: flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 9.5px; }
+.review-filter-controls .select { width: auto; min-width: 105px; height: 32px; padding: 0 8px; font-size: 11px; }
+.review-filter-controls .btn { height: 32px; }
+@media (max-width: 640px) {
+  .review-filter-card { align-items: flex-start; }
+  .review-filter-controls { width: 100%; }
+  .review-filter-controls label { flex: 1 1 30%; }
+  .review-filter-controls .select { width: 100%; min-width: 0; }
+  .review-filter-controls .btn { width: 100%; }
+  .review-answer-photo-body img { max-height: 180px; }
+}
+
+/* 错题详情：窄屏操作区不挤成竖排 */
+@media (max-width: 1100px) {
+  .modal.detail-modal .modal-foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .modal.detail-modal .modal-foot > .btn-danger { order: 2; width: 100%; }
+  .modal.detail-modal .modal-foot .foot-right {
+    order: 1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .modal.detail-modal .modal-foot .foot-right .btn {
+    width: 100%;
+    min-width: 0;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+  .modal.detail-modal .modal-foot .foot-right .btn-primary {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+}
+@media (max-width: 640px) {
+  .modal.detail-modal .modal-foot .foot-right { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 </style>
 </head>
 <body>
@@ -2134,7 +2211,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.34';
+const APP_VERSION = '1.5.37';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -2868,6 +2945,8 @@ function openDetail(id) {
   <div class="detail-info"><div class="info-cell"><span>题型</span><strong>${esc(q.type)}</strong></div><div class="info-cell"><span>复习次数</span><strong>${q.reviewCount} 次</strong></div><div class="info-cell"><span>连续掌握</span><strong>${q.correctStreak} 次</strong></div><div class="info-cell"><span>下次复习</span><strong>${esc(fmtDue(q.nextReview, q.status))}</strong></div></div>
   ${history.length ? `<div class="detail-history"><div class="answer-label">最近复习</div>${history.map((l) => `<div class="history-row"><span>${esc(RATING[l.rating]?.label || l.rating)}</span><span>${esc(fmtDate(l.date))} · ${esc(fmtDateTime(l.at))}</span></div>`).join('')}</div>` : ''}
   </div></div><div class="modal-foot"><button class="btn btn-danger btn-sm" data-action="delete" data-id="${esc(q.id)}">${icon('trash', 'icon-sm')}删除</button><div class="foot-right"><button class="btn btn-ghost" data-action="star" data-id="${esc(q.id)}">${icon('star')}${q.starred ? '取消重点' : '标为重点'}</button><button class="btn btn-ghost" data-action="edit" data-id="${esc(q.id)}">${icon('edit')}编辑</button><button class="btn btn-primary" data-action="start-review" data-mode="single" data-id="${esc(q.id)}">${icon('play')}复习这道</button></div></div>`, false);
+  const modal = document.querySelector('#modalRoot .modal');
+  if (modal) modal.classList.add('detail-modal');
 }
 
 /* ---------------- review ---------------- */
@@ -6584,11 +6663,19 @@ setInterval(() => { if ($('#viewportInfo')) applyLayout(); }, 1500);
   <script>
 /* ============================================================
    错题拾遗 · 沉浸复习（方案 C）
+   会话恢复 / 草稿纸 / AI 提示 / 下次日期 / 同知识点连刷
    ============================================================ */
 'use strict';
 
+const REVIEW_SESSION_KEY = 'cuoti_review_session_v1';
+const REVIEW_ANSWER_KEY = 'cuoti_review_answer_images_v1';
+
 let reviewStartedAt = 0;
 let reviewTimerId = null;
+let reviewHintBusy = false;
+let reviewHints = {};
+let reviewAnswerImages = {};
+try { reviewAnswerImages = JSON.parse(localStorage.getItem(REVIEW_ANSWER_KEY) || '{}') || {}; } catch (e) { reviewAnswerImages = {}; }
 
 function reviewTimeText() {
   if (!reviewStartedAt) return '00:00';
@@ -6605,24 +6692,122 @@ function startReviewTimer() {
   paint();
   reviewTimerId = setInterval(paint, 1000);
 }
+function saveReviewAnswerImages() {
+  try { localStorage.setItem(REVIEW_ANSWER_KEY, JSON.stringify(reviewAnswerImages)); } catch (e) {}
+}
+function saveReviewSession() {
+  if (!state.review) return;
+  if (state.review.index >= state.review.total) {
+    try { localStorage.removeItem(REVIEW_SESSION_KEY); } catch (e) {}
+    return;
+  }
+  const elapsed = reviewStartedAt ? Math.max(0, Math.floor((Date.now() - reviewStartedAt) / 1000)) : 0;
+  try {
+    localStorage.setItem(REVIEW_SESSION_KEY, JSON.stringify({
+      queue: state.review.queue,
+      index: state.review.index,
+      results: state.review.results,
+      total: state.review.total,
+      elapsed,
+      savedAt: new Date().toISOString()
+    }));
+  } catch (e) {}
+}
+function loadSavedReview() {
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem(REVIEW_SESSION_KEY) || 'null'); } catch (e) {}
+  if (!data || !Array.isArray(data.queue) || !data.queue.length) return null;
+  const valid = data.queue.filter((id) => state.questions.some((q) => q.id === id));
+  if (!valid.length) { clearSavedReview(); return null; }
+  const index = Math.max(0, Math.min(Number(data.index) || 0, valid.length - 1));
+  return {
+    queue: valid,
+    index,
+    total: valid.length,
+    results: data.results || { again: 0, hard: 0, good: 0, easy: 0 },
+    elapsed: Number(data.elapsed) || 0,
+    savedAt: data.savedAt || ''
+  };
+}
+function clearSavedReview() {
+  try { localStorage.removeItem(REVIEW_SESSION_KEY); } catch (e) {}
+}
+function resumeSavedReview() {
+  const data = loadSavedReview();
+  if (!data) return toast('没有可继续的复习', 'info');
+  state.review = { queue: data.queue, index: data.index, revealed: false, results: data.results, total: data.total };
+  reviewStartedAt = Date.now() - data.elapsed * 1000;
+  renderReview();
+}
+function reviewKey(q) {
+  return [q.subject, q.chapter || q.topic || '', q.topic || ''].filter(Boolean).join('|') || q.subject || '';
+}
+function groupReviewQueue() {
+  const r = state.review;
+  if (!r || !r.queue || r.queue.length < 2) return;
+  const groups = new Map();
+  r.queue.forEach((id) => {
+    const q = state.questions.find((x) => x.id === id);
+    const key = q ? reviewKey(q) : '';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(id);
+  });
+  r.queue = [...groups.values()].flat();
+}
+function clusterNextFor(q) {
+  const r = state.review;
+  if (!r || r.index >= r.total || !q) return;
+  const key = reviewKey(q);
+  const cur = currentReview();
+  if (cur && reviewKey(cur) === key) return;
+  const at = r.queue.findIndex((id, i) => i > r.index && reviewKey(state.questions.find((x) => x.id === id) || {}) === key);
+  if (at > r.index) {
+    const [id] = r.queue.splice(at, 1);
+    r.queue.splice(r.index, 0, id);
+    renderReview();
+  }
+}
 
 const baseStartReviewV2 = startReview;
 startReview = function (mode = 'due', id = null) {
   reviewStartedAt = Date.now();
-  return baseStartReviewV2(mode, id);
+  reviewHints = {};
+  const result = baseStartReviewV2(mode, id);
+  if (state.review) {
+    groupReviewQueue();
+    saveReviewSession();
+    if (mode !== 'single') renderReview();
+  }
+  return result;
 };
 const baseCloseReviewV2 = closeReview;
 closeReview = function () {
+  saveReviewSession();
   stopReviewTimer();
   reviewStartedAt = 0;
   return baseCloseReviewV2();
 };
+
+function reviewAnswerPhotoHTML(q) {
+  const src = reviewAnswerImages[q.id] || '';
+  return `<div class="review-answer-photo">
+    <div class="review-answer-photo-head"><span>${icon('image', 'icon-sm')}我的作答照片</span><div><button type="button" class="btn btn-ghost btn-sm" data-review-action="answer-camera">${icon('image', 'icon-sm')}拍照作答</button><button type="button" class="btn btn-ghost btn-sm" data-review-action="answer-gallery">从相册选</button></div></div>
+    ${src ? `<div class="review-answer-photo-body"><a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="我的作答照片"></a><button type="button" class="review-answer-remove" data-review-action="answer-remove">移除</button></div>` : '<div class="review-answer-photo-empty">没有作答照片。可以先拍照，再翻答案对照。</div>'}
+  </div>`;
+}
+
+function reviewHintHTML(q) {
+  const hint = reviewHints[q.id] || '';
+  return `<div class="review-hint-row"><button type="button" class="btn btn-ghost btn-sm" id="reviewHintBtn" data-review-action="hint">${icon('spark', 'icon-sm')}AI 提示（不给答案）</button><span class="hint">卡住时再点</span></div>
+  <div class="review-hint-panel" id="reviewHintPanel" ${hint ? '' : 'hidden'}>${hint ? esc(hint) : ''}</div>`;
+}
 
 const baseRenderReviewV2 = renderReview;
 renderReview = function () {
   if (!state.review) return;
   if (state.review.index >= state.review.total) {
     stopReviewTimer();
+    clearSavedReview();
     return baseRenderReviewV2();
   }
   const r = state.review;
@@ -6642,6 +6827,8 @@ renderReview = function () {
         <h2 class="review-v2-title">${esc(q.item || q.topic || '错题复习')}</h2>
         <p class="review-v2-q">${esc(q.question || '（图片错题，请查看图片）')}</p>
         ${q.images.length ? `<div class="review-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+        ${reviewAnswerPhotoHTML(q)}
+        ${reviewHintHTML(q)}
         ${!r.revealed ? `<button class="reveal-btn" data-action="reveal">${icon('eye')}先自己想，点击显示答案与解析</button><div class="review-v2-wait">先在心里完整讲一遍：这题考什么？第一步做什么？</div>` : `<div class="review-answer">
           <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
           <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '暂无解析')}</p></div>
@@ -6655,7 +6842,163 @@ renderReview = function () {
   </div>`;
   document.body.classList.add('modal-open');
   startReviewTimer();
+  saveReviewSession();
 };
+
+/* 评分：同知识点连刷 + 下次日期 */
+const baseRateV2 = rate;
+rate = async function (rating) {
+  const q = currentReview();
+  if (!q || !state.review || !state.review.revealed) return baseRateV2(rating);
+  const sched = schedule(q, rating);
+  await baseRateV2(rating);
+  if (state.review && state.review.index < state.review.total) {
+    clusterNextFor(q);
+    saveReviewSession();
+  }
+  if (sched && sched.nextReview) toast('已记录 · 下次复习：' + fmtDate(sched.nextReview), 'success');
+};
+
+/* 我的作答：拍照 / 相册 */
+function pickReviewAnswerPhoto(camera = true) {
+  const q = currentReview();
+  if (!q) return;
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  if (camera) input.setAttribute('capture', 'environment');
+  input.addEventListener('change', async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    try {
+      let f = file;
+      if (typeof cropImageFile === 'function') {
+        f = await cropImageFile(file);
+        if (!f) return;
+      }
+      const src = await compress(f);
+      reviewAnswerImages[q.id] = src;
+      saveReviewAnswerImages();
+      if (state.review && currentReview()?.id === q.id) renderReview();
+      toast('作答照片已保存');
+    } catch (error) {
+      toast(error.message || '作答照片保存失败', 'error');
+    }
+  });
+  input.click();
+}
+
+document.addEventListener('click', (event) => {
+  const action = event.target.closest('[data-review-action]')?.dataset.reviewAction;
+  if (!action) return;
+  if (action === 'answer-camera') { event.preventDefault(); pickReviewAnswerPhoto(true); return; }
+  if (action === 'answer-gallery') { event.preventDefault(); pickReviewAnswerPhoto(false); return; }
+  if (action === 'answer-remove') {
+    const q = currentReview();
+    if (q) { delete reviewAnswerImages[q.id]; saveReviewAnswerImages(); renderReview(); }
+    return;
+  }
+  if (action === 'resume') { event.preventDefault(); resumeSavedReview(); return; }
+  if (action === 'discard') { event.preventDefault(); clearSavedReview(); render(); return; }
+  if (action === 'start-filtered') { event.preventDefault(); startFilteredReview(); return; }
+  if (action === 'hint') showReviewHint(event.target.closest('[data-review-action="hint"]'));
+});
+
+async function showReviewHint(btn) {
+  const q = currentReview();
+  const panel = $('#reviewHintPanel');
+  if (!q || !panel || reviewHintBusy) return;
+  if (reviewHints[q.id]) { panel.hidden = false; panel.textContent = reviewHints[q.id]; return; }
+  const text = q.question || q.ocrText || '';
+  if (!text && !q.images.length) return toast('这道题没有可提示的内容', 'info');
+  if (text && !aiConfigured()) return toast('先在设置里配置 DeepSeek Key', 'info');
+  if (!text && !visionConfigured()) return toast('图片题请先配置百炼 Qwen-VL Key', 'info');
+  reviewHintBusy = true;
+  const old = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.textContent = '正在想提示…'; }
+  const context = [
+    '学科：' + (q.subject || ''),
+    '章节：' + (q.chapter || ''),
+    '知识点：' + (q.topic || ''),
+    '具体考题项目：' + (q.item || ''),
+    '题型：' + (q.type || ''),
+    '题干：' + (q.question || q.ocrText || '')
+  ].join('\n');
+  try {
+    let hint = '';
+    if (text) {
+      hint = await callDeepSeek([
+        { role: 'system', content: '你是考研错题教练。只给下一步提示，不直接给最终答案；2 句话以内，中文。' },
+        { role: 'user', content: context }
+      ], 300, false);
+    } else {
+      hint = await callVisionGeneric(q.images[0], '只根据这张题目图片，给一句下一步解题提示。不要给最终答案，不要解释，2 句话以内，中文。');
+    }
+    hint = String(hint || '').trim();
+    if (!hint) throw new Error('没有返回提示');
+    reviewHints[q.id] = hint;
+    panel.textContent = hint;
+    panel.hidden = false;
+  } catch (error) {
+    toast(error.message || '提示失败，稍后再试', 'error');
+  } finally {
+    reviewHintBusy = false;
+    if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = old || 'AI 提示（不给答案）'; }
+  }
+}
+
+/* 复习页恢复卡片 + 复习前筛选 */
+function reviewFilterHTML() {
+  const subjects = [...new Set(state.questions.map((q) => q.subject))];
+  return `<div class="review-filter-card">
+    <div><strong>复习前筛选</strong><span>只复习你想刷的范围</span></div>
+    <div class="review-filter-controls">
+      <label>科目<select class="select input" id="reviewFilterSubject"><option value="">全部科目</option>${subjects.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}</select></label>
+      <label>范围<select class="select input" id="reviewFilterScope"><option value="due">到期复习</option><option value="active">未掌握 + 复习中</option><option value="all">全部错题</option></select></label>
+      <label>数量<select class="select input" id="reviewFilterCount"><option value="5">5 道</option><option value="10" selected>10 道</option><option value="20">20 道</option><option value="all">全部</option></select></label>
+      <button type="button" class="btn btn-primary btn-sm" data-review-action="start-filtered">按筛选开始</button>
+    </div>
+  </div>`;
+}
+function startReviewWithIds(ids) {
+  if (!ids.length) return toast('没有符合条件的错题', 'info');
+  state.review = { queue: ids.slice(), index: 0, revealed: false, results: { again: 0, hard: 0, good: 0, easy: 0 }, total: ids.length };
+  reviewStartedAt = Date.now();
+  reviewHints = {};
+  groupReviewQueue();
+  saveReviewSession();
+  renderReview();
+}
+function startFilteredReview() {
+  const subject = $('#reviewFilterSubject')?.value || '';
+  const scope = $('#reviewFilterScope')?.value || 'due';
+  const count = $('#reviewFilterCount')?.value || '10';
+  let pool = state.questions.filter((q) => !subject || q.subject === subject);
+  if (scope === 'due') pool = pool.filter((q) => dueQuestions().some((d) => d.id === q.id));
+  else if (scope === 'active') pool = pool.filter((q) => q.status !== 'mastered');
+  if (scope === 'due') pool.sort((a, b) => String(a.nextReview || '').localeCompare(String(b.nextReview || '')));
+  else pool.sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
+  if (count !== 'all') pool = pool.slice(0, Number(count) || 10);
+  startReviewWithIds(pool.map((q) => q.id));
+}
+
+const baseRenderReviewPageV2 = renderReviewPage;
+renderReviewPage = function () {
+  const html = baseRenderReviewPageV2();
+  let prefix = '';
+  const saved = loadSavedReview();
+  if (saved) {
+    const when = saved.savedAt ? fmtDate(saved.savedAt.slice(0, 10)) : '';
+    prefix += `<div class="review-resume-card"><div><strong>上次复习还没做完</strong><span>第 ${saved.index + 1} / ${saved.total} 道${when ? ' · ' + when : ''}</span></div><div><button type="button" class="btn btn-primary btn-sm" data-review-action="resume">继续上次复习</button><button type="button" class="btn btn-ghost btn-sm" data-review-action="discard">放弃</button></div></div>`;
+  }
+  prefix += reviewFilterHTML();
+  return prefix + html;
+};
+
+window.addEventListener('pagehide', () => { saveReviewSession(); saveReviewAnswerImages(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { saveReviewSession(); saveReviewAnswerImages(); }
+});
 
 </script>
   <script>
