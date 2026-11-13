@@ -11,6 +11,10 @@
     (function () {
       try {
         var p = new URLSearchParams(location.search);
+        if (p.get('browser') === '1') {
+          document.documentElement.setAttribute('data-shortcut', 'browser');
+          return;
+        }
         var tablet = p.get('tablet') === '1' || (window.matchMedia && matchMedia('(min-width: 900px)').matches && p.get('phone') !== '1');
         var l = document.createElement('link');
         l.rel = 'manifest';
@@ -2053,34 +2057,50 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   .review-answer-photo-body img { max-height: 180px; }
 }
 
-/* 错题详情：窄屏操作区不挤成竖排 */
+/* 错题详情：窄屏操作区压缩成一行，别挡题目 */
 @media (max-width: 1100px) {
   .modal.detail-modal .modal-foot {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
   }
-  .modal.detail-modal .modal-foot > .btn-danger { order: 2; width: 100%; }
+  .modal.detail-modal .modal-foot > .btn-danger {
+    order: 5;
+    width: auto;
+    flex: 0 0 auto;
+    padding: 0 8px;
+  }
   .modal.detail-modal .modal-foot .foot-right {
     order: 1;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
+    width: auto;
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
   }
   .modal.detail-modal .modal-foot .foot-right .btn {
-    width: 100%;
+    flex: 1 1 0;
+    width: auto;
     min-width: 0;
-    padding: 0 8px;
+    padding: 0 5px;
+    font-size: 10px;
+    gap: 3px;
     white-space: nowrap;
   }
-  .modal.detail-modal .modal-foot .foot-right .btn-primary {
-    grid-column: 1 / -1;
-    order: -1;
-  }
+  .modal.detail-modal .modal-foot .foot-right .btn-primary { order: -1; }
 }
 @media (max-width: 640px) {
-  .modal.detail-modal .modal-foot .foot-right { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .modal.detail-modal .modal-foot { flex-direction: column; align-items: stretch; }
+  .modal.detail-modal .modal-foot > .btn-danger { order: 2; width: 100%; }
+  .modal.detail-modal .modal-foot .foot-right {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    order: 1;
+  }
+  .modal.detail-modal .modal-foot .foot-right .btn { width: 100%; padding: 0 8px; font-size: 11px; }
+  .modal.detail-modal .modal-foot .foot-right .btn-primary { grid-column: 1 / -1; order: -1; }
 }
 
 /* 平板横屏首页：先保证可读和可点，不再硬挤两栏 */
@@ -2254,7 +2274,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.38';
+const APP_VERSION = '1.5.40';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
