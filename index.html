@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#172522">
-  <meta name="description" content="错题拾遗·本地版：考研错题按科目、模块和错因整理，数据只保存在本机。">
-  <title>错题拾遗 · 本地版</title>
+  <meta name="description" content="错题拾遗 1.5：考研错题按科目、知识点和具体考题项目整理，本地保存，可选云端同步与 AI 教练。">
+  <title>错题拾遗 · 1.5</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -1613,6 +1613,134 @@ body.chat-open { overflow: hidden; }
   .ai-chat-head-actions .btn[data-chat-action="clear"] { display: none; }
 }
 
+/* ---------- 配置向导 / 扫码配对 / 诊断 ---------- */
+.wizard-card { border-color: rgba(212,90,62,.35); }
+.wizard-step { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.wizard-step:last-of-type { border-bottom: 0; }
+.wizard-step-no { width: 24px; height: 24px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: var(--paper-deep); color: var(--muted); font: 700 11px/1 var(--sans); }
+.wizard-step-no.ok { background: var(--teal-soft); color: var(--teal); }
+.wizard-step-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.wizard-step-main strong { font-size: 12.5px; }
+.wizard-step-main span { color: var(--muted); font-size: 10.5px; line-height: 1.5; }
+.wizard-step .btn { flex: 0 0 auto; }
+.pair-wrap { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.pair-qr { width: 236px; min-height: 236px; padding: 8px; background: #fff; border: 1px solid var(--line); border-radius: 12px; display: grid; place-items: center; }
+.pair-qr img, .pair-qr canvas { max-width: 220px; height: auto; }
+.pair-info { flex: 1; min-width: 220px; }
+.pair-code { word-break: break-all; font-family: var(--font-mono); font-size: 11px; }
+.pair-link { resize: vertical; font-family: var(--font-mono); }
+.diag-row { display: flex; align-items: flex-start; gap: 9px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+.diag-row:last-child { border-bottom: 0; }
+.diag-row .sync-dot { margin-top: 4px; }
+.diag-row strong { flex: 0 0 88px; }
+.diag-row span:last-child { color: var(--muted); }
+@media (max-width: 640px) {
+  .pair-wrap { flex-direction: column; align-items: center; }
+  .pair-info { width: 100%; }
+}
+
+.wizard-card { grid-column: 1 / -1; }
+
+/* ---------- 知识框架思维导图 ---------- */
+.mindmap-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.mindmap-toolbar label { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
+.mindmap-toolbar .select { width: auto; min-width: 120px; height: 34px; }
+.mindmap-scroll { overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fdfaf3; max-height: 62vh; }
+.mindmap-svg { display: block; min-width: 760px; }
+.mindmap-topic:hover rect { fill: #f7e3dc; }
+
+/* ---------- 紧凑模式 ---------- */
+body.compact-ui .main { padding-top: 18px; }
+body.compact-ui .topbar { margin-bottom: 15px; }
+body.compact-ui .hero-main { min-height: 198px; padding: 22px 26px; }
+body.compact-ui .hero-title { font-size: clamp(24px, 2.5vw, 34px); margin-top: 13px; }
+body.compact-ui .card-pad,
+body.compact-ui .settings-card { padding: 16px; }
+body.compact-ui .stat-card { padding: 14px 15px 12px; }
+body.compact-ui .stats-grid { gap: 10px; }
+body.compact-ui .settings-grid { gap: 12px; }
+body.compact-ui .wizard-step { padding: 7px 0; }
+body.compact-ui .q-grid { gap: 10px; }
+body.compact-ui .settings-group-title { margin-top: 0; }
+
+/* ---------- 方案 A：轻量学习台 ---------- */
+.dash-light { display: flex; flex-direction: column; gap: 16px; }
+.dash-top-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr); gap: 16px; }
+.dash-focus { position: relative; overflow: hidden; min-height: 230px; padding: 28px 30px; border-radius: 20px; color: var(--cream); background: radial-gradient(circle at 92% 8%, rgba(212,90,62,.2) 0, transparent 38%), linear-gradient(125deg,#172522,#203a34); box-shadow: var(--shadow-md); }
+.dash-focus::after { content: ""; position: absolute; right: -60px; bottom: -140px; width: 300px; height: 300px; border: 1px solid rgba(247,241,229,.13); border-radius: 50%; }
+.dash-kicker { position: relative; z-index: 1; color: #c4d3cb; font-size: 9px; font-weight: 700; letter-spacing: .18em; }
+.dash-focus h2 { position: relative; z-index: 1; margin: 14px 0 7px; font-family: var(--font-serif); font-size: clamp(27px, 2.5vw, 36px); line-height: 1.35; }
+.dash-focus h2 em { color: #edb49f; font-style: normal; }
+.dash-focus p { position: relative; z-index: 1; margin: 0; color: #b9c8c1; font-size: 11.5px; }
+.dash-progress { position: relative; z-index: 1; height: 6px; margin: 22px 0 17px; border-radius: 8px; background: rgba(255,255,255,.13); overflow: hidden; }
+.dash-progress span { display: block; height: 100%; border-radius: inherit; background: #edb49f; }
+.dash-focus-bottom { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.dash-streak { padding: 7px 10px; border: 1px solid rgba(255,255,255,.15); border-radius: 99px; color: #c4d3cb; font-size: 10px; }
+.dash-quick { padding: 24px; display: flex; flex-direction: column; }
+.dash-quick h3 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 19px; }
+.dash-quick p { margin: 0 0 14px; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.dash-quick .btn { width: 100%; }
+.dash-quick-note { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line); color: var(--muted); font-size: 9.5px; line-height: 1.6; }
+.dash-two, .dash-bottom-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 16px; }
+.dash-recent { display: flex; flex-direction: column; }
+.dash-recent-row { display: flex; align-items: flex-start; gap: 10px; padding: 11px 0; border-bottom: 1px solid rgba(227,217,201,.65); cursor: pointer; }
+.dash-recent-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.dash-num { flex: 0 0 auto; padding: 6px 5px; color: var(--muted); font: 9px/1 var(--font-mono); border: 1px solid var(--line); border-radius: 6px; background: var(--paper); }
+.dash-recent-main { flex: 1; min-width: 0; }
+.dash-recent-title { overflow: hidden; font-size: 12px; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.dash-recent-meta { margin-top: 4px; overflow: hidden; color: var(--muted); font-size: 9.5px; white-space: nowrap; text-overflow: ellipsis; }
+.dash-pill { flex: 0 0 auto; padding: 3px 7px; color: var(--gold); background: var(--gold-soft); border-radius: 99px; font-size: 9px; }
+.dash-pill.review { color: var(--teal); background: var(--teal-soft); }
+.dash-pill.mastered { color: var(--teal); background: #e2eee9; }
+.dash-weak { display: flex; flex-direction: column; gap: 12px; }
+.dash-weak-label { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 5px; color: var(--soft); font-size: 10.5px; }
+.dash-weak-label strong { color: var(--muted); font-weight: 500; }
+.dash-weak-track { height: 6px; overflow: hidden; border-radius: 10px; background: #eee5d7; }
+.dash-weak-track span { display: block; height: 100%; border-radius: inherit; background: var(--teal); }
+.dash-weak-row:nth-child(2) .dash-weak-track span { background: var(--gold); }
+.dash-weak-row:nth-child(3) .dash-weak-track span { background: var(--accent); }
+.dash-ai-strip { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; padding: 9px 10px; border: 1px solid #eadfce; border-radius: 10px; background: #f7f1e5; color: var(--soft); font-size: 10px; line-height: 1.5; }
+.dash-ai-strip .btn { flex: 0 0 auto; }
+.dash-plan-nums { display: flex; gap: 24px; margin-top: 3px; flex-wrap: wrap; }
+.dash-plan-nums strong { display: block; font-family: var(--font-serif); font-size: 26px; line-height: 1; }
+.dash-plan-nums span { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; }
+.dash-plan-bar { height: 6px; margin-top: 15px; overflow: hidden; border-radius: 8px; background: #eee5d7; }
+.dash-plan-bar span { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.dash-quote { margin: 0 0 13px; color: var(--soft); font-family: var(--font-serif); font-size: 14px; line-height: 1.75; }
+@media (max-width: 900px) {
+  .dash-top-grid, .dash-two, .dash-bottom-grid { grid-template-columns: 1fr; }
+  .dash-focus { padding: 24px; }
+}
+
+/* ---------- 方案 C：沉浸复习 ---------- */
+.review-v2 { padding: 20px clamp(14px, 3.5vw, 48px); background: radial-gradient(circle at 50% -10%, rgba(212,90,62,.16) 0, transparent 38%), #12201d; }
+.review-v2-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; max-width: 1000px; margin: 0 auto 12px; }
+.review-exit { display: inline-flex; align-items: center; gap: 5px; padding: 6px 8px; color: #9fb2aa; background: transparent; border: 0; border-radius: 7px; font-size: 11px; cursor: pointer; }
+.review-exit:hover { background: rgba(255,255,255,.06); color: #fff; }
+.review-v2-step { color: #aebbb5; font-size: 11px; letter-spacing: .06em; }
+.review-v2-step strong { margin: 0 3px; color: #fff; font: 700 18px/1 var(--font-serif); }
+.review-v2-step span { color: #81978d; }
+.review-v2-timer { min-width: 64px; padding: 7px 9px; color: #d8e3dd; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 8px; font: 700 12px/1 var(--font-mono); text-align: center; }
+.review-v2-progress { width: 100%; max-width: 1000px; height: 3px; margin: 0 auto 22px; overflow: hidden; border-radius: 3px; background: rgba(255,255,255,.1); }
+.review-v2-progress span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width .3s ease; }
+.review-v2-stage { width: 100%; max-width: 1000px; margin: 0 auto; }
+.review-v2-card { padding: clamp(22px, 3.5vw, 36px); color: var(--ink); background: var(--paper); border-radius: 18px; box-shadow: 0 24px 70px rgba(0,0,0,.3); }
+.review-v2-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.review-v2-title { margin: 0 0 13px; font: 700 22px/1.35 var(--font-serif); }
+.review-v2-q { margin: 0 0 16px; padding: 18px 20px; border-left: 3px solid var(--accent); border-radius: 0 11px 11px 0; background: rgba(255,253,248,.72); font: 400 18px/1.8 var(--font-serif); white-space: pre-wrap; word-break: break-word; }
+.review-v2-wait { margin-top: 10px; color: var(--muted); font-size: 10px; text-align: center; }
+.review-v2-rate-label { margin-top: 18px; color: var(--muted); font-size: 10px; }
+.review-v2-hint { margin-top: 15px; color: #7e9489; font-size: 9px; text-align: center; }
+.review-v2-foot { width: 100%; max-width: 1000px; margin: 14px auto 0; color: #71877d; font-size: 9.5px; text-align: center; }
+@media (max-width: 640px) {
+  .review-v2 { padding: 12px 10px; }
+  .review-v2-card { border-radius: 14px; padding: 18px 15px; }
+  .review-v2-title { font-size: 18px; }
+  .review-v2-q { padding: 14px; font-size: 16px; }
+  .review-v2-step { font-size: 10px; }
+  .review-v2-timer { font-size: 11px; }
+}
+
 </style>
 </head>
 <body>
@@ -1624,7 +1752,7 @@ body.chat-open { overflow: hidden; }
           <strong>错题拾遗</strong>
           <small>MISTAKE ARCHIVE</small>
         </span>
-        <span class="kaoyan-badge">本地版</span>
+        <span class="kaoyan-badge">v1.5</span>
       </a>
 
       <nav class="nav" aria-label="主导航">
@@ -1736,7 +1864,7 @@ body.chat-open { overflow: hidden; }
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.5';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -1925,6 +2053,7 @@ function normalize(raw = {}) {
     chapter: String(raw.chapter || '').trim(),
     source: String(raw.source || '').trim(),
     type: TYPES.includes(raw.type) ? raw.type : (raw.type || '其他'),
+    item: String(raw.item || '').trim(),
     difficulty: clamp(Number(raw.difficulty) || 3, 1, 5),
     question: String(raw.question || '').trim(),
     myAnswer: String(raw.myAnswer || '').trim(),
@@ -2161,7 +2290,7 @@ function filtered() {
   let list = state.questions.slice();
   if (f.search.trim()) {
     const n = f.search.trim().toLowerCase();
-    list = list.filter((q) => [q.question, q.topic, q.source, q.answer, q.analysis, q.myAnswer, q.tags.join(' ')].join(' ').toLowerCase().includes(n));
+    list = list.filter((q) => [q.question, q.topic, q.chapter, q.item, q.source, q.answer, q.analysis, q.myAnswer, q.tags.join(' ')].join(' ').toLowerCase().includes(n));
   }
   if (f.subject !== 'all') list = list.filter((q) => q.subject === f.subject);
   if (f.status === 'starred') list = list.filter((q) => q.starred);
@@ -2335,6 +2464,7 @@ function openForm(id = null) {
     <div class="form-col">
       <div class="field-row"><div class="field"><label for="qSubject">学科 <span class="req">*</span></label><select class="select input" id="qSubject" name="subject">${options(SUBJECTS, q.subject)}</select></div><div class="field"><label for="qType">题型</label><select class="select input" id="qType" name="type">${options(TYPES, q.type || '其他')}</select></div></div>
       <div class="field-row"><div class="field"><label for="qTopic">章节 / 知识点</label><input class="input" id="qTopic" name="topic" value="${esc(q.topic)}" placeholder="例：导数与最值"></div><div class="field"><label for="qSource">来源</label><input class="input" id="qSource" name="source" value="${esc(q.source)}" placeholder="例：期中试卷"></div></div>
+      <div class="field"><label for="qItem">具体考题项目<span class="hint">这一知识点下具体怎么考</span></label><input class="input" id="qItem" name="item" value="${esc(q.item || '')}" list="itemSuggestions" placeholder="例：求极限 / 无穷小阶的比较 / 间断点类型判断"><datalist id="itemSuggestions"></datalist></div>
       <div class="field"><label>难度</label><div class="segmented">${[1, 2, 3, 4, 5].map((n) => `<input type="radio" id="diff${n}" name="difficulty" value="${n}" ${q.difficulty === n ? 'checked' : ''}><label for="diff${n}">${'★'.repeat(n)}</label>`).join('')}</div></div>
       <div class="field"><label>掌握状态</label><div class="segmented">${[['new', '未掌握'], ['review', '复习中'], ['mastered', '已掌握']].map(([k, l]) => `<input type="radio" id="st${k}" name="status" value="${k}" ${q.status === k ? 'checked' : ''}><label for="st${k}">${l}</label>`).join('')}</div></div>
       <div class="field"><label for="qReason">错因 <span class="req">*</span></label><select class="select input" id="qReason" name="reason">${options(REASONS, q.reason || '概念不清')}</select></div>
@@ -2428,7 +2558,7 @@ async function saveForm(old) {
   const base = old || normalize({ id: uid(), status: d.status || 'new' });
   const aiGenerated = d.aiGenerated !== undefined ? d.aiGenerated === '1' : Boolean(base.aiGenerated);
   const aiVerified = d.aiVerified !== undefined ? d.aiVerified === '1' : Boolean(base.aiVerified);
-  const q = normalize({ ...base, subject: d.subject, topic: d.topic, chapter: d.chapter, source: d.source, type: d.type, difficulty: d.difficulty,
+  const q = normalize({ ...base, subject: d.subject, topic: d.topic, chapter: d.chapter, source: d.source, type: d.type, item: d.item, difficulty: d.difficulty,
     question: d.question, myAnswer: d.myAnswer, answer: d.answer, analysis: d.analysis, reason: d.reason,
     tags: d.tags, images: state.formImages, starred: d.starred === '1', status: d.status,
     aiGenerated, aiVerified, updatedAt: now });
@@ -2460,7 +2590,7 @@ function openDetail(id) {
   const q = state.questions.find((x) => x.id === id);
   if (!q) return;
   const history = state.logs.filter((l) => l.qid === q.id).slice(-6).reverse();
-  openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.chapter ? ' · ' + esc(q.chapter) : ''}${q.topic ? ' · ' + esc(q.topic) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.chapter ? ' · ' + esc(q.chapter) : ''}${q.topic ? ' · ' + esc(q.topic) : ''}${q.item ? ' · ' + esc(q.item) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
   <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}${q.aiGenerated ? `<span class="q-tag" style="color:var(--gold)">AI 生成${q.aiVerified ? ' · 已核对' : ' · 待核对'}</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
   <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
   <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '还没有写解析。编辑这道题，把“下次怎么做”写下来。')}</p></div>
@@ -2567,8 +2697,8 @@ function exportJSON() {
   toast('备份已导出');
 }
 function exportCSV() {
-  const H = ['学科', '知识点', '来源', '题型', '难度', '题干', '我的答案', '正确答案', '解析', '错因', '标签', '状态', '复习次数', '下次复习'];
-  const rows = state.questions.map((q) => [q.subject, q.topic, q.source, q.type, q.difficulty, q.question, q.myAnswer, q.answer, q.analysis, q.reason, q.tags.join(' / '), STATUS[q.status].label, q.reviewCount, q.nextReview]);
+  const H = ['学科', '章节', '知识点', '具体考题项目', '来源', '题型', '难度', '题干', '我的答案', '正确答案', '解析', '错因', '标签', '状态', '复习次数', '下次复习'];
+  const rows = state.questions.map((q) => [q.subject, q.chapter, q.topic, q.item, q.source, q.type, q.difficulty, q.question, q.myAnswer, q.answer, q.analysis, q.reason, q.tags.join(' / '), STATUS[q.status].label, q.reviewCount, q.nextReview]);
   const cell = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
   const csv = '\ufeff' + [H, ...rows].map((r) => r.map(cell).join(',')).join('\r\n');
   download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `错题拾遗-表格-${today()}.csv`);
@@ -3708,7 +3838,7 @@ function syllabusCard() {
   }
   const rows = Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 6);
   const max = Math.max(1, ...rows.map((x) => x[1]));
-  return `<div class="card card-pad" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">大纲章节掌握度</h2><p class="card-sub">按“科目 · 章节”汇总未掌握和复习中的题。</p></div><button class="btn btn-ghost btn-sm" data-syllabus-action="browse">${icon('book', 'icon-sm')}浏览大纲</button></div>
+  return `<div class="card card-pad" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">大纲章节掌握度</h2><p class="card-sub">按“科目 · 章节”汇总未掌握和复习中的题。</p></div><div class="foot-right"><button class="btn btn-ghost btn-sm" data-syllabus-action="mindmap">${icon('spark', 'icon-sm')}思维导图</button><button class="btn btn-ghost btn-sm" data-syllabus-action="browse">${icon('book', 'icon-sm')}浏览大纲</button></div></div>
     <div class="subject-bars">${rows.length ? rows.map(([n, v]) => `<div class="subject-row"><span class="subject-name" title="${esc(n)}">${esc(n)}</span><span class="subject-track"><span class="subject-fill" style="width:${Math.round(v / max * 100)}%"></span></span><span class="subject-num">${v}</span></div>`).join('') : '<div class="empty-mini">还没有章节数据，录题时选一下大纲即可。</div>'}</div>
   </div>`;
 }
@@ -3719,13 +3849,119 @@ renderStats = function () {
 
 function openSyllabus() {
   const subjects = Object.keys(SYLLABUS);
-  openModal(`<div class="modal-head"><div><div class="modal-kicker">SYLLABUS</div><h2 class="modal-title">考研大纲知识点</h2><p class="modal-sub">录题时可以直接选；这里用来对照复习范围。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
-  <div class="modal-body">${subjects.map((s) => `<details class="answer-block accent" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700">${esc(s)}</summary>${Object.entries(SYLLABUS[s]).map(([ch, pts]) => `<div style="margin-top:8px"><strong>${esc(ch)}</strong><div class="detail-tags" style="margin-top:4px">${pts.map((p) => `<span class="q-tag">${esc(p)}</span>`).join('')}</div></div>`).join('')}</details>`).join('')}</div>
-  <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
+  const qs = state.questions;
+  const countTopic = (s, ch, p) => qs.filter((q) => q.subject === s && chapterOf(q) === ch && (q.topic === p || q.topic.includes(p))).length;
+  const countChapter = (s, ch) => qs.filter((q) => q.subject === s && chapterOf(q) === ch);
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">KNOWLEDGE MAP</div><h2 class="modal-title">知识框架</h2><p class="modal-sub">按科目 → 章节 → 知识点看错题分布，点知识点可以跳到错题本。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">${subjects.map((s) => {
+    const all = qs.filter((q) => q.subject === s);
+    return `<details class="answer-block accent" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700;display:flex;justify-content:space-between;gap:10px"><span>${esc(s)}</span><span class="muted" style="font-weight:500;font-size:11px">${all.length} 道 · 未掌握 ${all.filter((q) => q.status !== 'mastered').length}</span></summary>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px">${Object.entries(SYLLABUS[s]).map(([ch, pts]) => {
+        const list = countChapter(s, ch);
+        return `<div class="syllabus-chapter"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>${esc(ch)}</strong><span class="muted" style="font-size:10px">${list.length} 道 · 未掌握 ${list.filter((q) => q.status !== 'mastered').length}</span></div><div class="detail-tags" style="margin-top:5px">${pts.map((p) => {
+          const n = countTopic(s, ch, p);
+          const types = {};
+          qs.filter((q) => q.subject === s && chapterOf(q) === ch && (q.topic === p || q.topic.includes(p))).forEach((q) => { const key = q.item || q.type; types[key] = (types[key] || 0) + 1; });
+          const typeText = Object.entries(types).map(([k, v]) => `${k}${v}`).join(' · ');
+          return `<button type="button" class="q-tag" style="border:0;cursor:pointer;${n ? '' : 'opacity:.55'}" data-syllabus-subject="${esc(s)}" data-syllabus-topic="${esc(p)}" title="${esc(typeText)}">${esc(p)}${n ? ` ${n}` : ''}${typeText ? `<span class="muted"> ${esc(typeText)}</span>` : ''}</button>`;
+        }).join('')}</div></div>`;
+      }).join('')}</div></details>`;
+  }).join('')}</div>
+  <div class="modal-foot"><span class="muted" style="font-size:10px">点知识点 → 跳到错题本按该知识点筛选</span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
 }
 document.addEventListener('click', (event) => {
   const el = event.target.closest('[data-syllabus-action="browse"]');
   if (el) { event.preventDefault(); openSyllabus(); }
+  const topic = event.target.closest('[data-syllabus-topic]');
+  if (topic) {
+    event.preventDefault();
+    state.filters.subject = topic.dataset.syllabusSubject || 'all';
+    state.filters.search = topic.dataset.syllabusTopic || '';
+    closeModal();
+    navigate('questions');
+  }
+});
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 知识框架思维导图
+   科目 → 章节 → 知识点 → 题型数量
+   ============================================================ */
+'use strict';
+
+function mindCount(subject, chapter, topic) {
+  return state.questions.filter((q) =>
+    q.subject === subject &&
+    chapterOf(q) === chapter &&
+    (q.topic === topic || (q.topic && q.topic.includes(topic)))
+  );
+}
+
+function mindSvg(subject) {
+  const qs = state.questions.filter((q) => q.subject === subject);
+  const chapters = syllabusChapters(subject);
+  const rowH = 54;
+  const gap = 10;
+  const topicW = 300;
+  const chapterW = 150;
+  const rootW = 128;
+  const xRoot = 24;
+  const xChapter = 200;
+  const xTopic = 420;
+  const nodes = [];
+  let y = 32;
+  const chapterList = [];
+  for (const ch of chapters) {
+    const pts = syllabusPoints(subject, ch);
+    const leaves = [];
+    for (const p of pts) {
+      const list = mindCount(subject, ch, p);
+      const types = {};
+      list.forEach((q) => { const key = q.item || q.type; types[key] = (types[key] || 0) + 1; });
+      const typeText = Object.entries(types).map(([k, v]) => `${k}${v}`).join(' · ');
+      leaves.push({ topic: p, y: y + rowH / 2, count: list.length, un: list.filter((q) => q.status !== 'mastered').length, typeText });
+      y += rowH + gap;
+    }
+    const chY = leaves.length ? (leaves[0].y + leaves[leaves.length - 1].y) / 2 : y;
+    chapterList.push({ chapter: ch, y: chY, leaves, count: chapters.length ? qs.filter((q) => chapterOf(q) === ch).length : 0 });
+  }
+  const height = Math.max(420, y + 20);
+  const rootY = height / 2;
+  const paths = [];
+  const groups = [];
+
+  groups.push(`<g><rect x="${xRoot}" y="${rootY - 28}" width="${rootW}" height="56" rx="14" fill="#172522"/><text x="${xRoot + rootW / 2}" y="${rootY - 6}" text-anchor="middle" fill="#f7f1e5" font-size="13" font-weight="700">${esc(subject)}</text><text x="${xRoot + rootW / 2}" y="${rootY + 13}" text-anchor="middle" fill="#b9c8c1" font-size="10">${qs.length} 道 · 未掌握 ${qs.filter((q) => q.status !== 'mastered').length}</text></g>`);
+
+  for (const c of chapterList) {
+    const cy = c.y;
+    paths.push(`<path d="M${xRoot + rootW} ${rootY} C${xRoot + rootW + 45} ${rootY}, ${xChapter - 45} ${cy}, ${xChapter} ${cy}" fill="none" stroke="#cfc3b1" stroke-width="1.5"/>`);
+    groups.push(`<g><rect x="${xChapter}" y="${cy - 20}" width="${chapterW}" height="40" rx="10" fill="#fbf7ef" stroke="#d9cdbd"/><text x="${xChapter + chapterW / 2}" y="${cy - 3}" text-anchor="middle" fill="#1e2b2a" font-size="11" font-weight="700">${esc(c.chapter)}</text><text x="${xChapter + chapterW / 2}" y="${cy + 12}" text-anchor="middle" fill="#7a8783" font-size="9">${c.count} 道</text></g>`);
+    for (const leaf of c.leaves) {
+      paths.push(`<path d="M${xChapter + chapterW} ${cy} C${xChapter + chapterW + 35} ${cy}, ${xTopic - 35} ${leaf.y}, ${xTopic} ${leaf.y}" fill="none" stroke="#e0d6c8" stroke-width="1.2"/>`);
+      const accent = leaf.un ? '#d45a3e' : leaf.count ? '#2f6d62' : '#cfc3b1';
+      groups.push(`<g class="mindmap-topic" data-syllabus-subject="${esc(subject)}" data-syllabus-topic="${esc(leaf.topic)}" style="cursor:pointer"><rect x="${xTopic}" y="${leaf.y - 22}" width="${topicW}" height="44" rx="10" fill="${leaf.count ? '#fffdf8' : '#fbf7ef'}" stroke="${accent}"/><text x="${xTopic + 12}" y="${leaf.y - 5}" fill="#1e2b2a" font-size="11" font-weight="600">${esc(leaf.topic)}</text><text x="${xTopic + 12}" y="${leaf.y + 12}" fill="#7a8783" font-size="9">${leaf.count ? `${leaf.count} 道 · 未掌握 ${leaf.un}` : '暂无错题'}${leaf.typeText ? ' · ' + esc(leaf.typeText) : ''}</text></g>`);
+    }
+  }
+
+  return `<div class="mindmap-scroll"><svg class="mindmap-svg" viewBox="0 0 760 ${height}" width="760" height="${height}" role="img" aria-label="${esc(subject)}知识框架思维导图"><rect width="760" height="${height}" fill="#fdfaf3"/>${paths.join('')}${groups.join('')}</svg></div>`;
+}
+
+function openMindMap() {
+  const subjects = Object.keys(SYLLABUS);
+  const initial = state.filters.subject !== 'all' && subjects.includes(state.filters.subject) ? state.filters.subject : subjects[0];
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">MIND MAP</div><h2 class="modal-title">知识框架思维导图</h2><p class="modal-sub">科目 → 章节 → 知识点 → 题型；点知识点跳到错题本。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="mindmap-toolbar"><label>科目 <select class="select input" id="mindmapSubject">${subjects.map((s) => `<option value="${esc(s)}" ${s === initial ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select></label><span class="muted" style="font-size:10px">红色边 = 有未掌握</span></div><div id="mindmapCanvas">${mindSvg(initial)}</div></div>
+  <div class="modal-foot"><span class="muted" style="font-size:10px">点知识点 → 按该知识点筛选错题</span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">关闭</button></div></div>`, false);
+  setTimeout(() => {
+    const sel = $('#mindmapSubject');
+    if (sel) sel.addEventListener('change', () => { const c = $('#mindmapCanvas'); if (c) c.innerHTML = mindSvg(sel.value); });
+  }, 30);
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-syllabus-action="mindmap"]');
+  if (el) { event.preventDefault(); openMindMap(); }
 });
 
 </script>
@@ -3826,6 +4062,7 @@ function qText(q) {
     '学科：' + q.subject,
     '章节：' + (q.chapter || '未填写'),
     '知识点：' + (q.topic || '未填写'),
+    '具体考题项目：' + (q.item || '未填写'),
     '题型：' + (q.type || '未填写'),
     '难度：' + '★'.repeat(q.difficulty || 3),
     '错因：' + (q.reason || '未填写'),
@@ -4228,7 +4465,7 @@ document.addEventListener('click', (event) => {
       set('#qAnswer', lastSimilar.answer);
       set('#qAnalysis', lastSimilar.analysis);
       set('#qTopic', lastSimilar.topic);
-      if (src) set('#qSubject', src.subject);
+      if (src) { set('#qSubject', src.subject); set('#qItem', src.item || ''); }
       const d = document.querySelector(`input[name="difficulty"][value="${lastSimilar.difficulty}"]`);
       if (d) d.checked = true;
       const form = $('#questionForm');
@@ -4802,6 +5039,157 @@ document.addEventListener('visibilitychange', () => {
 </script>
   <script>
 /* ============================================================
+   错题拾遗 · AI 自动识别知识点
+   保存新错题时，按考研大纲自动填学科/章节/知识点/错因。
+   ============================================================ */
+'use strict';
+
+const AUTOTAG_KEY = 'cuoti_ai_autotag_v1';
+const AUTOTAG_CACHE_KEY = 'cuoti_ai_tag_cache_v1';
+
+let autotagBusy = false;
+let autotagCache = {};
+try { autotagCache = JSON.parse(safeGet(AUTOTAG_CACHE_KEY) || '{}') || {}; } catch { autotagCache = {}; }
+
+function autoTagEnabled() { return safeGet(AUTOTAG_KEY) !== '0'; }
+function autoTagShould(old) {
+  if (!aiConfigured() || !autoTagEnabled() || autotagBusy) return false;
+  if (old && (old.topic || old.chapter)) return false;
+  const topic = $('#qTopic');
+  const q = $('#qQuestion');
+  if (topic && topic.value.trim()) return false;
+  return Boolean(q && q.value.trim());
+}
+
+function syllabusPrompt() {
+  return Object.entries(SYLLABUS).map(([subject, chapters]) =>
+    subject + '：' + Object.entries(chapters).map(([ch, pts]) => `${ch}（${pts.join('、')}）`).join('；')
+  ).join('\n');
+}
+
+async function classifyQuestion(text) {
+  const key = 'q:' + String(text).slice(0, 1800);
+  if (autotagCache[key]) return autotagCache[key];
+  const content = await callDeepSeek([
+    { role: 'system', content: '你是考研错题分类器。只能从给定大纲中选择，不要编造章节。只输出 JSON，不要 markdown。' },
+    { role: 'user', content: `请根据题目选择最合适的学科、章节、知识点、具体考题项目和错因。\nitem 必须是该知识点下具体的考题项目（例如：求极限、无穷小阶的比较、间断点类型判断），不要只写选择题/解答题。\n输出 JSON：\n{"subject":"学科","chapter":"章节","topic":"知识点","type":"选择题/填空题/解答题等","item":"具体考题项目","reason":"错因","tags":["标签1","标签2"]}\n\n可选大纲：\n${syllabusPrompt()}\n\n可选题型：${TYPES.join('、')}\n可选错因：${REASONS.join('、')}\n\n题目：\n${String(text).slice(0, 4000)}` }
+  ], 500, true);
+  const r = parseAIJson(content);
+  if (!r) throw new Error('AI 没有返回分类结果');
+  const result = {
+    subject: SUBJECTS.includes(r.subject) ? r.subject : '',
+    chapter: String(r.chapter || '').trim(),
+    topic: String(r.topic || '').trim(),
+    type: TYPES.includes(r.type) ? r.type : '',
+    item: String(r.item || '').trim(),
+    reason: REASONS.includes(r.reason) ? r.reason : '',
+    tags: Array.isArray(r.tags) ? r.tags.map((x) => String(x).trim()).filter(Boolean).slice(0, 6) : []
+  };
+  autotagCache[key] = result;
+  const keys = Object.keys(autotagCache);
+  if (keys.length > 120) for (const k of keys.slice(0, keys.length - 120)) delete autotagCache[k];
+  try { safeSet(AUTOTAG_CACHE_KEY, JSON.stringify(autotagCache)); } catch {}
+  return result;
+}
+
+function fillClassification(r) {
+  if (!r) return;
+  const sub = $('#qSubject');
+  if (r.subject && sub && r.subject !== sub.value) {
+    sub.value = r.subject;
+    sub.dispatchEvent(new Event('change'));
+  }
+  const chapter = $('#sylChapter');
+  const point = $('#sylPoint');
+  const hidden = $('#qChapter');
+  if (r.chapter && chapter) {
+    const has = [...chapter.options].some((o) => o.value === r.chapter);
+    if (has) {
+      chapter.value = r.chapter;
+      chapter.dispatchEvent(new Event('change'));
+      if (r.topic && point && [...point.options].some((o) => o.value === r.topic)) {
+        point.value = r.topic;
+        point.dispatchEvent(new Event('change'));
+      }
+    }
+  }
+  if (r.topic) {
+    const topic = $('#qTopic');
+    if (topic) topic.value = r.topic;
+  }
+  if (hidden) hidden.value = r.chapter || hidden.value;
+  const type = $('#qType');
+  if (r.type && type && [...type.options].some((o) => o.value === r.type)) type.value = r.type;
+  const item = $('#qItem');
+  if (item && r.item) item.value = r.item;
+  const reason = $('#qReason');
+  if (r.reason && reason && [...reason.options].some((o) => o.value === r.reason)) reason.value = r.reason;
+  const tags = $('#qTags');
+  if (tags && r.tags && r.tags.length) tags.value = r.tags.join(', ');
+}
+
+async function autoTagForm(manual = false) {
+  if (!aiConfigured()) { if (manual) toast('先在设置 → AI 错题教练里配置 DeepSeek Key', 'info'); return; }
+  const q = $('#qQuestion');
+  if (!q || !q.value.trim()) { if (manual) toast('先写题干，AI 才能识别', 'info'); return; }
+  if (autotagBusy) return;
+  autotagBusy = true;
+  try {
+    const r = await classifyQuestion(q.value);
+    fillClassification(r);
+    toast(manual ? '已填入 AI 识别的知识点' : '已自动识别知识点');
+  } catch (e) {
+    toast('知识点识别失败：' + (e.message || ''), 'error');
+  } finally {
+    autotagBusy = false;
+  }
+}
+
+const baseSaveFormAuto = saveForm;
+saveForm = async function (old) {
+  if (autoTagShould(old)) await autoTagForm(false);
+  return baseSaveFormAuto(old);
+};
+
+function injectAutoTag() {
+  const chapter = $('#sylChapter');
+  if (!chapter || $('#autoTagBtn')) return;
+  const field = chapter.closest('.field');
+  if (!field) return;
+  field.insertAdjacentHTML('beforeend', `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+    <button type="button" class="btn btn-ghost btn-sm" id="autoTagBtn" data-autotag-action="run">${icon('spark', 'icon-sm')}AI 识别知识点</button>
+    <label style="display:flex;gap:6px;align-items:center;font-size:10.5px;color:var(--muted)"><input type="checkbox" id="autoTagToggle" ${autoTagEnabled() ? 'checked' : ''}> 保存时自动识别</label>
+  </div>`);
+  const topic = $('#qTopic');
+  const list = $('#itemSuggestions');
+  const fillItems = () => {
+    if (!list) return;
+    const t = topic ? topic.value.trim() : '';
+    const items = [...new Set(state.questions.filter((q) => (!t || q.topic === t) && q.item).map((q) => q.item))].slice(0, 40);
+    list.innerHTML = items.map((x) => `<option value="${esc(x)}"></option>`).join('');
+  };
+  if (topic) topic.addEventListener('input', fillItems);
+  fillItems();
+}
+const baseOpenFormAuto = openForm;
+openForm = function (id = null) {
+  baseOpenFormAuto(id);
+  setTimeout(injectAutoTag, 50);
+};
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-autotag-action]');
+  if (el) { event.preventDefault(); autoTagForm(true); }
+});
+document.addEventListener('change', (event) => {
+  if (event.target.id !== 'autoTagToggle') return;
+  safeSet(AUTOTAG_KEY, event.target.checked ? '1' : '0');
+  toast(event.target.checked ? '已开启：保存时自动识别知识点' : '已关闭自动识别');
+});
+
+</script>
+  <script>
+/* ============================================================
    错题拾遗 · 今日计划 / 连续复习
    ============================================================ */
 'use strict';
@@ -4845,6 +5233,95 @@ function planCard() {
 const baseRenderDashboardPlan = renderDashboard;
 renderDashboard = function () {
   return baseRenderDashboardPlan() + planCard();
+};
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 轻量学习台（方案 A）
+   ============================================================ */
+'use strict';
+
+function dashStreak() {
+  const dates = new Set(state.logs.map((l) => l.date).filter(Boolean));
+  let d = today();
+  if (!dates.has(d)) d = addDays(d, -1);
+  let n = 0;
+  while (dates.has(d) && n < 3650) { n++; d = addDays(d, -1); }
+  return n;
+}
+function dashReviewedToday() {
+  return new Set(state.logs.filter((l) => l.date === today()).map((l) => l.qid)).size;
+}
+
+function renderDashboardLight() {
+  const due = dueQuestions();
+  const dueCount = due.length;
+  const reviewed = dashReviewedToday();
+  const streak = typeof planStreak === 'function' ? planStreak() : dashStreak();
+  const active = state.questions.filter((q) => q.status !== 'mastered');
+  const topicMap = {};
+  active.forEach((q) => {
+    const k = q.chapter || q.topic || '未分类';
+    topicMap[k] = (topicMap[k] || 0) + 1;
+  });
+  const weak = Object.entries(topicMap).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const maxWeak = Math.max(1, ...weak.map((x) => x[1]));
+  const recent = state.questions.slice().sort((a, b) => String(b.updatedAt || b.createdAt).localeCompare(String(a.updatedAt || a.createdAt))).slice(0, 3);
+  const progress = dueCount + reviewed ? Math.round(reviewed / (dueCount + reviewed) * 100) : 100;
+  const total = state.questions.length;
+  const mastery = typeof masteryRate === 'function' ? masteryRate() : 0;
+
+  return `<div class="dash-light">
+    <div class="dash-top-grid">
+      <div class="dash-focus">
+        <div class="dash-kicker">TODAY'S FOCUS</div>
+        <h2>${dueCount ? `今天还有 <em>${dueCount}</em> 道<br>值得再想一遍` : '今天的复习<br>已经清完了'}</h2>
+        <p>${dueCount ? '先清到期，再开新题。' : '可以随机抽一道保持手感，或者录入新错题。'}</p>
+        <div class="dash-progress"><span style="width:${Math.max(3, progress)}%"></span></div>
+        <div class="dash-focus-bottom">
+          ${dueCount ? `<button class="btn btn-primary" data-action="start-review" data-mode="due">开始今日复习 ${icon('arrow', 'icon-sm')}</button>` : `<button class="btn btn-primary" data-action="start-review" data-mode="random">随机复习一道</button>`}
+          <span class="dash-streak">${icon('spark', 'icon-sm')} 连续 ${streak} 天</span>
+        </div>
+      </div>
+      <div class="card dash-quick">
+        <h3>快速录入</h3>
+        <p>拍照或粘贴题干，AI 自动识别知识点和具体考题项目。</p>
+        <button class="btn btn-primary" data-action="add">${icon('plus')}拍照 / 录入错题</button>
+        <div class="dash-quick-note">已开启“保存时自动识别”<br>会填入章节、知识点、具体考题项目。</div>
+      </div>
+    </div>
+
+    <div class="dash-two">
+      <div class="card card-pad">
+        <div class="card-head"><div><h2 class="card-title">最近错题</h2><p class="card-sub">接着上次的地方继续。</p></div><button class="btn btn-ghost btn-sm" data-route="questions">全部 ${total} 道 ${icon('arrow', 'icon-sm')}</button></div>
+        <div class="dash-recent">${recent.length ? recent.map((q, i) => `<div class="dash-recent-row" data-action="detail" data-id="${esc(q.id)}" role="button" tabindex="0"><span class="dash-num">${String(i + 1).padStart(2, '0')}</span><div class="dash-recent-main"><div class="dash-recent-title">${esc(titleOf(q))}</div><div class="dash-recent-meta">${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}${q.item ? ' · ' + esc(q.item) : ''}</div></div><span class="dash-pill ${q.status}">${esc(STATUS[q.status]?.label || q.status)}</span></div>`).join('') : '<div class="empty-mini">还没有错题，先录一道吧。</div>'}</div>
+      </div>
+      <div class="card card-pad">
+        <div class="card-head"><div><h2 class="card-title">薄弱知识点</h2><p class="card-sub">未掌握和复习中的题，按知识点聚合。</p></div><button class="btn btn-ghost btn-sm" data-syllabus-action="mindmap">${icon('spark', 'icon-sm')}思维导图</button></div>
+        <div class="dash-weak">${weak.length ? weak.map(([n, v]) => `<div class="dash-weak-row"><div class="dash-weak-label"><span>${esc(n)}</span><strong>${v} 道</strong></div><div class="dash-weak-track"><span style="width:${Math.round(v / maxWeak * 100)}%"></span></div></div>`).join('') : '<div class="empty-mini">还没有未掌握的错题。</div>'}</div>
+        <div class="dash-ai-strip"><span><strong>AI 建议：</strong>先补最上面的知识点，再开新题。</span><button class="btn btn-ghost btn-sm" data-ai-action="advice">让 AI 分析 ${icon('arrow', 'icon-sm')}</button></div>
+      </div>
+    </div>
+
+    <div class="dash-bottom-grid">
+      <div class="card card-pad">
+        <div class="card-head"><div><h2 class="card-title">今日计划</h2><p class="card-sub">先复习，再录入。</p></div><span class="dash-pill">${progress}%</span></div>
+        <div class="dash-plan-nums"><div><strong>${dueCount}</strong><span>待复习</span></div><div><strong>${reviewed}</strong><span>已复习</span></div><div><strong>${streak}</strong><span>连续天数</span></div><div><strong>${mastery}%</strong><span>掌握率</span></div></div>
+        <div class="dash-plan-bar"><span style="width:${Math.max(3, progress)}%"></span></div>
+      </div>
+      <div class="card card-pad dash-ai-card">
+        <div class="card-head"><div><h2 class="card-title">AI 学习助手</h2><p class="card-sub">结合你的错题数据回答。</p></div><span class="dash-pill">随时问</span></div>
+        <p class="dash-quote">“今天先补哪个知识点？帮我排一下优先级。”</p>
+        <button class="btn btn-ghost" style="width:100%" data-chat-action="open">${icon('spark')}打开对话</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+const baseRenderDashboardLight = renderDashboard;
+renderDashboard = function () {
+  return renderDashboardLight();
 };
 
 </script>
@@ -4967,11 +5444,13 @@ function updateBottomNav() {
 
 function settingsGroupOf(card) {
   const t = card.querySelector('h3')?.textContent || '';
-  if (t.includes('图片识题') || t.includes('AI 错题教练')) return 0;
-  if (t.includes('个人同步') || t.includes('备份与恢复')) return 1;
-  if (t.includes('考研设置')) return 2;
-  if (t.includes('数据备份') || t.includes('示例与重置')) return 3;
-  return 4;
+  if (t.includes('配置向导')) return 0;
+  if (t.includes('图片识题') || t.includes('AI 错题教练')) return 1;
+  if (t.includes('个人同步') || t.includes('备份与恢复')) return 2;
+  if (t.includes('考研设置')) return 3;
+  if (t.includes('数据备份') || t.includes('示例与重置')) return 4;
+  if (t.includes('显示与安装')) return 5;
+  return 5;
 }
 
 function groupSettings() {
@@ -4979,7 +5458,7 @@ function groupSettings() {
   if (!grid || grid.dataset.grouped === '1') return;
   const cards = [...grid.querySelectorAll(':scope > .settings-card')];
   if (!cards.length) return;
-  const groups = ['AI 工具', '同步与备份', '学习设置', '数据管理', '其他'];
+  const groups = ['开始', 'AI 工具', '同步与备份', '学习设置', '数据管理', '其他'];
   const buckets = groups.map(() => []);
   cards.forEach((c) => buckets[settingsGroupOf(c)].push(c));
   grid.innerHTML = '';
@@ -5194,6 +5673,8 @@ function injectChatFab() {
 }
 
 document.addEventListener('click', (event) => {
+  const open = event.target.closest('[data-chat-action="open"]');
+  if (open) { event.preventDefault(); openChat(); return; }
   const el = event.target.closest('[data-chat-action], [data-chat-quick]');
   if (!el) return;
   if (el.dataset.chatQuick) { sendChat(el.dataset.chatQuick); return; }
@@ -5210,6 +5691,350 @@ document.addEventListener('click', (event) => {
 
 document.addEventListener('DOMContentLoaded', () => setTimeout(injectChatFab, 600));
 window.addEventListener('pagehide', () => { if ($('#aiChatOverlay')) closeChat(); });
+
+</script>
+  <script>
+var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this.parsedData=[];for(var b=[],d=0,e=this.data.length;e>d;d++){var f=this.data.charCodeAt(d);f>65536?(b[0]=240|(1835008&f)>>>18,b[1]=128|(258048&f)>>>12,b[2]=128|(4032&f)>>>6,b[3]=128|63&f):f>2048?(b[0]=224|(61440&f)>>>12,b[1]=128|(4032&f)>>>6,b[2]=128|63&f):f>128?(b[0]=192|(1984&f)>>>6,b[1]=128|63&f):b[0]=f,this.parsedData=this.parsedData.concat(b)}this.parsedData.length!=this.data.length&&(this.parsedData.unshift(191),this.parsedData.unshift(187),this.parsedData.unshift(239))}function b(a,b){this.typeNumber=a,this.errorCorrectLevel=b,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}function i(a,b){if(void 0==a.length)throw new Error(a.length+"/"+b);for(var c=0;c<a.length&&0==a[c];)c++;this.num=new Array(a.length-c+b);for(var d=0;d<a.length-c;d++)this.num[d]=a[d+c]}function j(a,b){this.totalCount=a,this.dataCount=b}function k(){this.buffer=[],this.length=0}function m(){return"undefined"!=typeof CanvasRenderingContext2D}function n(){var a=!1,b=navigator.userAgent;return/android/i.test(b)&&(a=!0,aMat=b.toString().match(/android ([0-9]\.[0-9])/i),aMat&&aMat[1]&&(a=parseFloat(aMat[1]))),a}function r(a,b){for(var c=1,e=s(a),f=0,g=l.length;g>=f;f++){var h=0;switch(b){case d.L:h=l[f][0];break;case d.M:h=l[f][1];break;case d.Q:h=l[f][2];break;case d.H:h=l[f][3]}if(h>=e)break;c++}if(c>l.length)throw new Error("Too long data");return c}function s(a){var b=encodeURI(a).toString().replace(/\%[0-9a-fA-F]{2}/g,"a");return b.length+(b.length!=a?3:0)}a.prototype={getLength:function(){return this.parsedData.length},write:function(a){for(var b=0,c=this.parsedData.length;c>b;b++)a.put(this.parsedData[b],8)}},b.prototype={addData:function(b){var c=new a(b);this.dataList.push(c),this.dataCache=null},isDark:function(a,b){if(0>a||this.moduleCount<=a||0>b||this.moduleCount<=b)throw new Error(a+","+b);return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,c){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var d=0;d<this.moduleCount;d++){this.modules[d]=new Array(this.moduleCount);for(var e=0;e<this.moduleCount;e++)this.modules[d][e]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(a,c),this.typeNumber>=7&&this.setupTypeNumber(a),null==this.dataCache&&(this.dataCache=b.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,c)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=c>=0&&6>=c&&(0==d||6==d)||d>=0&&6>=d&&(0==c||6==c)||c>=2&&4>=c&&d>=2&&4>=d?!0:!1)},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=f.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},createMovieClip:function(a,b,c){var d=a.createEmptyMovieClip(b,c),e=1;this.make();for(var f=0;f<this.modules.length;f++)for(var g=f*e,h=0;h<this.modules[f].length;h++){var i=h*e,j=this.modules[f][h];j&&(d.beginFill(0,100),d.moveTo(i,g),d.lineTo(i+e,g),d.lineTo(i+e,g+e),d.lineTo(i,g+e),d.endFill())}return d},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=f.getPatternPosition(this.typeNumber),b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var g=-2;2>=g;g++)for(var h=-2;2>=h;h++)this.modules[d+g][e+h]=-2==g||2==g||-2==h||2==h||0==g&&0==h?!0:!1}},setupTypeNumber:function(a){for(var b=f.getBCHTypeNumber(this.typeNumber),c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[Math.floor(c/3)][c%3+this.moduleCount-8-3]=d}for(var c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[c%3+this.moduleCount-8-3][Math.floor(c/3)]=d}},setupTypeInfo:function(a,b){for(var c=this.errorCorrectLevel<<3|b,d=f.getBCHTypeInfo(c),e=0;15>e;e++){var g=!a&&1==(1&d>>e);6>e?this.modules[e][8]=g:8>e?this.modules[e+1][8]=g:this.modules[this.moduleCount-15+e][8]=g}for(var e=0;15>e;e++){var g=!a&&1==(1&d>>e);8>e?this.modules[8][this.moduleCount-e-1]=g:9>e?this.modules[8][15-e-1+1]=g:this.modules[8][15-e-1]=g}this.modules[this.moduleCount-8][8]=!a},mapData:function(a,b){for(var c=-1,d=this.moduleCount-1,e=7,g=0,h=this.moduleCount-1;h>0;h-=2)for(6==h&&h--;;){for(var i=0;2>i;i++)if(null==this.modules[d][h-i]){var j=!1;g<a.length&&(j=1==(1&a[g]>>>e));var k=f.getMask(b,d,h-i);k&&(j=!j),this.modules[d][h-i]=j,e--,-1==e&&(g++,e=7)}if(d+=c,0>d||this.moduleCount<=d){d-=c,c=-c;break}}}},b.PAD0=236,b.PAD1=17,b.createData=function(a,c,d){for(var e=j.getRSBlocks(a,c),g=new k,h=0;h<d.length;h++){var i=d[h];g.put(i.mode,4),g.put(i.getLength(),f.getLengthInBits(i.mode,a)),i.write(g)}for(var l=0,h=0;h<e.length;h++)l+=e[h].dataCount;if(g.getLengthInBits()>8*l)throw new Error("code length overflow. ("+g.getLengthInBits()+">"+8*l+")");for(g.getLengthInBits()+4<=8*l&&g.put(0,4);0!=g.getLengthInBits()%8;)g.putBit(!1);for(;;){if(g.getLengthInBits()>=8*l)break;if(g.put(b.PAD0,8),g.getLengthInBits()>=8*l)break;g.put(b.PAD1,8)}return b.createBytes(g,e)},b.createBytes=function(a,b){for(var c=0,d=0,e=0,g=new Array(b.length),h=new Array(b.length),j=0;j<b.length;j++){var k=b[j].dataCount,l=b[j].totalCount-k;d=Math.max(d,k),e=Math.max(e,l),g[j]=new Array(k);for(var m=0;m<g[j].length;m++)g[j][m]=255&a.buffer[m+c];c+=k;var n=f.getErrorCorrectPolynomial(l),o=new i(g[j],n.getLength()-1),p=o.mod(n);h[j]=new Array(n.getLength()-1);for(var m=0;m<h[j].length;m++){var q=m+p.getLength()-h[j].length;h[j][m]=q>=0?p.get(q):0}}for(var r=0,m=0;m<b.length;m++)r+=b[m].totalCount;for(var s=new Array(r),t=0,m=0;d>m;m++)for(var j=0;j<b.length;j++)m<g[j].length&&(s[t++]=g[j][m]);for(var m=0;e>m;m++)for(var j=0;j<b.length;j++)m<h[j].length&&(s[t++]=h[j][m]);return s};for(var c={MODE_NUMBER:1,MODE_ALPHA_NUM:2,MODE_8BIT_BYTE:4,MODE_KANJI:8},d={L:1,M:0,Q:3,H:2},e={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7},f={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],G15:1335,G18:7973,G15_MASK:21522,getBCHTypeInfo:function(a){for(var b=a<<10;f.getBCHDigit(b)-f.getBCHDigit(f.G15)>=0;)b^=f.G15<<f.getBCHDigit(b)-f.getBCHDigit(f.G15);return(a<<10|b)^f.G15_MASK},getBCHTypeNumber:function(a){for(var b=a<<12;f.getBCHDigit(b)-f.getBCHDigit(f.G18)>=0;)b^=f.G18<<f.getBCHDigit(b)-f.getBCHDigit(f.G18);return a<<12|b},getBCHDigit:function(a){for(var b=0;0!=a;)b++,a>>>=1;return b},getPatternPosition:function(a){return f.PATTERN_POSITION_TABLE[a-1]},getMask:function(a,b,c){switch(a){case e.PATTERN000:return 0==(b+c)%2;case e.PATTERN001:return 0==b%2;case e.PATTERN010:return 0==c%3;case e.PATTERN011:return 0==(b+c)%3;case e.PATTERN100:return 0==(Math.floor(b/2)+Math.floor(c/3))%2;case e.PATTERN101:return 0==b*c%2+b*c%3;case e.PATTERN110:return 0==(b*c%2+b*c%3)%2;case e.PATTERN111:return 0==(b*c%3+(b+c)%2)%2;default:throw new Error("bad maskPattern:"+a)}},getErrorCorrectPolynomial:function(a){for(var b=new i([1],0),c=0;a>c;c++)b=b.multiply(new i([1,g.gexp(c)],0));return b},getLengthInBits:function(a,b){if(b>=1&&10>b)switch(a){case c.MODE_NUMBER:return 10;case c.MODE_ALPHA_NUM:return 9;case c.MODE_8BIT_BYTE:return 8;case c.MODE_KANJI:return 8;default:throw new Error("mode:"+a)}else if(27>b)switch(a){case c.MODE_NUMBER:return 12;case c.MODE_ALPHA_NUM:return 11;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 10;default:throw new Error("mode:"+a)}else{if(!(41>b))throw new Error("type:"+b);switch(a){case c.MODE_NUMBER:return 14;case c.MODE_ALPHA_NUM:return 13;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 12;default:throw new Error("mode:"+a)}}},getLostPoint:function(a){for(var b=a.getModuleCount(),c=0,d=0;b>d;d++)for(var e=0;b>e;e++){for(var f=0,g=a.isDark(d,e),h=-1;1>=h;h++)if(!(0>d+h||d+h>=b))for(var i=-1;1>=i;i++)0>e+i||e+i>=b||(0!=h||0!=i)&&g==a.isDark(d+h,e+i)&&f++;f>5&&(c+=3+f-5)}for(var d=0;b-1>d;d++)for(var e=0;b-1>e;e++){var j=0;a.isDark(d,e)&&j++,a.isDark(d+1,e)&&j++,a.isDark(d,e+1)&&j++,a.isDark(d+1,e+1)&&j++,(0==j||4==j)&&(c+=3)}for(var d=0;b>d;d++)for(var e=0;b-6>e;e++)a.isDark(d,e)&&!a.isDark(d,e+1)&&a.isDark(d,e+2)&&a.isDark(d,e+3)&&a.isDark(d,e+4)&&!a.isDark(d,e+5)&&a.isDark(d,e+6)&&(c+=40);for(var e=0;b>e;e++)for(var d=0;b-6>d;d++)a.isDark(d,e)&&!a.isDark(d+1,e)&&a.isDark(d+2,e)&&a.isDark(d+3,e)&&a.isDark(d+4,e)&&!a.isDark(d+5,e)&&a.isDark(d+6,e)&&(c+=40);for(var k=0,e=0;b>e;e++)for(var d=0;b>d;d++)a.isDark(d,e)&&k++;var l=Math.abs(100*k/b/b-50)/5;return c+=10*l}},g={glog:function(a){if(1>a)throw new Error("glog("+a+")");return g.LOG_TABLE[a]},gexp:function(a){for(;0>a;)a+=255;for(;a>=256;)a-=255;return g.EXP_TABLE[a]},EXP_TABLE:new Array(256),LOG_TABLE:new Array(256)},h=0;8>h;h++)g.EXP_TABLE[h]=1<<h;for(var h=8;256>h;h++)g.EXP_TABLE[h]=g.EXP_TABLE[h-4]^g.EXP_TABLE[h-5]^g.EXP_TABLE[h-6]^g.EXP_TABLE[h-8];for(var h=0;255>h;h++)g.LOG_TABLE[g.EXP_TABLE[h]]=h;i.prototype={get:function(a){return this.num[a]},getLength:function(){return this.num.length},multiply:function(a){for(var b=new Array(this.getLength()+a.getLength()-1),c=0;c<this.getLength();c++)for(var d=0;d<a.getLength();d++)b[c+d]^=g.gexp(g.glog(this.get(c))+g.glog(a.get(d)));return new i(b,0)},mod:function(a){if(this.getLength()-a.getLength()<0)return this;for(var b=g.glog(this.get(0))-g.glog(a.get(0)),c=new Array(this.getLength()),d=0;d<this.getLength();d++)c[d]=this.get(d);for(var d=0;d<a.getLength();d++)c[d]^=g.gexp(g.glog(a.get(d))+b);return new i(c,0).mod(a)}},j.RS_BLOCK_TABLE=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],j.getRSBlocks=function(a,b){var c=j.getRsBlockTable(a,b);if(void 0==c)throw new Error("bad rs block @ typeNumber:"+a+"/errorCorrectLevel:"+b);for(var d=c.length/3,e=[],f=0;d>f;f++)for(var g=c[3*f+0],h=c[3*f+1],i=c[3*f+2],k=0;g>k;k++)e.push(new j(h,i));return e},j.getRsBlockTable=function(a,b){switch(b){case d.L:return j.RS_BLOCK_TABLE[4*(a-1)+0];case d.M:return j.RS_BLOCK_TABLE[4*(a-1)+1];case d.Q:return j.RS_BLOCK_TABLE[4*(a-1)+2];case d.H:return j.RS_BLOCK_TABLE[4*(a-1)+3];default:return void 0}},k.prototype={get:function(a){var b=Math.floor(a/8);return 1==(1&this.buffer[b]>>>7-a%8)},put:function(a,b){for(var c=0;b>c;c++)this.putBit(1==(1&a>>>b-c-1))},getLengthInBits:function(){return this.length},putBit:function(a){var b=Math.floor(this.length/8);this.buffer.length<=b&&this.buffer.push(0),a&&(this.buffer[b]|=128>>>this.length%8),this.length++}};var l=[[17,14,11,7],[32,26,20,14],[53,42,32,24],[78,62,46,34],[106,84,60,44],[134,106,74,58],[154,122,86,64],[192,152,108,84],[230,180,130,98],[271,213,151,119],[321,251,177,137],[367,287,203,155],[425,331,241,177],[458,362,258,194],[520,412,292,220],[586,450,322,250],[644,504,364,280],[718,560,394,310],[792,624,442,338],[858,666,482,382],[929,711,509,403],[1003,779,565,439],[1091,857,611,461],[1171,911,661,511],[1273,997,715,535],[1367,1059,751,593],[1465,1125,805,625],[1528,1190,868,658],[1628,1264,908,698],[1732,1370,982,742],[1840,1452,1030,790],[1952,1538,1112,842],[2068,1628,1168,898],[2188,1722,1228,958],[2303,1809,1283,983],[2431,1911,1351,1051],[2563,1989,1423,1093],[2699,2099,1499,1139],[2809,2213,1579,1219],[2953,2331,1663,1273]],o=function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){function g(a,b){var c=document.createElementNS("http://www.w3.org/2000/svg",a);for(var d in b)b.hasOwnProperty(d)&&c.setAttribute(d,b[d]);return c}var b=this._htOption,c=this._el,d=a.getModuleCount();Math.floor(b.width/d),Math.floor(b.height/d),this.clear();var h=g("svg",{viewBox:"0 0 "+String(d)+" "+String(d),width:"100%",height:"100%",fill:b.colorLight});h.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns:xlink","http://www.w3.org/1999/xlink"),c.appendChild(h),h.appendChild(g("rect",{fill:b.colorDark,width:"1",height:"1",id:"template"}));for(var i=0;d>i;i++)for(var j=0;d>j;j++)if(a.isDark(i,j)){var k=g("use",{x:String(i),y:String(j)});k.setAttributeNS("http://www.w3.org/1999/xlink","href","#template"),h.appendChild(k)}},a.prototype.clear=function(){for(;this._el.hasChildNodes();)this._el.removeChild(this._el.lastChild)},a}(),p="svg"===document.documentElement.tagName.toLowerCase(),q=p?o:m()?function(){function a(){this._elImage.src=this._elCanvas.toDataURL("image/png"),this._elImage.style.display="block",this._elCanvas.style.display="none"}function d(a,b){var c=this;if(c._fFail=b,c._fSuccess=a,null===c._bSupportDataURI){var d=document.createElement("img"),e=function(){c._bSupportDataURI=!1,c._fFail&&_fFail.call(c)},f=function(){c._bSupportDataURI=!0,c._fSuccess&&c._fSuccess.call(c)};return d.onabort=e,d.onerror=e,d.onload=f,d.src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",void 0}c._bSupportDataURI===!0&&c._fSuccess?c._fSuccess.call(c):c._bSupportDataURI===!1&&c._fFail&&c._fFail.call(c)}if(this._android&&this._android<=2.1){var b=1/window.devicePixelRatio,c=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(a,d,e,f,g,h,i,j){if("nodeName"in a&&/img/i.test(a.nodeName))for(var l=arguments.length-1;l>=1;l--)arguments[l]=arguments[l]*b;else"undefined"==typeof j&&(arguments[1]*=b,arguments[2]*=b,arguments[3]*=b,arguments[4]*=b);c.apply(this,arguments)}}var e=function(a,b){this._bIsPainted=!1,this._android=n(),this._htOption=b,this._elCanvas=document.createElement("canvas"),this._elCanvas.width=b.width,this._elCanvas.height=b.height,a.appendChild(this._elCanvas),this._el=a,this._oContext=this._elCanvas.getContext("2d"),this._bIsPainted=!1,this._elImage=document.createElement("img"),this._elImage.style.display="none",this._el.appendChild(this._elImage),this._bSupportDataURI=null};return e.prototype.draw=function(a){var b=this._elImage,c=this._oContext,d=this._htOption,e=a.getModuleCount(),f=d.width/e,g=d.height/e,h=Math.round(f),i=Math.round(g);b.style.display="none",this.clear();for(var j=0;e>j;j++)for(var k=0;e>k;k++){var l=a.isDark(j,k),m=k*f,n=j*g;c.strokeStyle=l?d.colorDark:d.colorLight,c.lineWidth=1,c.fillStyle=l?d.colorDark:d.colorLight,c.fillRect(m,n,f,g),c.strokeRect(Math.floor(m)+.5,Math.floor(n)+.5,h,i),c.strokeRect(Math.ceil(m)-.5,Math.ceil(n)-.5,h,i)}this._bIsPainted=!0},e.prototype.makeImage=function(){this._bIsPainted&&d.call(this,a)},e.prototype.isPainted=function(){return this._bIsPainted},e.prototype.clear=function(){this._oContext.clearRect(0,0,this._elCanvas.width,this._elCanvas.height),this._bIsPainted=!1},e.prototype.round=function(a){return a?Math.floor(1e3*a)/1e3:a},e}():function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){for(var b=this._htOption,c=this._el,d=a.getModuleCount(),e=Math.floor(b.width/d),f=Math.floor(b.height/d),g=['<table style="border:0;border-collapse:collapse;">'],h=0;d>h;h++){g.push("<tr>");for(var i=0;d>i;i++)g.push('<td style="border:0;border-collapse:collapse;padding:0;margin:0;width:'+e+"px;height:"+f+"px;background-color:"+(a.isDark(h,i)?b.colorDark:b.colorLight)+';"></td>');g.push("</tr>")}g.push("</table>"),c.innerHTML=g.join("");var j=c.childNodes[0],k=(b.width-j.offsetWidth)/2,l=(b.height-j.offsetHeight)/2;k>0&&l>0&&(j.style.margin=l+"px "+k+"px")},a.prototype.clear=function(){this._el.innerHTML=""},a}();QRCode=function(a,b){if(this._htOption={width:256,height:256,typeNumber:4,colorDark:"#000000",colorLight:"#ffffff",correctLevel:d.H},"string"==typeof b&&(b={text:b}),b)for(var c in b)this._htOption[c]=b[c];"string"==typeof a&&(a=document.getElementById(a)),this._android=n(),this._el=a,this._oQRCode=null,this._oDrawing=new q(this._el,this._htOption),this._htOption.text&&this.makeCode(this._htOption.text)},QRCode.prototype.makeCode=function(a){this._oQRCode=new b(r(a,this._htOption.correctLevel),this._htOption.correctLevel),this._oQRCode.addData(a),this._oQRCode.make(),this._el.title=a,this._oDrawing.draw(this._oQRCode),this.makeImage()},QRCode.prototype.makeImage=function(){"function"==typeof this._oDrawing.makeImage&&(!this._android||this._android>=3)&&this._oDrawing.makeImage()},QRCode.prototype.clear=function(){this._oDrawing.clear()},QRCode.CorrectLevel=d}();
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 配置向导 / 手机扫码配对 / 一键诊断
+   ============================================================ */
+'use strict';
+
+const PAIR_FLAG = 'cuoti_pair_success_v1';
+
+function b64urlEncode(s) {
+  return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+function b64urlDecode(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  return atob(s);
+}
+
+/* 手机扫码打开后：写入 Gist 配置，去掉 hash，重载让同步模块接管 */
+(function handlePairHash() {
+  const raw = location.hash.replace(/^#/, '');
+  if (!raw.startsWith('pair=')) return;
+  try {
+    const data = JSON.parse(b64urlDecode(raw.slice(5)));
+    if (!data || !data.id || !data.token) throw new Error('配对内容不完整');
+    safeSet('cuoti_gist_id_v1', String(data.id));
+    safeSet('cuoti_gist_token_v1', String(data.token));
+    try { sessionStorage.setItem(PAIR_FLAG, '1'); } catch {}
+    history.replaceState({}, '', location.pathname + location.search);
+    location.reload();
+  } catch (e) {
+    console.warn('配对失败', e);
+    setTimeout(() => toast('扫码配对失败，请让电脑重新生成二维码', 'error'), 800);
+  }
+})();
+
+function wizardConfigured() {
+  return {
+    ai: typeof aiConfigured === 'function' && aiConfigured(),
+    sync: typeof gistConfigured === 'function' && gistConfigured(),
+    backup: (typeof backupDays === 'function' && backupDays() !== null) || Boolean(typeof lastSnapshotAt !== 'undefined' && lastSnapshotAt)
+  };
+}
+
+function wizardStep(num, title, desc, ok, action, actionText) {
+  return `<div class="wizard-step"><span class="wizard-step-no ${ok ? 'ok' : ''}">${ok ? '✓' : num}</span><div class="wizard-step-main"><strong>${title}</strong><span>${desc}</span></div><button type="button" class="btn btn-ghost btn-sm" data-wizard-action="${action}">${actionText}</button></div>`;
+}
+
+function wizardCard() {
+  const c = wizardConfigured();
+  return `<div class="card settings-card wizard-card"><h3>${icon('flag')}配置向导</h3><p>按顺序配置，已经完成的会显示绿色。全部可选，不配置也能记错题。</p>
+    ${wizardStep(1, 'AI 错题教练', c.ai ? '已配置 DeepSeek Key' : '分析错题、出相似题、AI 聊天', c.ai, 'go-ai', c.ai ? '查看' : '去配置')}
+    ${wizardStep(2, '个人同步', c.sync ? '已连接 Gist，可多设备同步' : '电脑/平板/手机共用一份错题', c.sync, 'go-sync', c.sync ? '查看' : '去配置')}
+    ${wizardStep(3, '备份', c.backup ? '已有导出或快照' : '防止清理浏览器后数据丢失', c.backup, 'go-backup', c.backup ? '查看' : '去备份')}
+    <div class="setting-actions"><button type="button" class="btn btn-primary" data-wizard-action="diagnose">${icon('check')}一键诊断</button><button type="button" class="btn btn-ghost" data-wizard-action="pair" ${c.sync ? '' : 'disabled'}>${icon('image')}手机扫码配对</button></div>
+    <div class="sync-install-tip">扫码配对会把 Gist ID 和 Token 编进二维码，只给自己的手机扫，不要截图发人。</div>
+  </div>`;
+}
+const baseSettingsWizard = renderSettings;
+renderSettings = function () {
+  return baseSettingsWizard().replace('<div class="settings-grid">', `<div class="settings-grid">${wizardCard()}`);
+};
+
+function wizardScrollTo(title) {
+  const cards = [...document.querySelectorAll('.settings-card')];
+  const card = cards.find((c) => (c.querySelector('h3')?.textContent || '').includes(title));
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function wizCopy(text, msg) {
+  const done = () => toast(msg || '已复制');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => {
+      try { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); } catch { toast('复制失败，请手动选择', 'error'); }
+    });
+  } else {
+    try { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); } catch { toast('复制失败，请手动选择', 'error'); }
+  }
+}
+
+function pairingLink() {
+  const id = safeGet('cuoti_gist_id_v1');
+  const token = safeGet('cuoti_gist_token_v1');
+  if (!id || !token) return '';
+  const payload = b64urlEncode(JSON.stringify({ id, token }));
+  return location.origin + location.pathname + '#pair=' + payload;
+}
+
+function openPairing() {
+  const id = safeGet('cuoti_gist_id_v1');
+  const token = safeGet('cuoti_gist_token_v1');
+  if (!id || !token) return toast('先在电脑上完成个人同步', 'error');
+  const link = pairingLink();
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">PAIR DEVICE</div><h2 class="modal-title">手机扫码配对</h2><p class="modal-sub">手机相机扫码，自动填入 Gist ID 和 Token</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body"><div class="pair-wrap"><div id="pairQr" class="pair-qr"></div><div class="pair-info"><div class="answer-block accent"><div class="answer-label">Gist ID</div><p class="answer-text pair-code">${esc(id)}</p><button type="button" class="btn btn-ghost btn-sm" data-wizard-action="copy-id">复制 Gist ID</button></div><div class="answer-block warn" style="margin-top:10px"><div class="answer-label">注意</div><p class="answer-text">二维码里包含 Token，只给自己的手机扫；不要截图发到群里。配对后手机会自动连接，不会再问 Gist ID。</p></div></div></div><div class="answer-block" style="margin-top:12px"><div class="answer-label">扫码后打不开？</div><p class="answer-text">在手机浏览器手动打开下面链接，或复制到手机：</p><textarea class="input pair-link" id="pairLink" readonly style="width:100%;height:62px;margin-top:6px;font-size:10px">${esc(link)}</textarea><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-wizard-action="copy-link">复制配对链接</button></div></div>
+  <div class="modal-foot"><span></span><div class="foot-right"><button type="button" class="btn btn-primary" data-action="close-modal">完成</button></div></div>`, true);
+  setTimeout(() => {
+    const box = $('#pairQr');
+    if (!box) return;
+    if (typeof QRCode === 'function') {
+      box.innerHTML = '';
+      new QRCode(box, { text: link, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
+    } else {
+      box.innerHTML = '<div class="empty-mini">二维码组件未加载，请用下方链接</div>';
+    }
+  }, 50);
+}
+
+async function diagnose() {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">DIAGNOSE</div><h2 class="modal-title">正在检查</h2><p class="modal-sub">检查 AI、同步、备份、相机和公式</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div><div class="modal-body"><div class="empty-mini">检查中…</div></div>`, false);
+  const rows = [];
+  const add = (name, ok, text) => rows.push(`<div class="diag-row"><span class="sync-dot ${ok ? 'on' : 'err'}"></span><strong>${name}</strong><span>${esc(text)}</span></div>`);
+
+  if (typeof aiConfigured === 'function' && aiConfigured()) add('DeepSeek', true, 'Key 已配置（未调用，避免扣费）');
+  else add('DeepSeek', false, '未配置 Key');
+
+  if (typeof gistConfigured === 'function' && gistConfigured()) {
+    try {
+      await gistApi('/gists/' + encodeURIComponent(safeGet('cuoti_gist_id_v1')));
+      add('个人同步', true, 'Gist 可访问');
+    } catch (e) { add('个人同步', false, e.message || 'Gist 访问失败'); }
+  } else add('个人同步', false, '未开启');
+
+  const days = typeof backupDays === 'function' ? backupDays() : null;
+  const hasSnap = typeof lastSnapshotAt !== 'undefined' && lastSnapshotAt;
+  add('备份', days !== null || hasSnap, days !== null ? `${days} 天前导出过` : hasSnap ? '有本机快照' : '还没有导出或快照');
+
+  const cam = Boolean(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  add('相机', cam && location.protocol === 'https:', cam ? (location.protocol === 'https:' ? '支持页内相机' : '需要 HTTPS 才能开相机') : '浏览器不支持页内相机');
+
+  const math = typeof window.renderMathInElement === 'function';
+  add('公式渲染', math, math ? 'KaTeX 已加载' : 'KaTeX 未加载（公式显示原文）');
+
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">DIAGNOSE</div><h2 class="modal-title">诊断结果</h2><p class="modal-sub">绿色正常，红色需要处理</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div><div class="modal-body">${rows.join('')}</div><div class="modal-foot"><span></span><div class="foot-right"><button type="button" class="btn btn-primary" data-action="close-modal">知道了</button></div></div>`, false);
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-wizard-action]');
+  if (!el) return;
+  const action = el.dataset.wizardAction;
+  if (action === 'go-ai') { event.preventDefault(); wizardScrollTo('AI 错题教练'); }
+  if (action === 'go-sync') { event.preventDefault(); wizardScrollTo('个人同步'); }
+  if (action === 'go-backup') { event.preventDefault(); wizardScrollTo('备份与恢复'); }
+  if (action === 'pair') { event.preventDefault(); openPairing(); }
+  if (action === 'diagnose') { event.preventDefault(); diagnose(); }
+  if (action === 'copy-id') { event.preventDefault(); wizCopy(safeGet('cuoti_gist_id_v1') || '', 'Gist ID 已复制'); }
+  if (action === 'copy-link') { event.preventDefault(); wizCopy(pairingLink(), '配对链接已复制'); }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (sessionStorage.getItem(PAIR_FLAG) === '1') {
+      sessionStorage.removeItem(PAIR_FLAG);
+      setTimeout(() => toast('手机配对成功，正在同步'), 900);
+    }
+  } catch {}
+});
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 显示与安装 / 跨浏览器
+   ============================================================ */
+'use strict';
+
+const DENSITY_KEY = 'cuoti_density_v1';
+let installPromptEvent = null;
+
+function isStandaloneApp() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function displayModeText() {
+  return isStandaloneApp() ? '独立应用窗口' : '浏览器标签页';
+}
+function applyDensity() {
+  const compact = safeGet(DENSITY_KEY) === 'compact';
+  document.body.classList.toggle('compact-ui', compact);
+}
+function displayCopy(text, msg) {
+  if (typeof wizCopy === 'function') return wizCopy(text, msg);
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast(msg || '已复制')).catch(() => {});
+}
+
+async function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+      toast('已退出全屏');
+    } else if (document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+      toast('已进入全屏，按返回键或 Esc 退出');
+    } else {
+      toast('这个浏览器不支持页内全屏，请用 Edge 安装到桌面', 'info');
+    }
+  } catch (e) {
+    toast('全屏失败：' + (e.message || ''), 'error');
+  }
+}
+
+function installHelp() {
+  openModal(`<div class="modal-head"><div><div class="modal-kicker">INSTALL</div><h2 class="modal-title">安装到桌面</h2><p class="modal-sub">安装后从桌面打开，不显示地址栏。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+  <div class="modal-body">
+    <div class="answer-block accent" style="margin-bottom:10px"><div class="answer-label">电脑 Edge / Chrome</div><p class="answer-text">地址栏右侧“安装”图标 → 安装；或菜单 → 应用 → 安装此站点。</p></div>
+    <div class="answer-block accent" style="margin-bottom:10px"><div class="answer-label">Android Edge</div><p class="answer-text">右上角菜单 → 安装应用 / 添加到主屏幕。装好后从桌面图标打开，不显示浏览器地址栏。</p></div>
+    <div class="answer-block warn" style="margin-bottom:10px"><div class="answer-label">华为浏览器</div><p class="answer-text">可能只创建快捷方式，打开仍有地址栏。想真正全屏，建议装 Edge，或用 PWABuilder 生成 APK。</p></div>
+    <div class="answer-block accent"><div class="answer-label">iPhone / iPad</div><p class="answer-text">Safari → 分享 → 添加到主屏幕。必须用 Safari，微信/夸克打开不会全屏。</p></div>
+  </div>
+  <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-primary" data-action="close-modal">知道了</button></div></div>`, true);
+}
+
+async function installApp() {
+  if (installPromptEvent) {
+    installPromptEvent.prompt();
+    try { await installPromptEvent.userChoice; } catch {}
+    installPromptEvent = null;
+    return;
+  }
+  installHelp();
+}
+
+function displayCard() {
+  const standalone = isStandaloneApp();
+  const sync = typeof gistConfigured === 'function' && gistConfigured();
+  return `<div class="card settings-card"><h3>${icon('grid')}显示与安装</h3><p>解决“每次打开上面都有网页”和“不同浏览器内容不一样”。</p>
+    <div class="sync-status"><span class="sync-dot ${standalone ? 'on' : ''}"></span><strong>${standalone ? '独立应用窗口' : '浏览器标签页'}</strong><span>${standalone ? '没有地址栏' : '安装到桌面后不显示地址栏'}</span></div>
+    <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="fullscreen">${icon('eye')}进入全屏</button><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
+    <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
+    <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
+  </div>`;
+}
+const baseSettingsDisplay = renderSettings;
+renderSettings = function () {
+  return baseSettingsDisplay().replace('<div class="settings-grid">', `<div class="settings-grid">${displayCard()}`);
+};
+
+function copyPairLink() {
+  if (typeof pairingLink !== 'function') return toast('配对功能未加载', 'error');
+  const link = pairingLink();
+  if (!link) return toast('先在个人同步里完成连接', 'error');
+  displayCopy(link, '配对链接已复制，去另一个浏览器打开');
+}
+
+document.addEventListener('change', (event) => {
+  if (event.target.id !== 'densitySelect') return;
+  safeSet(DENSITY_KEY, event.target.value);
+  applyDensity();
+  toast(event.target.value === 'compact' ? '已切换紧凑模式' : '已切换舒适模式');
+});
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-display-action]');
+  if (!el) return;
+  event.preventDefault();
+  const action = el.dataset.displayAction;
+  if (action === 'fullscreen') toggleFullscreen();
+  if (action === 'install') installApp();
+  if (action === 'pair-link') copyPairLink();
+});
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  installPromptEvent = event;
+});
+window.addEventListener('appinstalled', () => { installPromptEvent = null; toast('已安装到桌面'); });
+applyDensity();
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 沉浸复习（方案 C）
+   ============================================================ */
+'use strict';
+
+let reviewStartedAt = 0;
+let reviewTimerId = null;
+
+function reviewTimeText() {
+  if (!reviewStartedAt) return '00:00';
+  const s = Math.max(0, Math.floor((Date.now() - reviewStartedAt) / 1000));
+  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function stopReviewTimer() {
+  if (reviewTimerId) clearInterval(reviewTimerId);
+  reviewTimerId = null;
+}
+function startReviewTimer() {
+  stopReviewTimer();
+  const paint = () => { const el = $('#reviewTimerText'); if (el) el.textContent = reviewTimeText(); };
+  paint();
+  reviewTimerId = setInterval(paint, 1000);
+}
+
+const baseStartReviewV2 = startReview;
+startReview = function (mode = 'due', id = null) {
+  reviewStartedAt = Date.now();
+  return baseStartReviewV2(mode, id);
+};
+const baseCloseReviewV2 = closeReview;
+closeReview = function () {
+  stopReviewTimer();
+  reviewStartedAt = 0;
+  return baseCloseReviewV2();
+};
+
+const baseRenderReviewV2 = renderReview;
+renderReview = function () {
+  if (!state.review) return;
+  if (state.review.index >= state.review.total) {
+    stopReviewTimer();
+    return baseRenderReviewV2();
+  }
+  const r = state.review;
+  const q = currentReview();
+  if (!q) return baseRenderReviewV2();
+  const progress = Math.round(r.index / r.total * 100);
+  $('#modalRoot').innerHTML = `<div class="review-overlay review-v2">
+    <div class="review-v2-top">
+      <button class="review-exit" data-action="close-review">${icon('x', 'icon-sm')} 退出复习</button>
+      <div class="review-v2-step">今日复习 <strong>${String(r.index + 1).padStart(2, '0')}</strong> <span>/ ${String(r.total).padStart(2, '0')}</span></div>
+      <div class="review-v2-timer" id="reviewTimerText">${reviewTimeText()}</div>
+    </div>
+    <div class="review-v2-progress"><span style="width:${progress}%"></span></div>
+    <div class="review-v2-stage">
+      <div class="review-v2-card">
+        <div class="review-v2-tags">${subjectBadge(q.subject)}${q.chapter ? `<span class="q-tag">${esc(q.chapter)}</span>` : ''}${q.topic ? `<span class="q-tag">${esc(q.topic)}</span>` : ''}${q.item ? `<span class="q-tag" style="color:var(--accent);border-color:#efc8c2">${esc(q.item)}</span>` : ''}<span class="q-tag">${esc(q.type)}</span><span class="q-tag">${esc(q.reason)}</span></div>
+        <h2 class="review-v2-title">${esc(q.item || q.topic || '错题复习')}</h2>
+        <p class="review-v2-q">${esc(q.question || '（图片错题，请查看图片）')}</p>
+        ${q.images.length ? `<div class="review-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+        ${!r.revealed ? `<button class="reveal-btn" data-action="reveal">${icon('eye')}先自己想，点击显示答案与解析</button><div class="review-v2-wait">先在心里完整讲一遍：这题考什么？第一步做什么？</div>` : `<div class="review-answer">
+          <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
+          <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '暂无解析')}</p></div>
+          <div class="review-v2-rate-label">这道题掌握得怎么样？</div>
+          <div class="rating-grid">${Object.entries(RATING).map(([k, v], i) => `<button class="rating-btn ${v.cls}" data-action="rate" data-rating="${k}"><strong>${i + 1} · ${v.label}</strong><span>${v.hint}</span></button>`).join('')}</div>
+        </div>`}
+        <div class="review-v2-hint">${r.revealed ? '按 1—4 评分 · Esc 退出' : '按 Space 显示答案 · Esc 退出'}</div>
+      </div>
+    </div>
+    <div class="review-v2-foot">${icon('spark', 'icon-sm')} 先回忆，再看答案；能讲清第一步，比答案对了更重要。</div>
+  </div>`;
+  document.body.classList.add('modal-open');
+  startReviewTimer();
+};
 
 </script>
   <script>

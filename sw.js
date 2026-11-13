@@ -1,10 +1,11 @@
 /* 错题拾遗 · 离线缓存 */
-const CACHE = 'cuoti-local-v12';
+const CACHE = 'cuoti-local-1.5';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './favicon.svg',
+  './使用说明.html',
   './icons/icon-180.png',
   './icons/icon-192.png',
   './icons/icon-512.png'
