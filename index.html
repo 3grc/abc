@@ -1993,7 +1993,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5';
+const APP_VERSION = '1.5.15';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -6145,10 +6145,6 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 window.addEventListener('appinstalled', () => { installPromptEvent = null; toast('已安装到桌面'); });
 applyDensity();
-if (!safeGet('cuoti_manual_landscape_reset_v1')) {
-  safeSet(MANUAL_LANDSCAPE_KEY, '0');
-  safeSet('cuoti_manual_landscape_reset_v1', '1');
-}
 applyLayout();
 setInterval(() => { if ($('#viewportInfo')) applyLayout(); }, 1500);
 
