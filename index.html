@@ -5998,13 +5998,11 @@ function applyDensity() {
   document.body.classList.toggle('compact-ui', compact);
 }
 function applyLayout() {
-  const mode = safeGet(LAYOUT_KEY) || 'auto';
-  const landscape = window.innerWidth > window.innerHeight && window.innerWidth >= 700;
-  const autoLandscape = mode === 'auto' && landscape;
-  document.body.classList.toggle('force-desktop', mode === 'desktop' || autoLandscape);
-  document.body.classList.toggle('auto-landscape', autoLandscape);
+  const landscape = window.innerWidth > window.innerHeight && window.innerWidth >= 900;
+  document.body.classList.toggle('force-desktop', landscape);
+  document.body.classList.toggle('auto-landscape', landscape);
   const info = $('#viewportInfo');
-  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${landscape ? '横屏' : '竖屏'} · ${mode === 'auto' ? '自动' : '桌面'}`;
+  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${landscape ? '横屏已启用' : '竖屏'}`;
 }
 if (window.matchMedia) {
   const layoutMq = window.matchMedia('(orientation: landscape) and (min-width: 700px)');
@@ -6042,14 +6040,12 @@ async function toggleFullscreen() {
 }
 
 async function desktopFullscreen() {
-  safeSet(LAYOUT_KEY, 'desktop');
   applyLayout();
   await new Promise((r) => setTimeout(r, 80));
   await toggleFullscreen();
 }
 
 async function landscapeMode() {
-  safeSet(LAYOUT_KEY, 'desktop');
   applyLayout();
   try {
     if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
@@ -6101,7 +6097,7 @@ function displayCard() {
     <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="desktop-fullscreen">${icon('eye')}桌面全屏</button><button type="button" class="btn btn-ghost" data-display-action="landscape">${icon('repeat')}横屏模式</button><button type="button" class="btn btn-ghost" data-display-action="fullscreen">普通全屏</button></div>
     <div class="setting-actions"><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
     <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
-    <div class="field" style="margin-top:10px"><label for="layoutMode">布局模式 <span class="hint">全屏后想保留电脑版，选“桌面”</span></label><select class="select input" id="layoutMode"><option value="auto" ${(safeGet(LAYOUT_KEY) || 'auto') === 'auto' ? 'selected' : ''}>自动（横屏桌面 / 竖屏跟随）</option><option value="desktop" ${safeGet(LAYOUT_KEY) === 'desktop' ? 'selected' : ''}>桌面布局（左侧栏）</option></select><div class="sync-install-tip" id="viewportInfo" style="margin-top:6px"></div></div>
+    <div class="field" style="margin-top:10px"><label>布局模式</label><div class="sync-install-tip">自动识别：横屏左侧栏 + 双栏，竖屏跟随屏幕。无需手动切换。</div><div class="sync-install-tip" id="viewportInfo" style="margin-top:6px"></div></div>
     <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
   </div>`;
 }
@@ -6122,11 +6118,6 @@ document.addEventListener('change', (event) => {
     safeSet(DENSITY_KEY, event.target.value);
     applyDensity();
     toast(event.target.value === 'compact' ? '已切换紧凑模式' : '已切换舒适模式');
-  }
-  if (event.target.id === 'layoutMode') {
-    safeSet(LAYOUT_KEY, event.target.value);
-    applyLayout();
-    toast(event.target.value === 'desktop' ? '已锁定桌面布局' : '布局跟随屏幕宽度');
   }
 });
 document.addEventListener('click', (event) => {
@@ -6150,6 +6141,7 @@ window.addEventListener('beforeinstallprompt', (event) => {
 window.addEventListener('appinstalled', () => { installPromptEvent = null; toast('已安装到桌面'); });
 applyDensity();
 applyLayout();
+setInterval(() => { if ($('#viewportInfo')) applyLayout(); }, 1500);
 
 </script>
   <script>
