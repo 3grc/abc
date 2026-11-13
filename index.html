@@ -6007,24 +6007,17 @@ function applyDensity() {
 function manualLandscapeOn() {
   return safeGet(MANUAL_LANDSCAPE_KEY) === '1';
 }
-function updateLandscapeButtons() {
-  const on = manualLandscapeOn();
-  document.querySelectorAll('[data-promo-action="landscape"]').forEach((b) => {
-    b.classList.toggle('is-on', on);
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
-  document.querySelectorAll('[data-display-action="landscape"]').forEach((b) => {
-    b.classList.toggle('is-on', on);
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
-}
 function applyLayout() {
   const on = manualLandscapeOn();
   document.body.classList.toggle('force-desktop', on);
   document.body.classList.toggle('auto-landscape', on);
   const info = $('#viewportInfo');
   if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${on ? '手动横屏布局' : '普通布局'}`;
-  updateLandscapeButtons();
+  const btn = document.querySelector('[data-display-action="landscape"]');
+  if (btn) {
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
 }
 async function toggleManualLandscape() {
   const on = !manualLandscapeOn();
@@ -6040,7 +6033,6 @@ async function toggleManualLandscape() {
     return;
   }
 
-  // 先尝试真正旋转屏幕；浏览器拒绝时至少保留横屏布局
   try {
     if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
       await document.documentElement.requestFullscreen();
@@ -6081,19 +6073,7 @@ async function toggleFullscreen() {
 }
 
 async function desktopFullscreen() {
-  applyLayout();
-  await new Promise((r) => setTimeout(r, 80));
   await toggleFullscreen();
-}
-
-function landscapeMode() {
-  toggleManualLandscape();
-}
-
-function reapplyFullscreenLayout() {
-  applyLayout();
-  setTimeout(applyLayout, 80);
-  setTimeout(applyLayout, 350);
 }
 
 function installHelp() {
@@ -6125,7 +6105,7 @@ function displayCard() {
     <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="desktop-fullscreen">${icon('eye')}桌面全屏</button><button type="button" class="btn btn-ghost" data-display-action="landscape">${icon('repeat')}横屏模式</button><button type="button" class="btn btn-ghost" data-display-action="fullscreen">普通全屏</button></div>
     <div class="setting-actions"><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
     <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
-    <div class="field" style="margin-top:10px"><label>横屏布局</label><div class="sync-install-tip">不再自动切换。点右上角或上面的“横屏模式”按钮手动进入；再点一次恢复。</div><div class="sync-install-tip" id="viewportInfo" style="margin-top:6px"></div></div>
+    <div class="sync-install-tip" id="viewportInfo" style="margin-top:8px"></div>
     <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
   </div>`;
 }
@@ -6155,12 +6135,9 @@ document.addEventListener('click', (event) => {
   const action = el.dataset.displayAction;
   if (action === 'fullscreen') toggleFullscreen();
   if (action === 'desktop-fullscreen') desktopFullscreen();
-  if (action === 'landscape') landscapeMode();
+  if (action === 'landscape') toggleManualLandscape();
   if (action === 'install') installApp();
   if (action === 'pair-link') copyPairLink();
-});
-['fullscreenchange', 'webkitfullscreenchange'].forEach((ev) => {
-  document.addEventListener(ev, reapplyFullscreenLayout);
 });
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
@@ -6168,6 +6145,10 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 window.addEventListener('appinstalled', () => { installPromptEvent = null; toast('已安装到桌面'); });
 applyDensity();
+if (!safeGet('cuoti_manual_landscape_reset_v1')) {
+  safeSet(MANUAL_LANDSCAPE_KEY, '0');
+  safeSet('cuoti_manual_landscape_reset_v1', '1');
+}
 applyLayout();
 setInterval(() => { if ($('#viewportInfo')) applyLayout(); }, 1500);
 
@@ -6286,7 +6267,7 @@ function injectPromo() {
   if (!document.querySelector('.promo-top-btn')) {
     const right = document.querySelector('.topbar-right');
     if (right) {
-      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn landscape-entry" data-promo-action="landscape">${icon('repeat', 'icon-sm')}<span>横屏模式</span></button><button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
+      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
     }
   }
 
@@ -6309,7 +6290,6 @@ function injectPromo() {
     removePromoBanner();
     hidePromoInstallButtons();
   }
-  if (typeof applyLayout === 'function') applyLayout();
 }
 
 document.addEventListener('click', (event) => {
@@ -6319,7 +6299,6 @@ document.addEventListener('click', (event) => {
   const action = el.dataset.promoAction;
   if (action === 'install') promoInstall();
   if (action === 'help') window.open('./使用说明.html', '_blank');
-  if (action === 'landscape' && typeof toggleManualLandscape === 'function') toggleManualLandscape();
   if (action === 'dismiss') {
     safeSet(PROMO_DISMISS_KEY, '1');
     removePromoBanner();
