@@ -1741,6 +1741,28 @@ body.compact-ui .settings-group-title { margin-top: 0; }
   .review-v2-timer { font-size: 11px; }
 }
 
+/* ---------- 强制桌面布局（平板全屏用） ---------- */
+body.force-desktop .sidebar {
+  position: fixed; inset: 0 auto 0 0; z-index: 30; width: 244px;
+  display: flex; flex-direction: column; padding: 26px 16px 20px;
+  border-right: 1px solid rgba(255,255,255,.04); border-radius: 0;
+}
+body.force-desktop .brand { padding: 4px 9px 24px; }
+body.force-desktop .nav { display: flex; flex-direction: column; gap: 5px; overflow: visible; width: auto; max-width: none; padding: 0; }
+body.force-desktop .nav-item { width: 100%; flex: 0 0 auto; gap: 11px; padding: 11px 12px; font-size: 13.5px; }
+body.force-desktop .nav-item.active::before { left: 0; right: auto; top: 9px; bottom: 9px; width: 3px; height: auto; }
+body.force-desktop .sidebar-foot { display: block; }
+body.force-desktop .main { margin-left: 244px; width: auto; max-width: none; padding: 28px 38px 70px; }
+body.force-desktop .bottom-nav { display: none !important; }
+@media (max-width: 900px) {
+  body.force-desktop .sidebar { display: flex !important; }
+  body.force-desktop .main { width: calc(100vw - 244px); max-width: calc(100vw - 244px); margin-left: 244px; }
+  body.force-desktop .settings-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  body.force-desktop .dash-top-grid { grid-template-columns: minmax(0,1.35fr) minmax(230px,.65fr); }
+  body.force-desktop .dash-two, body.force-desktop .dash-bottom-grid { grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); }
+  body.force-desktop .topbar { margin-bottom: 20px; }
+}
+
 </style>
 </head>
 <body>
@@ -5861,6 +5883,7 @@ document.addEventListener('DOMContentLoaded', () => {
 'use strict';
 
 const DENSITY_KEY = 'cuoti_density_v1';
+const LAYOUT_KEY = 'cuoti_layout_v1';
 let installPromptEvent = null;
 
 function isStandaloneApp() {
@@ -5872,6 +5895,10 @@ function displayModeText() {
 function applyDensity() {
   const compact = safeGet(DENSITY_KEY) === 'compact';
   document.body.classList.toggle('compact-ui', compact);
+}
+function applyLayout() {
+  const mode = safeGet(LAYOUT_KEY) || 'auto';
+  document.body.classList.toggle('force-desktop', mode === 'desktop');
 }
 function displayCopy(text, msg) {
   if (typeof wizCopy === 'function') return wizCopy(text, msg);
@@ -5922,6 +5949,7 @@ function displayCard() {
     <div class="sync-status"><span class="sync-dot ${standalone ? 'on' : ''}"></span><strong>${standalone ? '独立应用窗口' : '浏览器标签页'}</strong><span>${standalone ? '没有地址栏' : '安装到桌面后不显示地址栏'}</span></div>
     <div class="setting-actions"><button type="button" class="btn btn-primary" data-display-action="fullscreen">${icon('eye')}进入全屏</button><button type="button" class="btn btn-ghost" data-display-action="install">${icon('download')}安装到桌面</button><a class="btn btn-ghost" href="./使用说明.html" target="_blank" rel="noopener">${icon('book')}完整使用说明</a></div>
     <div class="field" style="margin-top:12px"><label for="densitySelect">界面密度</label><select class="select input" id="densitySelect"><option value="comfortable" ${safeGet(DENSITY_KEY) !== 'compact' ? 'selected' : ''}>舒适</option><option value="compact" ${safeGet(DENSITY_KEY) === 'compact' ? 'selected' : ''}>紧凑</option></select></div>
+    <div class="field" style="margin-top:10px"><label for="layoutMode">布局模式 <span class="hint">全屏后想保留电脑版，选“桌面”</span></label><select class="select input" id="layoutMode"><option value="auto" ${(safeGet(LAYOUT_KEY) || 'auto') === 'auto' ? 'selected' : ''}>自动（跟随屏幕宽度）</option><option value="desktop" ${safeGet(LAYOUT_KEY) === 'desktop' ? 'selected' : ''}>桌面布局（左侧栏）</option></select></div>
     <div class="answer-block warn" style="margin-top:12px"><div class="answer-label">不同浏览器数据不一样？</div><p class="answer-text">数据默认只存在当前浏览器。要让 Edge、Chrome、平板显示同一份数据，需要在每个浏览器连接同一个 Gist。可以复制配对链接，在另一个浏览器打开。</p><button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" data-display-action="pair-link" ${sync ? '' : 'disabled'}>${icon('link')}复制配对链接</button></div>
   </div>`;
 }
@@ -5938,10 +5966,16 @@ function copyPairLink() {
 }
 
 document.addEventListener('change', (event) => {
-  if (event.target.id !== 'densitySelect') return;
-  safeSet(DENSITY_KEY, event.target.value);
-  applyDensity();
-  toast(event.target.value === 'compact' ? '已切换紧凑模式' : '已切换舒适模式');
+  if (event.target.id === 'densitySelect') {
+    safeSet(DENSITY_KEY, event.target.value);
+    applyDensity();
+    toast(event.target.value === 'compact' ? '已切换紧凑模式' : '已切换舒适模式');
+  }
+  if (event.target.id === 'layoutMode') {
+    safeSet(LAYOUT_KEY, event.target.value);
+    applyLayout();
+    toast(event.target.value === 'desktop' ? '已锁定桌面布局' : '布局跟随屏幕宽度');
+  }
 });
 document.addEventListener('click', (event) => {
   const el = event.target.closest('[data-display-action]');
@@ -5958,6 +5992,7 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 window.addEventListener('appinstalled', () => { installPromptEvent = null; toast('已安装到桌面'); });
 applyDensity();
+applyLayout();
 
 </script>
   <script>
