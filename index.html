@@ -1939,6 +1939,73 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   box-shadow: 0 -8px 20px rgba(35,42,36,.06);
 }
 
+/* 录入表单内部滚动：form 必须是纵向 flex，否则 modal-body 不会滚动 */
+.modal > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+}
+.modal > form > .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ---------- 录入增强：草稿 / 两步 / 公式 / 原图 / AI 补全 ---------- */
+.entry-tools-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-soft); }
+.entry-tools-bar .hint { margin-left: auto; }
+.entry-simple .entry-optional { display: none !important; }
+.entry-draft-banner { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; padding: 8px 10px; border: 1px solid #e5d2a8; border-radius: 9px; background: #fbf5e8; color: var(--gold); font-size: 10.5px; }
+.entry-draft-banner button { border: 0; background: transparent; color: var(--accent); font-size: 10px; font-weight: 700; cursor: pointer; }
+.entry-image-ref { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,253,248,.96); box-shadow: 0 6px 14px rgba(35,42,36,.05); }
+.entry-ref-label { color: var(--muted); font-size: 9.5px; font-weight: 700; letter-spacing: .08em; }
+.entry-image-ref a { display: block; }
+.entry-image-ref img { width: 58px; height: 44px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); background: var(--card); }
+.entry-math-tools { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin: -4px 0 7px; }
+.entry-math-tools button { padding: 3px 7px; color: var(--teal); background: var(--teal-soft); border: 1px solid #c9ded6; border-radius: 6px; font-size: 9.5px; cursor: pointer; }
+.entry-math-tools button:hover { background: #d7e9e2; }
+.entry-math-preview { display: none; margin: 5px 0 2px; padding: 7px 10px; border: 1px dashed var(--line); border-radius: 8px; background: var(--card-soft); color: var(--ink); font-size: 12px; line-height: 1.8; overflow-x: auto; }
+.entry-math-preview.has-math { display: block; }
+.entry-math-preview:empty { display: none; }
+@media (max-width: 640px) {
+  .entry-tools-bar .hint { margin-left: 0; width: 100%; }
+  .entry-image-ref { position: static; }
+  .entry-image-ref img { width: 48px; height: 38px; }
+}
+
+/* 平板录入：工具栏和原图固定，输入时不丢上下文 */
+@media (min-width: 700px) {
+  .modal.form-modal .entry-tools-bar {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    margin-left: -2px;
+    margin-right: -2px;
+    background: rgba(251,247,239,.97);
+    backdrop-filter: blur(8px);
+  }
+  .modal.form-modal .entry-tools-bar .btn { height: 38px; }
+  .modal.form-modal .entry-image-ref {
+    position: sticky;
+    top: 58px;
+    z-index: 7;
+    padding: 8px 10px;
+  }
+  .modal.form-modal .entry-image-ref img {
+    width: 112px;
+    height: 82px;
+    object-fit: cover;
+  }
+  .modal.form-modal .textarea-lg { min-height: 150px; }
+  .modal.form-modal .input,
+  .modal.form-modal .select,
+  .modal.form-modal .textarea { font-size: 14px; }
+}
+
 </style>
 </head>
 <body>
@@ -2067,7 +2134,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.26';
+const APP_VERSION = '1.5.34';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -2259,6 +2326,7 @@ function normalize(raw = {}) {
     item: String(raw.item || '').trim(),
     difficulty: clamp(Number(raw.difficulty) || 3, 1, 5),
     question: String(raw.question || '').trim(),
+    ocrText: String(raw.ocrText || '').trim(),
     myAnswer: String(raw.myAnswer || '').trim(),
     answer: String(raw.answer || '').trim(),
     analysis: String(raw.analysis || '').trim(),
@@ -2762,9 +2830,8 @@ async function saveForm(old) {
   const aiGenerated = d.aiGenerated !== undefined ? d.aiGenerated === '1' : Boolean(base.aiGenerated);
   const aiVerified = d.aiVerified !== undefined ? d.aiVerified === '1' : Boolean(base.aiVerified);
   const q = normalize({ ...base, subject: d.subject, topic: d.topic, chapter: d.chapter, source: d.source, type: d.type, item: d.item, difficulty: d.difficulty,
-    question: d.question, myAnswer: d.myAnswer, answer: d.answer, analysis: d.analysis, reason: d.reason,
-    tags: d.tags, images: state.formImages, starred: d.starred === '1', status: d.status,
-    aiGenerated, aiVerified, updatedAt: now });
+    question: d.question, ocrText: base.ocrText || '', myAnswer: d.myAnswer, answer: d.answer, analysis: d.analysis, reason: d.reason,
+    tags: d.tags, images: state.formImages, starred: d.starred === '1', status: d.status, aiGenerated, aiVerified, updatedAt: now });
   if (isNew) {
     q.createdAt = now;
     q.reviewCount = 0;
@@ -2794,7 +2861,7 @@ function openDetail(id) {
   if (!q) return;
   const history = state.logs.filter((l) => l.qid === q.id).slice(-6).reverse();
   openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.chapter ? ' · ' + esc(q.chapter) : ''}${q.topic ? ' · ' + esc(q.topic) : ''}${q.item ? ' · ' + esc(q.item) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
-  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}${q.aiGenerated ? `<span class="q-tag" style="color:var(--gold)">AI 生成${q.aiVerified ? ' · 已核对' : ' · 待核对'}</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 14px"><button type="button" class="btn btn-primary btn-sm" data-action="ocr-detail" data-id="${esc(q.id)}">${icon('image', 'icon-sm')}识别图片文字</button><span class="hint">识别后会自动填入编辑表单的题干</span></div>` : ''}
+  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}${q.aiGenerated ? `<span class="q-tag" style="color:var(--gold)">AI 生成${q.aiVerified ? ' · 已核对' : ' · 待核对'}</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 14px"><button type="button" class="btn btn-primary btn-sm" data-action="ocr-detail" data-id="${esc(q.id)}">${icon('image', 'icon-sm')}${q.ocrText ? '重新识别图片文字' : '识别图片文字'}</button><button type="button" class="btn btn-ghost btn-sm" data-vision-action="image-analyze" data-id="${esc(q.id)}">${icon('spark', 'icon-sm')}AI 看图分析</button><span class="hint">看图分析直接读取图片，不使用文字题干</span></div>${q.ocrText ? `<div class="answer-block accent" style="margin-bottom:14px"><div class="answer-label">${icon('image', 'icon-sm')}图片识别文字</div><p class="answer-text">${esc(q.ocrText)}</p></div>` : ''}` : ''}
   <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
   <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '还没有写解析。编辑这道题，把“下次怎么做”写下来。')}</p></div>
   <div class="detail-tags">${q.tags.map(tagHTML).join('') || '<span class="q-tag">暂无标签</span>'}</div>
@@ -4196,7 +4263,7 @@ let lastSimilar = null;
 let lastSimilarSource = null;
 
 function aiFingerprint(q) {
-  return [q.id, q.question, q.answer, q.myAnswer, q.reason, q.topic].join('|').slice(0, 4000);
+  return [q.id, q.question, q.ocrText, q.answer, q.myAnswer, q.reason, q.topic].join('|').slice(0, 4000);
 }
 function aiCacheGet(q, mode = 'full') {
   const item = aiCache[aiFingerprint(q) + '|' + mode];
@@ -4272,7 +4339,7 @@ function qText(q) {
     '题型：' + (q.type || '未填写'),
     '难度：' + '★'.repeat(q.difficulty || 3),
     '错因：' + (q.reason || '未填写'),
-    '题干：' + (q.question || ''),
+    '题干：' + (q.question || q.ocrText || ''),
     '我的答案/思路：' + (q.myAnswer || '未填写'),
     '正确答案：' + (q.answer || '未填写'),
     '我的解析：' + (q.analysis || '未填写')
@@ -4340,8 +4407,9 @@ async function aiAnalyze(id, force = false, full = false) {
   const q = state.questions.find((x) => x.id === id);
   if (!q) return;
   if (!aiConfigured()) return aiNeedKey();
-  if (!q.question && !q.images.length) return toast('这道题没有文字题干', 'info');
-  if (!q.question) return toast('图片题请先在“编辑”里补一句题干，AI 才能分析', 'info');
+  const stem = q.question || q.ocrText || '';
+  if (!stem && !q.images.length) return toast('这道题没有文字题干', 'info');
+  if (!stem) return toast('图片题请先点“识别图片文字”，AI 才能分析', 'info');
   const hintOnly = aiHintMode && !full;
   const mode = hintOnly ? 'hint' : 'full';
   if (!force) {
@@ -4440,7 +4508,7 @@ async function aiSimilar(id) {
   const q = state.questions.find((x) => x.id === id);
   if (!q) return;
   if (!aiConfigured()) return aiNeedKey();
-  if (!q.question) return toast('图片题请先在“编辑”里补一句题干', 'info');
+  if (!q.question && !q.ocrText) return toast('图片题请先点“识别图片文字”', 'info');
   if (aiBusy) return;
   aiBusy = true;
   aiLoading('正在出相似题', '保持考点和难度，换一个情境…');
@@ -5024,32 +5092,36 @@ document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootBackup(
 'use strict';
 
 const VISION_KEY = 'cuoti_vision_key_v1';
-const VISION_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
-const VISION_MODEL = 'qwen-vl-plus';
+const VISION_URLS = [
+  'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+  'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions'
+];
+const VISION_MODELS = ['qwen-vl-plus', 'qwen-vl-max', 'qwen2.5-vl-72b-instruct', 'qwen-vl-ocr-latest'];
+const OCR_PROMPT = '请提取这张图片里的题目文字，保留题号、选项和数学公式（公式用 LaTeX），不要解答，不要解释，只输出题目原文。';
 
 let visionKeyValue = safeGet(VISION_KEY) || '';
 let visionBusy = false;
 let liveStream = null;
+let lastImageAnalysis = null;
 
 function visionConfigured() { return Boolean(visionKeyValue); }
 
-async function callVision(dataUrl) {
-  if (!visionKeyValue) throw new Error('还没有填写百炼 API Key');
-  const res = await fetch(VISION_URL, {
+async function requestVision(dataUrl, model, endpoint, prompt) {
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + visionKeyValue
     },
     body: JSON.stringify({
-      model: VISION_MODEL,
+      model,
       temperature: 0.1,
-      max_tokens: 1400,
+      max_tokens: 1800,
       messages: [{
         role: 'user',
         content: [
           { type: 'image_url', image_url: { url: dataUrl } },
-          { type: 'text', text: '请提取这张图片里的题目文字，保留题号、选项和数学公式（公式用 LaTeX），不要解答，不要解释，只输出题目原文。' }
+          { type: 'text', text: prompt }
         ]
       }]
     })
@@ -5064,6 +5136,28 @@ async function callVision(dataUrl) {
   const content = data.choices?.[0]?.message?.content;
   if (Array.isArray(content)) return content.map((x) => x.text || '').join('\n').trim();
   return String(content || '').trim();
+}
+
+async function callVisionGeneric(dataUrl, prompt) {
+  if (!visionKeyValue) throw new Error('还没有填写百炼 API Key');
+  let lastError = null;
+  for (const endpoint of VISION_URLS) {
+    for (const model of VISION_MODELS) {
+      try {
+        return await requestVision(dataUrl, model, endpoint, prompt);
+      } catch (error) {
+        lastError = error;
+        const msg = String(error.message || '');
+        // 模型下线 / 未开通 / 区域不匹配时自动换下一个
+        if (!/model.*not.*exist|model_not_found|invalid.*model|does not exist|not found|invalid.*endpoint|url|API Key|401/i.test(msg)) throw error;
+      }
+    }
+  }
+  throw new Error(`图片模型不可用：${lastError?.message || 'Model not exist'}。请到阿里云百炼确认已开通 Qwen-VL，并重新创建 Key。`);
+}
+
+async function callVision(dataUrl) {
+  return callVisionGeneric(dataUrl, OCR_PROMPT);
 }
 
 function visionNeedKey() {
@@ -5335,22 +5429,72 @@ async function recognizeDetailImage(id) {
   try {
     const text = await callVision(q.images[0]);
     if (!text) throw new Error('没有识别到文字，换一张清晰的图片试试');
-    const had = String(q.question || '').trim();
-    openForm(q.id);
-    setTimeout(() => {
-      const ta = $('#qQuestion');
-      if (!ta) return;
-      ta.value = text;
-      ta.dispatchEvent(new Event('input', { bubbles: true }));
-      ta.focus();
-      toast(had ? '识别完成，已覆盖表单题干，请核对' : '识别完成，请核对后保存');
-    }, 120);
+    const updated = normalize({ ...q, ocrText: text, updatedAt: new Date().toISOString() });
+    const index = state.questions.findIndex((x) => x.id === q.id);
+    if (index >= 0) state.questions[index] = updated;
+    await Store.put(updated);
+    openDetail(updated.id);
+    toast('识别完成，已单独保存为图片文字，不会改题干');
   } catch (error) {
     toast(error.message || '识别失败，检查百炼 Key 和图片', 'error');
   } finally {
     visionBusy = false;
     if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = old || '识别图片文字'; }
   }
+}
+
+async function analyzeImageQuestion(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q || !q.images || !q.images.length) return toast('这道题没有图片', 'info');
+  if (!visionConfigured()) return visionNeedKey();
+  if (visionBusy) return;
+  visionBusy = true;
+  const btn = document.querySelector(`[data-vision-action="image-analyze"][data-id="${CSS.escape(id)}"]`);
+  const old = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.textContent = '看图分析中…'; }
+  try {
+    const prompt = `你是一位考研错题教练。请直接看这张题目图片，不要假设已有文字题干。只根据图片分析，输出 JSON：
+{"题目概述":"一句话概括题目","考点":["具体考点"],"解题思路":"先做什么、再做什么","关键步骤":["步骤1","步骤2"],"答案":"最终答案","易错点":["易错点"]}
+只输出 JSON，不要 Markdown 代码块。`;
+    const raw = await callVisionGeneric(q.images[0], prompt);
+    let obj = null;
+    try {
+      const m = String(raw).match(/\{[\s\S]*\}/);
+      if (m) obj = JSON.parse(m[0]);
+    } catch (e) {}
+    const lines = [];
+    if (obj) {
+      if (obj['题目概述']) lines.push('题目概述：' + obj['题目概述']);
+      if (Array.isArray(obj['考点']) && obj['考点'].length) lines.push('考点：' + obj['考点'].join('；'));
+      if (obj['解题思路']) lines.push('解题思路：' + obj['解题思路']);
+      if (Array.isArray(obj['关键步骤']) && obj['关键步骤'].length) lines.push('关键步骤：\n' + obj['关键步骤'].map((x, i) => `${i + 1}. ${x}`).join('\n'));
+      if (obj['答案']) lines.push('答案：' + obj['答案']);
+      if (Array.isArray(obj['易错点']) && obj['易错点'].length) lines.push('易错点：\n' + obj['易错点'].map((x) => '- ' + x).join('\n'));
+    }
+    lastImageAnalysis = lines.length ? lines.join('\n\n') : String(raw || '').trim();
+    if (!lastImageAnalysis) throw new Error('没有返回分析内容，换一张清晰图片再试');
+    openModal(`<div class="modal-head"><div><div class="modal-kicker">VISION ANALYSIS</div><h2 class="modal-title">AI 看图分析</h2><p class="modal-sub">直接读取图片，不使用题干文字。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+      <div class="modal-body"><div class="answer-block accent"><div class="answer-label">${icon('spark', 'icon-sm')}图片分析结果</div><p class="answer-text" style="white-space:pre-wrap;line-height:1.8">${esc(lastImageAnalysis)}</p></div><div class="note" style="font-size:10px">AI 可能出错，答案和步骤请自己核对。</div></div>
+      <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-ghost" data-action="close-modal">关闭</button><button class="btn btn-primary" data-vision-action="save-image-analysis" data-id="${esc(q.id)}">${icon('check')}写入解析</button></div></div>`, false);
+  } catch (error) {
+    toast(error.message || '看图分析失败，检查百炼 Key 和图片', 'error');
+  } finally {
+    visionBusy = false;
+    if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = old || 'AI 看图分析'; }
+  }
+}
+
+async function saveImageAnalysis(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q || !lastImageAnalysis) return;
+  if (q.analysis && !confirm('解析已有内容，要用 AI 看图分析覆盖吗？')) return;
+  const updated = normalize({ ...q, analysis: lastImageAnalysis, updatedAt: new Date().toISOString() });
+  const i = state.questions.findIndex((x) => x.id === q.id);
+  if (i >= 0) state.questions[i] = updated;
+  await Store.put(updated);
+  closeModal();
+  openDetail(updated.id);
+  toast('AI 看图分析已写入解析');
 }
 
 async function runOCR() {
@@ -5397,6 +5541,8 @@ document.addEventListener('click', (event) => {
   if (!el) return;
   const action = el.dataset.visionAction;
   if (action === 'ocr') { event.preventDefault(); runOCR(); }
+  if (action === 'image-analyze') { event.preventDefault(); analyzeImageQuestion(el.dataset.id); }
+  if (action === 'save-image-analysis') { event.preventDefault(); saveImageAnalysis(el.dataset.id); }
   if (action === 'save-key') {
     event.preventDefault();
     const input = $('#visionKeyInput');
@@ -5889,7 +6035,6 @@ const baseOpenFormUI = openForm;
 openForm = function (id = null) {
   baseOpenFormUI(id);
   setTimeout(() => {
-    reorderFormForMobile();
     const modal = document.querySelector('.modal');
     if (modal && modal.querySelector('#questionForm')) {
       modal.classList.add('form-modal');
@@ -6601,6 +6746,359 @@ function bootPromo(tries = 0) {
   if (tries < 100) setTimeout(() => bootPromo(tries + 1), 150);
 }
 document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootPromo(), 400));
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 录入增强
+   草稿 / 两步录入 / 公式工具栏 / 原图对照 / AI 一键补全
+   ============================================================ */
+'use strict';
+
+const ENTRY_DRAFT_KEY = 'cuoti_entry_draft_v1';
+const MATH_SNIPPETS = [
+  ['分数', '$\\frac{}{}$'],
+  ['根号', '$\\sqrt{}$'],
+  ['积分', '$\\int_{}^{} \\,dx$'],
+  ['求和', '$\\sum_{}^{}$'],
+  ['极限', '$\\lim_{x \\to 0}$'],
+  ['矩阵', '$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$']
+];
+
+let entryDraftTimer = null;
+let entryRestoring = false;
+
+function entryRoot() { return document.querySelector('#questionForm'); }
+
+function entryOptionalFields() {
+  const ids = ['qMyAnswer', 'qAnswer', 'qAnalysis', 'qType', 'qTopic', 'qSource', 'qItem', 'qTags'];
+  const fields = ids.map((id) => document.getElementById(id)?.closest('.field')).filter(Boolean);
+  entryRoot()?.querySelectorAll('.form-col:nth-child(2) .field').forEach((field) => {
+    const text = field.textContent || '';
+    if (/难度|掌握状态|重点标记|AI 识别知识点/.test(text)) fields.push(field);
+  });
+  const syllabusField = document.getElementById('sylChapter')?.closest('.field');
+  if (syllabusField) fields.push(syllabusField);
+  return [...new Set(fields)];
+}
+
+function entrySerialize() {
+  const form = entryRoot();
+  if (!form) return null;
+  const data = Object.fromEntries(new FormData(form).entries());
+  return {
+    ...data,
+    images: Array.isArray(state.formImages) ? state.formImages : [],
+    starred: state.formStarred ? '1' : '0',
+    savedAt: new Date().toISOString()
+  };
+}
+
+function entrySaveDraft() {
+  if (entryRestoring) return;
+  const form = entryRoot();
+  if (!form || form.dataset.id) return;
+  try {
+    const data = entrySerialize();
+    if (!data) return;
+    const hasText = ['question', 'myAnswer', 'answer', 'analysis', 'topic', 'item', 'tags', 'source'].some((k) => String(data[k] || '').trim());
+    if (!hasText && !(data.images || []).length && data.starred !== '1') return;
+    localStorage.setItem(ENTRY_DRAFT_KEY, JSON.stringify(data));
+    const tip = document.querySelector('#entryDraftTip');
+    if (tip) tip.textContent = '草稿已自动保存';
+  } catch (e) {
+    // 图片过大时只存文字部分
+    try {
+      const data = entrySerialize();
+      if (data) {
+        delete data.images;
+        const hasText = ['question', 'myAnswer', 'answer', 'analysis', 'topic', 'item', 'tags', 'source'].some((k) => String(data[k] || '').trim());
+        if (hasText || data.starred === '1') localStorage.setItem(ENTRY_DRAFT_KEY, JSON.stringify(data));
+      }
+    } catch (err) {}
+  }
+}
+
+function entryScheduleDraft() {
+  clearTimeout(entryDraftTimer);
+  entryDraftTimer = setTimeout(entrySaveDraft, 400);
+}
+
+function entryApplyDraft(data) {
+  if (!data) return;
+  entryRestoring = true;
+  const form = entryRoot();
+  if (!form) return;
+  ['subject', 'type', 'topic', 'source', 'item', 'difficulty', 'status', 'reason', 'tags', 'question', 'myAnswer', 'answer', 'analysis'].forEach((name) => {
+    const el = form.querySelector(`[name="${name}"]`);
+    if (!el) return;
+    if (el.type === 'radio') {
+      const radio = form.querySelector(`[name="${name}"][value="${CSS.escape(String(data[name] || ''))}"]`);
+      if (radio) radio.checked = true;
+    } else if (data[name] !== undefined) {
+      el.value = data[name];
+    }
+  });
+  if (Array.isArray(data.images) && data.images.length) {
+    state.formImages = data.images.slice(0, 4);
+    renderFormImages();
+  }
+  state.formStarred = data.starred === '1';
+  const star = document.getElementById('formStarred');
+  if (star) star.value = state.formStarred ? '1' : '0';
+  const starBtn = document.getElementById('formStarBtn');
+  if (starBtn) starBtn.classList.toggle('is-on', state.formStarred);
+  entryRestoring = false;
+  entryUpdateAllPreviews();
+}
+
+function entryClearDraft() {
+  try { localStorage.removeItem(ENTRY_DRAFT_KEY); } catch (e) {}
+  const banner = document.querySelector('#entryDraftBanner');
+  if (banner) banner.remove();
+  const tip = document.querySelector('#entryDraftTip');
+  if (tip) tip.textContent = '';
+}
+
+function entryMathPreview(textarea) {
+  const preview = textarea.parentElement.querySelector('.entry-math-preview');
+  if (!preview) return;
+  preview.textContent = textarea.value;
+  preview.classList.toggle('has-math', /\$/.test(textarea.value));
+  if (window.renderMathInElement) {
+    try {
+      window.renderMathInElement(preview, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false }
+        ],
+        throwOnError: false,
+        strict: false
+      });
+    } catch (e) {}
+  }
+}
+function entryUpdateAllPreviews() {
+  entryRoot()?.querySelectorAll('.entry-math-preview').forEach((preview) => {
+    const textarea = preview.parentElement.querySelector('textarea');
+    if (textarea) entryMathPreview(textarea);
+  });
+}
+
+function entryBuildMathTools(textarea) {
+  if (!textarea || textarea.dataset.mathReady) return;
+  textarea.dataset.mathReady = '1';
+  const tools = document.createElement('div');
+  tools.className = 'entry-math-tools';
+  tools.innerHTML = MATH_SNIPPETS.map(([label, code]) => `<button type="button" data-entry-latex="${esc(code)}">${esc(label)}</button>`).join('');
+  textarea.parentElement.insertBefore(tools, textarea);
+  const preview = document.createElement('div');
+  preview.className = 'entry-math-preview';
+  textarea.parentElement.insertBefore(preview, textarea.nextSibling);
+  textarea.addEventListener('input', () => {
+    entryMathPreview(textarea);
+    entryScheduleDraft();
+  });
+  entryMathPreview(textarea);
+}
+
+function entryInsertLatex(code) {
+  const ta = document.activeElement && document.activeElement.matches('textarea') ? document.activeElement : null;
+  if (!ta) return;
+  const start = ta.selectionStart || 0;
+  const end = ta.selectionEnd || 0;
+  const selected = ta.value.slice(start, end);
+  const snippet = code.replace('{}', `{${selected}}`);
+  ta.value = ta.value.slice(0, start) + snippet + ta.value.slice(end);
+  ta.focus();
+  const caret = start + snippet.length;
+  ta.setSelectionRange(caret, caret);
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function entryImageReference() {
+  let ref = document.getElementById('entryImageRef');
+  const images = Array.isArray(state.formImages) ? state.formImages : [];
+  if (!images.length) { if (ref) ref.remove(); return; }
+  if (!ref) {
+    const head = entryRoot()?.querySelector('.modal-body');
+    const toolbar = head?.querySelector('.entry-tools-bar');
+    if (!head) return;
+    head.insertAdjacentHTML('afterbegin', '<div class="entry-image-ref" id="entryImageRef"></div>');
+    ref = document.getElementById('entryImageRef');
+    if (ref && toolbar && toolbar.parentElement) toolbar.parentElement.insertBefore(ref, toolbar.nextSibling);
+  }
+  if (!ref) return;
+  ref.innerHTML = `<span class="entry-ref-label">原图对照</span>${images.map((src, i) => `<a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="原图 ${i + 1}"></a>`).join('')}`;
+}
+
+function entrySetOptional(expanded) {
+  const root = entryRoot();
+  if (!root) return;
+  root.classList.toggle('entry-simple', !expanded);
+  root.classList.toggle('entry-expanded', expanded);
+  const btn = root.querySelector('[data-entry-action="toggle-optional"]');
+  if (btn) btn.textContent = expanded ? '收起更多字段' : '展开答案 / 解析 / 更多字段';
+}
+
+function entryAiFill() {
+  const q = entryRoot();
+  if (!q) return;
+  if (!state.formImages.length) return toast('先拍照或从相册选一张题图', 'info');
+  if (!visionConfigured()) return visionNeedKey();
+  if (visionBusy) return;
+  const hasContent = ['qQuestion', 'qAnswer', 'qAnalysis', 'qMyAnswer'].some((id) => document.getElementById(id)?.value.trim());
+  if (hasContent && !confirm('AI 会覆盖题干、答案、解析和部分字段，继续吗？')) return;
+  const modal = q.closest('.modal');
+  const btn = q.querySelector('[data-entry-action="ai-fill"]');
+  const old = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'AI 识别中…'; }
+  visionBusy = true;
+  const prompt = `你是考研错题录入助手。请直接看这张题目图片，输出 JSON：
+{"question":"完整题干，保留公式 LaTeX","answer":"正确答案","analysis":"解题思路和关键步骤","subject":"政治|英语一|英语二|数学一|数学二|数学三|专业课一|专业课二|管综 之一","chapter":"章节","topic":"具体知识点","item":"具体考题项目","type":"选择题|填空题|解答题|证明题|其他 之一","reason":"概念不清|计算错误|审题偏差|思路错误|知识遗忘|方法不当|其他 之一","tags":["标签"]}
+只输出 JSON，不要代码块。`;
+  callVisionGeneric(state.formImages[0], prompt).then((raw) => {
+    let r = null;
+    try { const m = String(raw).match(/\{[\s\S]*\}/); if (m) r = JSON.parse(m[0]); } catch (e) {}
+    if (!r) throw new Error('AI 没有返回可用的结构化结果');
+    const set = (id, value) => {
+      if (!value) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.tagName === 'SELECT') {
+        const opt = [...el.options].find((o) => o.value === value);
+        if (opt) el.value = value;
+      } else {
+        el.value = value;
+      }
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    set('qQuestion', r.question);
+    set('qAnswer', r.answer);
+    set('qAnalysis', r.analysis);
+    set('qSubject', r.subject);
+    set('qTopic', r.topic);
+    set('qItem', r.item);
+    set('qType', r.type);
+    set('qReason', r.reason);
+    set('qTags', Array.isArray(r.tags) ? r.tags.join(', ') : r.tags);
+    entrySetOptional(true);
+    entryUpdateAllPreviews();
+    entryScheduleDraft();
+    if (modal) modal.classList.add('show-optional');
+    toast('AI 已补全，请核对后保存');
+  }).catch((error) => {
+    toast(error.message || 'AI 补全失败，检查图片和百炼 Key', 'error');
+  }).finally(() => {
+    visionBusy = false;
+    if (btn) { btn.disabled = false; btn.innerHTML = old || 'AI 一键补全'; }
+  });
+}
+
+function entrySetup(id, tries = 0) {
+  const form = entryRoot();
+  if (!form) {
+    if (tries < 20) setTimeout(() => entrySetup(id, tries + 1), 60);
+    return;
+  }
+  if (form.dataset.entryReady) return;
+  form.dataset.entryReady = '1';
+
+  const head = form.querySelector('.modal-body');
+  if (head && !head.querySelector('.entry-tools-bar')) {
+    head.insertAdjacentHTML('afterbegin', `<div class="entry-tools-bar">
+      <button type="button" class="btn btn-primary btn-sm" data-entry-action="ai-fill">${icon('spark', 'icon-sm')}AI 一键补全</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-entry-action="toggle-optional">展开答案 / 解析 / 更多字段</button>
+      <span class="hint" id="entryDraftTip">新录入会自动保存草稿</span>
+    </div>`);
+  }
+  if (head && !head.querySelector('#entryImageRef') && state.formImages.length) {
+    const toolbar = head.querySelector('.entry-tools-bar');
+    if (toolbar) toolbar.insertAdjacentHTML('afterend', '<div class="entry-image-ref" id="entryImageRef"></div>');
+    else head.insertAdjacentHTML('afterbegin', '<div class="entry-image-ref" id="entryImageRef"></div>');
+  }
+
+  entryOptionalFields().forEach((field) => field.classList.add('entry-optional'));
+  entrySetOptional(!id ? false : true);
+
+  document.querySelectorAll('#questionForm textarea').forEach(entryBuildMathTools);
+
+  form.querySelectorAll('input, textarea, select').forEach((el) => {
+    el.addEventListener('input', entryScheduleDraft);
+    el.addEventListener('change', entryScheduleDraft);
+  });
+
+  if (!id) {
+    let draft = null;
+    try { draft = JSON.parse(localStorage.getItem(ENTRY_DRAFT_KEY) || 'null'); } catch (e) {}
+    if (draft) {
+      entryApplyDraft(draft);
+      if (head && !head.querySelector('#entryDraftBanner')) {
+        head.insertAdjacentHTML('afterbegin', `<div class="entry-draft-banner" id="entryDraftBanner"><span>已恢复上次未保存的草稿</span><button type="button" data-entry-action="discard-draft">丢弃草稿</button></div>`);
+      }
+      toast('已恢复上次草稿');
+    }
+  }
+
+  entryImageReference();
+  entryUpdateAllPreviews();
+}
+
+document.addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-entry-action]');
+  if (btn) {
+    event.preventDefault();
+    const action = btn.dataset.entryAction;
+    if (action === 'ai-fill') entryAiFill();
+    if (action === 'toggle-optional') {
+      const root = entryRoot();
+      entrySetOptional(root?.classList.contains('entry-simple'));
+    }
+    if (action === 'discard-draft') {
+      entryClearDraft();
+      toast('已丢弃草稿');
+    }
+    return;
+  }
+  const latex = event.target.closest('[data-entry-latex]');
+  if (latex) {
+    event.preventDefault();
+    entryInsertLatex(latex.dataset.entryLatex);
+  }
+});
+
+const baseOpenFormEntry = openForm;
+openForm = function (id = null) {
+  baseOpenFormEntry(id);
+  setTimeout(() => entrySetup(id), 80);
+};
+
+const baseRenderFormImagesEntry = renderFormImages;
+renderFormImages = function () {
+  baseRenderFormImagesEntry();
+  entryImageReference();
+  entryScheduleDraft();
+};
+
+const baseSaveFormEntry = saveForm;
+saveForm = async function (old) {
+  await baseSaveFormEntry(old);
+  if (!document.getElementById('questionForm')) entryClearDraft();
+};
+
+// 平板/手机键盘弹出时，把正在输入的字段带到可视区域
+document.addEventListener('focusin', (event) => {
+  if (!event.target.closest('#questionForm')) return;
+  if (!event.target.matches('input, textarea, select')) return;
+  setTimeout(() => {
+    const rect = event.target.getBoundingClientRect();
+    const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    if (rect.top < 90 || rect.bottom > vh - 90) {
+      event.target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  }, 260);
+});
 
 </script>
   <script>
