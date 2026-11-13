@@ -6026,11 +6026,34 @@ function applyLayout() {
   if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${on ? '手动横屏布局' : '普通布局'}`;
   updateLandscapeButtons();
 }
-function toggleManualLandscape() {
+async function toggleManualLandscape() {
   const on = !manualLandscapeOn();
   safeSet(MANUAL_LANDSCAPE_KEY, on ? '1' : '0');
   applyLayout();
-  toast(on ? '已切换横屏布局' : '已恢复普通布局');
+
+  if (!on) {
+    try {
+      if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+      if (document.fullscreenElement) await document.exitFullscreen();
+    } catch (e) {}
+    toast('已恢复普通布局');
+    return;
+  }
+
+  // 先尝试真正旋转屏幕；浏览器拒绝时至少保留横屏布局
+  try {
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+    }
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock('landscape');
+      toast('已进入横屏');
+    } else {
+      toast('已切换横屏布局；这个浏览器不支持旋转屏幕', 'info');
+    }
+  } catch (e) {
+    toast('已切换横屏布局；浏览器不允许自动旋转', 'info');
+  }
 }
 window.addEventListener('resize', applyLayout);
 document.addEventListener('visibilitychange', () => {
