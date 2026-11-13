@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>错题拾遗 · 完整使用说明</title>
+<style>
+:root{--ink:#1e2b2a;--soft:#40504d;--muted:#7a8783;--paper:#f5f0e6;--card:#fffdf8;--line:#e3d9c9;--accent:#d45a3e;--teal:#2f6d62;--gold:#b98a3f;--sidebar:#172522;--cream:#f7f1e5;--danger:#b33a32}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 10% -10%,#fffaf0 0,transparent 38%),var(--paper);color:var(--ink);font:14px/1.75 "Microsoft YaHei","PingFang SC",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:28px 18px 70px}
+.hero{background:linear-gradient(125deg,#172522,#203a34);border-radius:20px;padding:30px 30px 26px;color:var(--cream);margin-bottom:18px}
+.kicker{font-size:9px;font-weight:700;letter-spacing:.2em;color:#c4d3cb}
+h1{font:700 32px/1.25 "SimSun","Songti SC",serif;margin:8px 0 7px}
+.hero p{margin:0;color:#b9c8c1;font-size:12px}
+.search{display:flex;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;margin:0 0 16px;position:sticky;top:8px;z-index:10;box-shadow:0 8px 24px rgba(35,42,36,.07)}
+.search input{flex:1;border:0;background:transparent;outline:none;font:13px/1.5 inherit;color:var(--ink);padding:6px 8px}
+.toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:22px}
+.toc a{color:var(--soft);text-decoration:none;font-size:12px;padding:3px 0;border-bottom:1px dotted transparent}
+.toc a:hover{color:var(--accent);border-color:var(--line)}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:14px 0;box-shadow:0 3px 14px rgba(35,42,36,.035)}
+h2{font:700 21px/1.4 "SimSun","Songti SC",serif;margin:0 0 10px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+h3{font:700 15px/1.45 "Microsoft YaHei",sans-serif;margin:18px 0 6px}
+p{margin:8px 0}
+ul,ol{margin:8px 0;padding-left:22px}
+li{margin:4px 0}
+code{font-family:Consolas,"SFMono-Regular",monospace;font-size:12px;background:#f3ece0;border:1px solid #e5dac9;border-radius:4px;padding:1px 5px;word-break:break-all}
+pre{background:#172522;color:#e9f0ec;padding:12px 14px;border-radius:10px;overflow:auto;font:12px/1.7 Consolas,monospace}
+.note{border-left:3px solid var(--accent);background:#fdf1ee;padding:10px 13px;border-radius:0 9px 9px 0;margin:12px 0;font-size:12.5px}
+.note.green{border-color:var(--teal);background:#f1f8f5}
+.note.gold{border-color:var(--gold);background:#fbf5e8}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}
+th,td{border:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+th{background:#f7f1e5;font-weight:700}
+td:first-child{white-space:nowrap}
+.badge{display:inline-block;font-size:10px;color:var(--teal);background:#e2eeea;border-radius:99px;padding:2px 8px;margin-right:5px}
+.badge.warn{color:var(--danger);background:#f8e4e1}
+.footer{color:var(--muted);font-size:11px;text-align:center;margin-top:24px}
+.hidden{display:none!important}
+@media(max-width:640px){.wrap{padding:14px 12px 50px}.hero{padding:22px 18px}.toc{grid-template-columns:1fr}section{padding:18px 16px}h1{font-size:26px}table{font-size:11px}th,td{padding:7px 6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker">MISTAKE ARCHIVE · MANUAL</div>
+    <h1>错题拾遗 · 完整使用说明</h1>
+    <p>适用于 v1.5。包含安装、同步、AI、拍照、备份、复习、思维导图，以及常见卡住的地方。</p>
+  </div>
+
+  <div class="search"><input id="helpSearch" placeholder="搜索问题，例如：Token、Gist、相机、404、备份……"></div>
+
+  <nav class="toc">
+    <a href="#start">01. 5 分钟上手</a>
+    <a href="#install">02. 安装到桌面 / 地址栏</a>
+    <a href="#data">03. 数据在哪 / 跨浏览器</a>
+    <a href="#sync">04. 个人同步完整配置</a>
+    <a href="#pair">05. 手机扫码配对</a>
+    <a href="#ai">06. AI 配置与使用</a>
+    <a href="#ocr">07. 拍照 / 图片识题</a>
+    <a href="#entry">08. 录题与自动识别</a>
+    <a href="#review">09. 复习 / 今日计划</a>
+    <a href="#map">10. 知识框架 / 思维导图</a>
+    <a href="#backup">11. 备份 / 恢复 / 导入</a>
+    <a href="#update">12. 更新 / 缓存</a>
+    <a href="#errors">13. 常见错误对照表</a>
+    <a href="#safety">14. 安全与隐私</a>
+    <a href="#stuck">15. 仍然卡住怎么办</a>
+  </nav>
+
+  <section id="start">
+    <h2>01. 5 分钟上手</h2>
+    <ol>
+      <li>打开 <code>https://3grc.github.io/abc/</code>。</li>
+      <li>第一次没有数据，去 <strong>设置 → 示例与重置 → 恢复示例数据</strong>，或者直接新增错题。</li>
+      <li>点首页的 <strong>拍照 / 录入错题</strong>，写题干、答案、错因。</li>
+      <li>保存后，回首页点 <strong>开始今日复习</strong>，进入全屏复习。</li>
+      <li>去 <strong>设置 → 备份与恢复 → 立即导出备份</strong>，先存一份 JSON。</li>
+    </ol>
+    <div class="note green">最小可用配置：什么都不配，也能本地记错题、复习、导出。AI、图片识题、个人同步都是可选的。</div>
+  </section>
+
+  <section id="install">
+    <h2>02. 安装到桌面 / 地址栏问题</h2>
+    <h3>为什么每次打开上面有地址栏？</h3>
+    <p>因为打开的是浏览器里的网页，不是安装后的独立应用。网页快捷方式一定会带浏览器地址栏。</p>
+    <h3>怎么去掉地址栏</h3>
+    <ul>
+      <li><strong>电脑 Edge / Chrome</strong>：地址栏右侧“安装”图标，或菜单 → 应用 → 安装此站点。</li>
+      <li><strong>Android Edge</strong>：菜单 → 安装应用 / 添加到主屏幕。</li>
+      <li><strong>iPhone / iPad</strong>：必须用 Safari → 分享 → 添加到主屏幕。</li>
+      <li><strong>华为浏览器</strong>：通常只能创建快捷方式，仍可能显示地址栏；想真正全屏建议用 Edge。</li>
+    </ul>
+    <p>设置 → <strong>显示与安装</strong> 里有“桌面全屏”“普通全屏”和“安装到桌面”。桌面全屏会先锁定左侧栏再全屏；普通全屏只隐藏地址栏。</p>
+    <div class="note gold">如果一进全屏就变回手机布局：点 <strong>桌面全屏</strong>，不要点普通全屏。它会先切到桌面布局再全屏。</div>
+    <div class="note">如果安装后仍显示地址栏：卸载旧快捷方式，用 Edge 重新“安装应用”，不要用“添加到桌面”的网页快捷方式。</div>
+    <h3>想要 APK</h3>
+    <p>网页本身可以用 PWABuilder 打包成 APK，但 AI、同步仍需要网络。当前电脑没有 Android 构建环境，不能直接产出 APK。</p>
+  </section>
+
+  <section id="data">
+    <h2>03. 数据在哪 / 为什么不同浏览器不一样</h2>
+    <div class="note">数据默认只存在<strong>当前浏览器</strong>的本地存储里。Edge 的数据、Chrome 的数据、华为浏览器的数据是互相独立的。</div>
+    <p>所以会出现：</p>
+    <ul>
+      <li>Edge 里有 20 道题，Chrome 里只有 3 道</li>
+      <li>平板和电脑内容不一样</li>
+      <li>换浏览器后 AI Key 也要重新填</li>
+    </ul>
+    <h3>让它们一致</h3>
+    <ol>
+      <li>在已经配置好的浏览器完成“个人同步”。</li>
+      <li>在另一个浏览器打开同一个网址。</li>
+      <li>设置 → 个人同步 → 填同一个 <strong>Gist ID + Token</strong>，点“连接已有 Gist”。</li>
+      <li>或者从已配置浏览器点“复制配对链接”，在新浏览器打开。</li>
+    </ol>
+    <p><strong>AI Key、图片识别 Key 不会同步</strong>，每个浏览器要各填一次。</p>
+    <h3>换设备</h3>
+    <p>导出 JSON → 新设备导入 JSON；或者连接同一个 Gist。</p>
+  </section>
+
+  <section id="sync">
+    <h2>04. 个人同步完整配置</h2>
+    <p>个人同步用 GitHub 的 secret Gist 存一份数据，只在你自己的设备之间同步，不是给同学共享。</p>
+    <h3>第一步：创建 Classic Token</h3>
+    <ol>
+      <li>打开 <code>https://github.com/settings/tokens</code></li>
+      <li>左侧点 <strong>Tokens (classic)</strong>，不是 Fine-grained tokens。</li>
+      <li>Generate new token → Generate new token (classic)。</li>
+      <li>Note 填 <code>cuoti</code>，Expiration 选 90 天。</li>
+      <li>权限只勾 <strong>gist</strong>。其他都不要勾。</li>
+      <li>Generate token，复制 <code>ghp_...</code>。</li>
+    </ol>
+    <div class="note warn">Fine-grained Token 不支持 Gist，前缀是 <code>github_pat_</code>，不能用。必须用 <code>ghp_</code> 的 Classic Token。</div>
+    <h3>第二步：电脑创建 Gist</h3>
+    <ol>
+      <li>设置 → 个人同步。</li>
+      <li>粘贴 Token，Gist ID 留空。</li>
+      <li>点 <strong>创建新 Gist 并连接</strong>。</li>
+      <li>显示“已连接”即成功。</li>
+    </ol>
+    <h3>第三步：手机/平板连接</h3>
+    <ol>
+      <li>打开同一个网址。</li>
+      <li>设置 → 个人同步。</li>
+      <li>填同一个 Token 和同一个 Gist ID。</li>
+      <li>点 <strong>连接已有 Gist</strong>，不要点“创建新 Gist”。</li>
+    </ol>
+    <h3>常见错误</h3>
+    <table>
+      <tr><th>提示</th><th>原因</th><th>解决</th></tr>
+      <tr><td>Gist 不存在，或 Token 没有 gist 权限</td><td>Token 不是 Classic，或没勾 gist</td><td>重新创建 Classic Token，只勾 gist</td></tr>
+      <tr><td>Bad credentials / 401</td><td>Token 失效、复制不完整、被撤销</td><td>重新生成 Token，所有设备换新 Token</td></tr>
+      <tr><td>Gist 不存在</td><td>Gist ID 填错，或 Gist 被删</td><td>核对完整 ID；或电脑重新创建 Gist</td></tr>
+      <tr><td>连接后内容不一样</td><td>两个设备填了不同 Gist ID</td><td>统一成同一个 ID，点“立即同步”</td></tr>
+      <tr><td>手机上找不到 Gist ID</td><td>设置里只显示前 8 位</td><td>在电脑“配置向导 → 手机扫码配对”里看完整 ID</td></tr>
+    </table>
+  </section>
+
+  <section id="pair">
+    <h2>05. 手机扫码配对</h2>
+    <ol>
+      <li>电脑上先完成个人同步，显示“已连接”。</li>
+      <li>设置 → 配置向导 → <strong>手机扫码配对</strong>。</li>
+      <li>手机相机扫码，自动打开网页并填入 Gist ID 和 Token。</li>
+      <li>等它显示“已连接”。</li>
+    </ol>
+    <div class="note warn">二维码里包含 Token。只给自己的手机扫，不要截图发群。配对链接也一样。</div>
+    <p>手机扫不开：用手机浏览器手动打开配对弹窗里的链接；或手动填 Gist ID + Token。</p>
+    <p><strong>不要</strong>在手机上点“创建新 Gist”，那会新建一份空数据。</p>
+  </section>
+
+  <section id="ai">
+    <h2>06. AI 配置与使用</h2>
+    <h3>获取 DeepSeek Key</h3>
+    <ol>
+      <li>打开 <code>https://platform.deepseek.com/api_keys</code></li>
+      <li>注册/登录，创建 API Key。</li>
+      <li>复制 <code>sk-...</code>。</li>
+      <li>设置 → AI 工具 → AI 错题教练 → 粘贴 → 保存并测试。</li>
+    </ol>
+    <h3>能做什么</h3>
+    <ul>
+      <li>错题详情底部：AI 分析、AI 相似题</li>
+      <li>右下角：AI 学习助手聊天</li>
+      <li>设置：本周学习建议、网站改进建议</li>
+      <li>录题保存：自动识别学科/章节/知识点/具体考题项目/题型/错因/标签</li>
+    </ul>
+    <h3>提示模式</h3>
+    <p>默认“只给提示，不直接给答案”。先看提示自己走一步，需要时点“看完整解析”。设置里可以关闭。</p>
+    <h3>常见问题</h3>
+    <table>
+      <tr><th>提示</th><th>原因</th><th>解决</th></tr>
+      <tr><td>401 / API Key 无效</td><td>Key 错、复制不完整、已删除</td><td>重新创建 Key，重新粘贴</td></tr>
+      <tr><td>402 / 余额不足</td><td>DeepSeek 账户没余额</td><td>充值；不充值就先用本地功能</td></tr>
+      <tr><td>429 / 请求太频繁</td><td>连续点击太快</td><td>等一会儿再试</td></tr>
+      <tr><td>AI 分析很慢</td><td>网络或模型排队</td><td>等 5-15 秒；不要重复点</td></tr>
+      <tr><td>自动识别太慢</td><td>保存时要等 AI 返回</td><td>等 1-3 秒；或关闭“保存时自动识别”</td></tr>
+      <tr><td>AI 相似题算错</td><td>模型会出错</td><td>点“AI 复核答案”，再进行人工核对</td></tr>
+    </table>
+    <div class="note">AI 分析会缓存；同一道题不会重复扣费。题目改了才会重新分析。</div>
+  </section>
+
+  <section id="ocr">
+    <h2>07. 拍照 / 图片识题</h2>
+    <h3>图片识题需要另一个 Key</h3>
+    <p>图片识题用阿里云百炼 Qwen-VL，和 DeepSeek Key 不通用。</p>
+    <ol>
+      <li>打开 <code>https://bailian.console.aliyun.com/</code></li>
+      <li>登录/开通百炼。</li>
+      <li>页面底部点 <strong>API Key</strong> → 创建 API Key。</li>
+      <li>复制 <code>sk-...</code>。</li>
+      <li>错题拾遗 → 设置 → AI 工具 → 图片识题 → 保存 Key。</li>
+    </ol>
+    <h3>拍照流程</h3>
+    <ol>
+      <li>新增错题 → 顶部“拍照录题”。</li>
+      <li>允许相机权限，拍下题目。</li>
+      <li>点“识别图片文字”，结果填入题干。</li>
+      <li>公式用 LaTeX 表示，识别后自己核对。</li>
+    </ol>
+    <h3>常见问题</h3>
+    <table>
+      <tr><th>问题</th><th>原因 / 解决</th></tr>
+      <tr><td>点拍照没反应</td><td>浏览器不支持页内相机；会退回相册。用 Edge，或先系统相机拍照再上传。</td></tr>
+      <tr><td>相机权限被拒绝</td><td>浏览器设置 → 网站权限 → 相机 → 允许；必须 HTTPS。</td></tr>
+      <tr><td>识别失败</td><td>检查百炼 Key、余额、图片清晰度；公式题识别后手动修正。</td></tr>
+      <tr><td>图片太大</td><td>会自动压缩到长边 1400px；超过 12MB 的图片会被拒绝。</td></tr>
+      <tr><td>图片题 AI 不分析</td><td>在编辑里补一句文字题干，AI 才能分析；图片识别只负责转文字。</td></tr>
+    </table>
+  </section>
+
+  <section id="entry">
+    <h2>08. 录题与自动识别</h2>
+    <p>必填：题干（或至少一张图片）、错因。学科默认会带入。</p>
+    <h3>字段说明</h3>
+    <ul>
+      <li><strong>学科</strong>：政治、英语一/二、数学一/二/三、专业课一/二、管综。</li>
+      <li><strong>章节</strong>：大纲模块，例如高等数学、线性代数。</li>
+      <li><strong>知识点</strong>：具体知识，例如多元积分学。</li>
+      <li><strong>具体考题项目</strong>：这一知识点具体怎么考，例如“求极限”“无穷小阶的比较”。</li>
+      <li><strong>题型</strong>：选择题、填空题、解答题等。</li>
+      <li><strong>错因</strong>：不要只写“粗心”，写具体错在哪一步。</li>
+    </ul>
+    <h3>AI 自动识别</h3>
+    <p>大纲下面有“AI 识别知识点”和“保存时自动识别”。保存时会自动填学科、章节、知识点、具体考题项目、题型、错因、标签。</p>
+    <div class="note">自动识别会消耗少量 DeepSeek 费用。不想花钱就取消勾选“保存时自动识别”，或手动填写。</div>
+    <h3>保存没反应</h3>
+    <ul>
+      <li>检查题干和图片是否至少有一个。</li>
+      <li>检查是否在等 AI 自动识别；等 1-3 秒。</li>
+      <li>浏览器存储满了：先导出 JSON，再清理旧图片。</li>
+      <li>手机键盘挡住保存：往下滑或收起键盘；底部保存按钮固定在弹窗下方。</li>
+    </ul>
+  </section>
+
+  <section id="review">
+    <h2>09. 复习 / 今日计划</h2>
+    <h3>今日计划</h3>
+    <p>首页显示今日待复习、已复习、连续天数、掌握率。到期题按 nextReview 计算。</p>
+    <h3>沉浸复习</h3>
+    <ol>
+      <li>点“开始今日复习”，进入全屏。</li>
+      <li>先自己回忆，按 Space 或点按钮显示答案。</li>
+      <li>按 1—4 或点按钮评分：又忘了 / 有点难 / 想起来了 / 很熟练。</li>
+      <li>Esc 退出；一轮结束显示总结。</li>
+    </ol>
+    <h3>评分怎么选</h3>
+    <ul>
+      <li>又忘了：明天再来。</li>
+      <li>有点难：2 天左右。</li>
+      <li>想起来了：按上次间隔拉长。</li>
+      <li>很熟练：拉得更长。</li>
+    </ul>
+    <p>不要为了连续天数乱点“很熟练”；按真实感受选，系统才会安排对。</p>
+  </section>
+
+  <section id="map">
+    <h2>10. 知识框架 / 思维导图</h2>
+    <p>统计分析 → 大纲章节掌握度 → 浏览大纲 / 思维导图。</p>
+    <h3>浏览大纲</h3>
+    <p>按科目 → 章节 → 知识点显示题量、未掌握数、具体考题项目分布。点知识点跳到错题本筛选。</p>
+    <h3>思维导图</h3>
+    <p>可视化树：科目 → 章节 → 知识点 → 具体考题项目。红色边框表示有未掌握，可以切换科目。</p>
+    <h3>为什么是空的 / 不准</h3>
+    <ul>
+      <li>题目没有选章节/知识点：编辑旧题，点“AI 识别知识点”。</li>
+      <li>知识点不在大纲里：选“自定义”，或手动填写具体知识点。</li>
+      <li>不同题目写法不同：统一使用大纲里的名称，统计才准。</li>
+    </ul>
+  </section>
+
+  <section id="backup">
+    <h2>11. 备份 / 恢复 / 导入</h2>
+    <h3>三种备份</h3>
+    <ul>
+      <li><strong>导出 JSON</strong>：独立文件，最重要。换设备、清缓存前必须做。</li>
+      <li><strong>本机快照</strong>：自动保留最近 3 份，防误删/误导入，但不能防清理浏览器。</li>
+      <li><strong>个人同步</strong>：Gist 云端副本，自动同步，但不是版本备份。</li>
+    </ul>
+    <h3>导入是合并，不是覆盖</h3>
+    <p>导入时会比较 updatedAt：新增没有的题，更新更晚的题，保留本机更新的题。不会删除现有题。</p>
+    <h3>电脑自动备份到文件</h3>
+    <p>设置 → 备份与恢复 → 开启自动备份到文件，选一个 JSON 路径。仅 Chrome/Edge 电脑支持；手机浏览器不支持静默写文件。</p>
+    <h3>常见问题</h3>
+    <table>
+      <tr><th>问题</th><th>解决</th></tr>
+      <tr><td>“该备份了”一直出现</td><td>点“立即备份”会导出并标记；或点“稍后”当天不再提醒。</td></tr>
+      <tr><td>恢复快照后数据变旧</td><td>快照是过去某一刻；恢复前先导出当前数据。</td></tr>
+      <tr><td>导入后没有变化</td><td>本机题目 updatedAt 更新，导入的较旧；确认导入文件时间。</td></tr>
+      <tr><td>清理浏览器后数据没了</td><td>本地数据和快照都丢了；只能从 JSON 备份或 Gist 恢复。</td></tr>
+    </table>
+  </section>
+
+  <section id="update">
+    <h2>12. 更新 / 缓存 / 旧版界面</h2>
+    <p>更新后打开 <code>https://3grc.github.io/abc/?v=1.5</code>，版本号可以强制绕过缓存。</p>
+    <ul>
+      <li>电脑：Ctrl + F5 强制刷新。</li>
+      <li>手机：清除该网站数据，或完全关掉浏览器再打开。</li>
+      <li>安装到桌面的 PWA：关闭应用，重新打开；仍旧就卸载重装。</li>
+    </ul>
+    <div class="note warn">清除网站数据会删除本地错题。先导出 JSON，或确认 Gist 已同步。</div>
+    <h3>Service Worker</h3>
+    <p>PWA 会缓存页面；更新后如果仍显示旧版，通常是 Service Worker 缓存。版本号查询参数能帮助绕过。</p>
+  </section>
+
+  <section id="errors">
+    <h2>13. 常见错误对照表</h2>
+    <table>
+      <tr><th>现象</th><th>原因</th><th>处理</th></tr>
+      <tr><td>GitHub Pages 404</td><td>Pages 没开启，或分支/目录错</td><td>Settings → Pages → Deploy from branch → main / root</td></tr>
+      <tr><td>线上还是旧版</td><td>没上传新 index，或缓存</td><td>看仓库 index 大小；用 ?v=19；清缓存</td></tr>
+      <tr><td>没有“配置向导”</td><td>旧版 index</td><td>上传新版全部文件</td></tr>
+      <tr><td>Failed to fetch</td><td>网络/接口被拦截，Supabase 旧版常见</td><td>新版用 DeepSeek/GitHub；检查网络</td></tr>
+      <tr><td>401 Bad credentials</td><td>Token 无效/过期/复制不全</td><td>重新生成 Classic Token</td></tr>
+      <tr><td>Gist 404</td><td>没勾 gist、Gist ID 错、Gist 删除</td><td>检查权限/ID；重新创建</td></tr>
+      <tr><td>403 rate limit</td><td>GitHub API 请求过多</td><td>等几分钟；减少刷新</td></tr>
+      <tr><td>402 余额不足</td><td>DeepSeek 没余额</td><td>充值或不用 AI</td></tr>
+      <tr><td>公式显示为 $...$</td><td>KaTeX CDN 没加载</td><td>联网重开；失败时保留原文</td></tr>
+      <tr><td>相机打不开</td><td>不是 HTTPS / 权限拒绝 / 浏览器不支持</td><td>用 Edge；允许相机；退回相册</td></tr>
+      <tr><td>思维导图空白</td><td>没有题目或没选章节</td><td>恢复示例数据；给旧题补章节</td></tr>
+      <tr><td>同步后内容不一致</td><td>不同 Gist ID / 未同步 / 旧缓存</td><td>统一 ID，点立即同步，刷新</td></tr>
+      <tr><td>保存没反应</td><td>没题干/图片，或 AI 正在识别</td><td>补题干；等 1-3 秒</td></tr>
+    </table>
+  </section>
+
+  <section id="safety">
+    <h2>14. 安全与隐私</h2>
+    <ul>
+      <li>DeepSeek Key、百炼 Key、GitHub Token 只保存在当前浏览器，不写进网页代码。</li>
+      <li>不要发到群里，不要截图公开；配对二维码里包含 Token。</li>
+      <li>Gist 是 secret，但不是加密存储；拿到链接和 Token 的人能看。</li>
+      <li>AI 分析会把题目文本发给 DeepSeek；图片识题会把图片发给阿里云。</li>
+      <li>共享设备时，别人可能用到你保存的 Key；用完清除 Key。</li>
+      <li>公开 GitHub 仓库里没有你的 Key；但不要把 Key 写进任何文件再上传。</li>
+    </ul>
+  </section>
+
+  <section id="stuck">
+    <h2>15. 仍然卡住怎么办</h2>
+    <p>准备这四项信息，发给维护者：</p>
+    <ol>
+      <li>你打开的完整网址（包括 <code>?v=</code> 参数）</li>
+      <li>手机/电脑的浏览器名称（Edge / Chrome / 华为浏览器 / Safari）</li>
+      <li>出问题的那一屏截图</li>
+      <li>错误提示原文，例如 401、404、Failed to fetch</li>
+    </ol>
+    <div class="note green">不要发送完整 Token、API Key 或配对二维码截图。</div>
+  </section>
+
+  <div class="footer">错题拾遗 · 完整使用说明 · v1.5</div>
+</div>
+<script>
+(function(){
+  const input=document.getElementById('helpSearch');
+  if(!input) return;
+  input.addEventListener('input',function(){
+    const q=input.value.trim().toLowerCase();
+    document.querySelectorAll('section').forEach(function(sec){
+      sec.classList.toggle('hidden', q && !sec.textContent.toLowerCase().includes(q));
+    });
+  });
+})();
+</script>
+</body>
+</html>
