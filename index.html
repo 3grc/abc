@@ -1784,6 +1784,38 @@ body.force-desktop .bottom-nav { display: none !important; }
   body.force-desktop .main { width: calc(100vw - 244px) !important; max-width: calc(100vw - 244px) !important; }
 }
 
+/* ---------- A+B：安装到桌面 / 使用说明入口 ---------- */
+.promo-top-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--soft); font: 600 10.5px/1 var(--sans); cursor: pointer; white-space: nowrap; }
+.promo-top-btn:hover { border-color: var(--accent); color: var(--accent); }
+.promo-top-btn .icon { width: 14px; height: 14px; }
+.promo-banner { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; padding: 11px 14px; border: 1px solid #e8d6b4; border-radius: 12px; background: #fff8e8; box-shadow: 0 4px 14px rgba(35,42,36,.035); }
+.promo-mark { flex: 0 0 auto; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: #f4ead4; color: var(--gold); font: 700 15px/1 var(--font-serif); }
+.promo-text { flex: 1; min-width: 0; color: var(--soft); font-size: 11px; line-height: 1.55; }
+.promo-text strong { display: block; margin-bottom: 1px; color: var(--ink); font-size: 12px; }
+.promo-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
+.promo-actions .btn { padding: 7px 9px; font-size: 10px; }
+.promo-close { border: 0; background: transparent; color: #9a8a70; font-size: 17px; line-height: 1; padding: 4px 5px; cursor: pointer; }
+.sidebar-help-link { display: flex; align-items: center; gap: 6px; margin-top: 9px; padding: 7px 3px 0; border-top: 1px solid rgba(255,255,255,.08); color: #aebbb5; text-decoration: none; font-size: 10px; }
+.sidebar-help-link:hover { color: #fff; }
+.sidebar-help-link .icon { width: 13px; height: 13px; }
+@media (max-width: 900px) {
+  .promo-top-btn span { display: none; }
+  .promo-top-btn { padding: 7px 8px; }
+  .promo-banner { flex-wrap: wrap; }
+  .promo-actions { width: 100%; justify-content: flex-end; }
+}
+@media (max-width: 640px) {
+  .promo-text { font-size: 10px; }
+  .promo-mark { display: none; }
+}
+
+/* 使用说明主导航入口 */
+.nav-item.nav-help { text-decoration: none; }
+.nav-help-badge { margin-left: auto; padding: 2px 5px; border-radius: 8px; background: rgba(185,138,63,.16); color: #d8b46b; font-size: 8px; line-height: 1.4; white-space: nowrap; }
+@media (max-width: 900px) {
+  .nav-item.nav-help { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1817,6 +1849,11 @@ body.force-desktop .bottom-nav { display: none !important; }
           <svg class="icon"><use href="#i-chart"></use></svg>
           <span>统计分析</span>
         </button>
+        <a class="nav-item nav-help" href="./使用说明.html" target="_blank" rel="noopener">
+          <svg class="icon"><use href="#i-book"></use></svg>
+          <span>使用说明</span>
+          <span class="nav-help-badge">3 分钟</span>
+        </a>
         <button class="nav-item" data-route="settings">
           <svg class="icon"><use href="#i-settings"></use></svg>
           <span>设置</span>
@@ -6128,6 +6165,94 @@ renderReview = function () {
   document.body.classList.add('modal-open');
   startReviewTimer();
 };
+
+</script>
+  <script>
+/* ============================================================
+   错题拾遗 · 首次使用提示 / 安装与使用说明入口（A+B）
+   ============================================================ */
+'use strict';
+
+const PROMO_DISMISS_KEY = 'cuoti_promo_dismissed_v1';
+
+function promoStandalone() {
+  return (typeof isStandaloneApp === 'function' && isStandaloneApp()) ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+}
+
+function promoInstall() {
+  if (typeof installApp === 'function') installApp();
+  else window.open('./使用说明.html', '_blank');
+}
+
+function removePromoBanner() {
+  const b = $('#promoBanner');
+  if (b) b.remove();
+}
+function hidePromoInstallButtons() {
+  document.querySelectorAll('[data-promo-action="install"]').forEach((b) => { b.style.display = 'none'; });
+}
+
+function injectPromo() {
+  const main = document.querySelector('.main');
+  const topbar = document.querySelector('.topbar');
+  const view = $('#view');
+  if (!main || !topbar || !view) return;
+
+  // B：标题栏常驻入口
+  if (!document.querySelector('.promo-top-btn')) {
+    const right = document.querySelector('.topbar-right');
+    if (right) {
+      right.insertAdjacentHTML('afterbegin', `<button type="button" class="promo-top-btn" data-promo-action="help">${icon('book', 'icon-sm')}<span>使用说明</span></button><button type="button" class="promo-top-btn" data-promo-action="install">${icon('download', 'icon-sm')}<span>安装到桌面</span></button>`);
+    }
+  }
+
+  // 侧边栏底部固定入口
+  const foot = document.querySelector('.sidebar-foot');
+  if (foot && !$('#sidebarHelpLink')) {
+    foot.insertAdjacentHTML('beforeend', `<a id="sidebarHelpLink" class="sidebar-help-link" href="./使用说明.html" target="_blank" rel="noopener">${icon('book', 'icon-sm')} 使用说明</a>`);
+  }
+
+  // A：首次使用提示条
+  if (!promoStandalone() && !safeGet(PROMO_DISMISS_KEY) && !$('#promoBanner')) {
+    topbar.insertAdjacentHTML('afterend', `<div class="promo-banner" id="promoBanner">
+      <span class="promo-mark">?</span>
+      <div class="promo-text"><strong>第一次用？先花 3 分钟看使用说明</strong>安装、同步、AI、拍照、备份和常见错误都写在里面。</div>
+      <div class="promo-actions"><button type="button" class="btn btn-primary btn-sm" data-promo-action="help">打开使用说明</button><button type="button" class="btn btn-ghost btn-sm" data-promo-action="dismiss">先自己试试</button><button type="button" class="promo-close" data-promo-action="dismiss" aria-label="关闭">×</button></div>
+    </div>`);
+  }
+
+  if (promoStandalone()) {
+    removePromoBanner();
+    hidePromoInstallButtons();
+  }
+}
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-promo-action]');
+  if (!el) return;
+  event.preventDefault();
+  const action = el.dataset.promoAction;
+  if (action === 'install') promoInstall();
+  if (action === 'help') window.open('./使用说明.html', '_blank');
+  if (action === 'dismiss') {
+    safeSet(PROMO_DISMISS_KEY, '1');
+    removePromoBanner();
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  removePromoBanner();
+  hidePromoInstallButtons();
+  toast('已安装到桌面');
+});
+
+function bootPromo(tries = 0) {
+  if (document.querySelector('.main') && document.querySelector('.topbar')) { injectPromo(); return; }
+  if (tries < 100) setTimeout(() => bootPromo(tries + 1), 150);
+}
+document.addEventListener('DOMContentLoaded', () => setTimeout(() => bootPromo(), 400));
 
 </script>
   <script>
