@@ -1893,6 +1893,30 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   .modal-foot { padding: 9px 18px; }
 }
 
+/* 横屏录入：表单全屏，保存按钮固定在底部可见 */
+@media (orientation: landscape) and (max-height: 1100px) {
+  .modal-backdrop.form-backdrop { padding: 0; place-items: stretch; }
+  .modal.form-modal {
+    width: 100vw;
+    max-width: 100vw;
+    height: var(--app-vvh, 100dvh);
+    max-height: var(--app-vvh, 100dvh);
+    border: 0;
+    border-radius: 0;
+  }
+  .modal.form-modal .modal-head { padding: 10px 18px 8px; border-radius: 0; }
+  .modal.form-modal .modal-title { font-size: 20px; }
+  .modal.form-modal .modal-body { padding: 10px 18px; overflow-y: auto; }
+  .modal.form-modal .modal-foot {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    padding: 8px 18px;
+    background: var(--card);
+    box-shadow: 0 -8px 20px rgba(35,42,36,.06);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2021,7 +2045,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.22';
+const APP_VERSION = '1.5.24';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -5809,7 +5833,14 @@ function reorderFormForMobile() {
 const baseOpenFormUI = openForm;
 openForm = function (id = null) {
   baseOpenFormUI(id);
-  setTimeout(reorderFormForMobile, 40);
+  setTimeout(() => {
+    reorderFormForMobile();
+    const modal = document.querySelector('.modal');
+    if (modal && modal.querySelector('#questionForm')) {
+      modal.classList.add('form-modal');
+      if (modal.parentElement) modal.parentElement.classList.add('form-backdrop');
+    }
+  }, 40);
 };
 
 /* 跟随输入法/浏览器可视高度，横屏录入时弹窗不会被键盘挡住 */
@@ -6208,13 +6239,11 @@ function manualLandscapeOn() {
   return safeGet(MANUAL_LANDSCAPE_KEY) === '1';
 }
 function applyLayout() {
-  const manual = manualLandscapeOn();
-  const auto = window.innerWidth > window.innerHeight && window.innerWidth >= 900;
-  const on = manual || auto;
+  const on = manualLandscapeOn();
   document.body.classList.toggle('force-desktop', on);
   document.body.classList.toggle('auto-landscape', on);
   const info = $('#viewportInfo');
-  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${manual ? '手动横屏布局' : auto ? '自动横屏布局' : '普通布局'}`;
+  if (info) info.textContent = `当前视口 ${window.innerWidth}×${window.innerHeight} · ${on ? '手动横屏布局' : '普通布局'}`;
   const btn = document.querySelector('[data-display-action="landscape"]');
   if (btn) {
     btn.classList.toggle('is-on', on);
@@ -6222,11 +6251,6 @@ function applyLayout() {
   }
 }
 window.addEventListener('resize', applyLayout);
-window.addEventListener('orientationchange', () => {
-  setTimeout(applyLayout, 120);
-  setTimeout(applyLayout, 450);
-  setTimeout(applyLayout, 900);
-});
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') setTimeout(applyLayout, 150);
 });
@@ -6352,6 +6376,7 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 window.addEventListener('appinstalled', () => { installPromptEvent = null; toast('已安装到桌面'); });
 applyDensity();
+safeSet(MANUAL_LANDSCAPE_KEY, '0');
 applyLayout();
 setInterval(() => { if ($('#viewportInfo')) applyLayout(); }, 1500);
 

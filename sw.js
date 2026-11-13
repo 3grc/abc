@@ -1,5 +1,5 @@
 /* 错题拾遗 · 离线缓存 */
-const CACHE = 'cuoti-local-1.5.22';
+const CACHE = 'cuoti-local-1.5.24';
 const ASSETS = [
   './',
   './index.html',
