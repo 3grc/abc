@@ -1917,6 +1917,28 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   }
 }
 
+/* 录入表单不再依赖 orientation 媒体查询，避免华为快捷方式报告错方向时失效 */
+.modal-backdrop.form-backdrop { padding: 0; place-items: stretch; }
+.modal.form-modal {
+  width: 100vw;
+  max-width: 100vw;
+  height: var(--app-vvh, 100dvh);
+  max-height: var(--app-vvh, 100dvh);
+  border: 0;
+  border-radius: 0;
+}
+.modal.form-modal .modal-head { padding: 10px 18px 8px; border-radius: 0; }
+.modal.form-modal .modal-title { font-size: 20px; }
+.modal.form-modal .modal-body { padding: 10px 18px; overflow-y: auto; }
+.modal.form-modal .modal-foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  padding: 8px 18px;
+  background: var(--card);
+  box-shadow: 0 -8px 20px rgba(35,42,36,.06);
+}
+
 </style>
 </head>
 <body>
@@ -2045,7 +2067,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.24';
+const APP_VERSION = '1.5.26';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -2772,7 +2794,7 @@ function openDetail(id) {
   if (!q) return;
   const history = state.logs.filter((l) => l.qid === q.id).slice(-6).reverse();
   openModal(`<div class="modal-head"><div><div class="modal-kicker">QUESTION DETAIL</div><h2 class="modal-title">错题详情</h2><p class="modal-sub">${esc(q.subject)}${q.chapter ? ' · ' + esc(q.chapter) : ''}${q.topic ? ' · ' + esc(q.topic) : ''}${q.item ? ' · ' + esc(q.item) : ''}${q.source ? ' · ' + esc(q.source) : ''}</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
-  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}${q.aiGenerated ? `<span class="q-tag" style="color:var(--gold)">AI 生成${q.aiVerified ? ' · 已核对' : ' · 待核对'}</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+  <div class="modal-body"><div class="detail-hero"><div class="detail-meta">${subjectBadge(q.subject)}${statusBadge(q)}<span class="q-tag">${esc(q.reason)}</span><span class="q-tag">${'★'.repeat(q.difficulty)}</span>${q.starred ? `<span class="q-tag" style="color:var(--gold)">${icon('star', 'icon-sm')} 重点</span>` : ''}${q.aiGenerated ? `<span class="q-tag" style="color:var(--gold)">AI 生成${q.aiVerified ? ' · 已核对' : ' · 待核对'}</span>` : ''}</div><p class="detail-question">${esc(q.question || '（图片错题，暂无文字题干）')}</p>${q.images.length ? `<div class="detail-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 14px"><button type="button" class="btn btn-primary btn-sm" data-action="ocr-detail" data-id="${esc(q.id)}">${icon('image', 'icon-sm')}识别图片文字</button><span class="hint">识别后会自动填入编辑表单的题干</span></div>` : ''}
   <div class="detail-grid"><div class="answer-block warn"><div class="answer-label">${icon('edit', 'icon-sm')}我的答案 / 思路</div><p class="answer-text">${esc(q.myAnswer || '未填写')}</p></div><div class="answer-block accent"><div class="answer-label">${icon('check', 'icon-sm')}正确答案</div><p class="answer-text">${esc(q.answer || '未填写')}</p></div></div>
   <div class="answer-block detail-analysis"><div class="answer-label">${icon('spark', 'icon-sm')}解析 / 方法总结</div><p class="answer-text">${esc(q.analysis || '还没有写解析。编辑这道题，把“下次怎么做”写下来。')}</p></div>
   <div class="detail-tags">${q.tags.map(tagHTML).join('') || '<span class="q-tag">暂无标签</span>'}</div>
@@ -2986,6 +3008,9 @@ function action(el, e) {
     'remove-form-image': () => {
       const i = Number(el.dataset.index);
       if (Number.isInteger(i)) { state.formImages.splice(i, 1); renderFormImages(); }
+    },
+    'ocr-detail': () => {
+      if (typeof recognizeDetailImage === 'function') recognizeDetailImage(el.dataset.id);
     }
   };
   if (map[a]) { e.preventDefault(); map[a](); }
@@ -5296,6 +5321,36 @@ async function captureLiveCamera() {
   stopLiveCamera();
   const cropped = await cropImageFile(file);
   if (cropped) await addImages([cropped]);
+}
+
+async function recognizeDetailImage(id) {
+  const q = state.questions.find((x) => x.id === id);
+  if (!q || !q.images || !q.images.length) return toast('这道题没有图片', 'info');
+  if (!visionConfigured()) return visionNeedKey();
+  if (visionBusy) return;
+  visionBusy = true;
+  const btn = document.querySelector(`[data-action="ocr-detail"][data-id="${CSS.escape(id)}"]`);
+  const old = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.textContent = '识别中…'; }
+  try {
+    const text = await callVision(q.images[0]);
+    if (!text) throw new Error('没有识别到文字，换一张清晰的图片试试');
+    const had = String(q.question || '').trim();
+    openForm(q.id);
+    setTimeout(() => {
+      const ta = $('#qQuestion');
+      if (!ta) return;
+      ta.value = text;
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
+      ta.focus();
+      toast(had ? '识别完成，已覆盖表单题干，请核对' : '识别完成，请核对后保存');
+    }, 120);
+  } catch (error) {
+    toast(error.message || '识别失败，检查百炼 Key 和图片', 'error');
+  } finally {
+    visionBusy = false;
+    if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = old || '识别图片文字'; }
+  }
 }
 
 async function runOCR() {
