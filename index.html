@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#172522">
-  <meta name="description" content="错题拾遗 1.5：考研错题按科目、知识点和具体考题项目整理，本地保存，可选云端同步与 AI 教练。">
-  <title>错题拾遗 · 1.5</title>
+  <meta name="description" content="错题拾遗 2.0：考研错题按科目、知识点和具体考题项目整理，本地保存，可选云端同步与 AI 教练。">
+  <title>错题拾遗 · 2.0</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script>
     (function () {
@@ -2146,6 +2146,21 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
   .kaoyan-badge { font-size: 8px; padding: 3px 5px; }
 }
 
+
+/* 复习图片放大 + 知识框架前置 */
+.dash-two > .card:nth-child(1) { order: 2; }
+.dash-two > .card:nth-child(2) { order: 1; }
+.review-v2 .review-images { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.review-v2 .review-images img { width: 100%; max-width: 100%; max-height: 46vh; object-fit: contain; margin: 0 auto; cursor: zoom-in; background: var(--card-soft); }
+.image-zoom-hint { color: var(--muted); font-size: 9px; text-align: center; }
+.review-image-viewer { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 14px; background: rgba(5,10,9,.97); }
+.review-image-viewer img { max-width: 96vw; max-height: 94vh; object-fit: contain; border-radius: 8px; }
+.review-image-close { position: fixed; right: 16px; top: 12px; width: 38px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(0,0,0,.4); color: #fff; font-size: 24px; line-height: 1; cursor: pointer; }
+.nav-item[data-syllabus-action] { cursor: pointer; }
+@media (max-width: 640px) {
+  .review-v2 .review-images img { max-height: 42vh; }
+}
+
 </style>
 </head>
 <body>
@@ -2157,7 +2172,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
           <strong>错题拾遗</strong>
           <small>MISTAKE ARCHIVE</small>
         </span>
-        <span class="kaoyan-badge">v1.5</span>
+        <span class="kaoyan-badge">v2.0</span>
       </a>
 
       <nav class="nav" aria-label="主导航">
@@ -2174,6 +2189,11 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
           <svg class="icon"><use href="#i-repeat"></use></svg>
           <span>今日复习</span>
           <span class="nav-dot" id="navDueDot" hidden></span>
+        </button>
+        <button class="nav-item" data-syllabus-action="browse">
+          <svg class="icon"><use href="#i-book"></use></svg>
+          <span>知识框架</span>
+          <span class="nav-help-badge">导图</span>
         </button>
         <button class="nav-item" data-route="stats">
           <svg class="icon"><use href="#i-chart"></use></svg>
@@ -2274,7 +2294,7 @@ body.auto-landscape .sidebar-foot { padding-left: 5px !important; padding-right:
    ============================================================ */
 'use strict';
 
-const APP_VERSION = '1.5.40';
+const APP_VERSION = '2.0';
 const DB_NAME = 'cuoti_shiyi_db';
 const STORE = 'questions';
 const LS_QUESTIONS = 'cuoti_shiyi_questions_v1';
@@ -4389,8 +4409,12 @@ document.addEventListener('click', (event) => {
 'use strict';
 
 const AI_KEY = 'cuoti_ai_key_v1';
+const AI_PROVIDER_KEY = 'cuoti_ai_provider_v1';
 const AI_URL = 'https://api.deepseek.com/chat/completions';
 const AI_MODEL = 'deepseek-chat';
+const BAILIAN_AI_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
+const BAILIAN_AI_MODEL = 'qwen3.8-flash';
+const BAILIAN_VISION_KEY = 'cuoti_vision_key_v1';
 const AI_MAX_CHARS = 5000;
 const AI_CACHE_KEY = 'cuoti_ai_cache_v1';
 const AI_HINT_KEY = 'cuoti_ai_hint_v1';
@@ -4421,43 +4445,68 @@ function aiCacheSet(q, result, mode = 'full') {
   safeSet(AI_CACHE_KEY, JSON.stringify(aiCache));
 }
 
-function aiConfigured() { return Boolean(aiKeyValue); }
+function aiUseBailian() { return safeGet(AI_PROVIDER_KEY) === 'bailian'; }
+function aiActiveKey() {
+  return aiUseBailian() ? (safeGet(BAILIAN_VISION_KEY) || '') : aiKeyValue;
+}
+function aiConfigured() { return Boolean(aiActiveKey()); }
 
 async function callDeepSeek(messages, maxTokens = 1400, json = true) {
-  if (!aiKeyValue) throw new Error('还没有填写 DeepSeek API Key');
-  const makeBody = (jsonMode) => {
-    const body = {
-      model: AI_MODEL,
-      messages,
-      temperature: 0.35,
-      max_tokens: maxTokens
+  const useBailian = aiUseBailian();
+  const key = aiActiveKey();
+  const endpoint = useBailian ? BAILIAN_AI_URL : AI_URL;
+  if (!key) throw new Error(useBailian ? '还没有填写百炼 API Key（图片识题里那个 Key）' : '还没有填写 DeepSeek API Key');
+
+  const requestModel = async (model) => {
+    const makeBody = (jsonMode) => {
+      const body = {
+        model,
+        messages,
+        temperature: 0.35,
+        max_tokens: maxTokens
+      };
+      if (jsonMode) body.response_format = { type: 'json_object' };
+      return body;
     };
-    if (jsonMode) body.response_format = { type: 'json_object' };
-    return body;
+    const send = (jsonMode) => fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + key
+      },
+      body: JSON.stringify(makeBody(jsonMode))
+    });
+    let res = await send(json);
+    let data = await res.json().catch(() => ({}));
+    // 个别账号/模型不支持 JSON mode 时，退回普通文本，再按 JSON 解析。
+    if (!res.ok && res.status === 400 && json) {
+      res = await send(false);
+      data = await res.json().catch(() => ({}));
+    }
+    if (!res.ok) {
+      const msg = data.error?.message || data.message || '';
+      if (res.status === 401) throw new Error(useBailian ? '百炼 API Key 无效' : 'API Key 无效');
+      if (res.status === 402) throw new Error(useBailian ? '百炼账户余额不足或未开通模型' : 'DeepSeek 余额不足，请充值');
+      if (res.status === 403) throw new Error(useBailian ? '百炼拒绝访问：请确认已开通 Qwen 模型' : 'DeepSeek 拒绝访问');
+      if (res.status === 429) throw new Error('请求太频繁，稍后再试');
+      throw new Error(msg || `${useBailian ? '百炼' : 'DeepSeek'} 返回 ${res.status}`);
+    }
+    return data.choices?.[0]?.message?.content || '';
   };
-  const send = (jsonMode) => fetch(AI_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + aiKeyValue
-    },
-    body: JSON.stringify(makeBody(jsonMode))
-  });
-  let res = await send(json);
-  let data = await res.json().catch(() => ({}));
-  // 个别账号/模型不支持 JSON mode 时，退回普通文本，再按 JSON 解析。
-  if (!res.ok && res.status === 400 && json) {
-    res = await send(false);
-    data = await res.json().catch(() => ({}));
+
+  if (!useBailian) return requestModel(AI_MODEL);
+
+  // 一个百炼 Key：优先用 Qwen3.8-Flash（文字/图片都支持），失败自动退回 Qwen-Plus
+  let lastError = null;
+  for (const model of ['qwen3.8-flash', 'qwen-plus']) {
+    try {
+      return await requestModel(model);
+    } catch (error) {
+      lastError = error;
+      if (!/model.*not.*exist|model_not_found|invalid.*model|does not exist|not found|access denied|forbidden|403/i.test(String(error.message || ''))) throw error;
+    }
   }
-  if (!res.ok) {
-    const msg = data.error?.message || data.message || '';
-    if (res.status === 401) throw new Error('API Key 无效');
-    if (res.status === 402) throw new Error('DeepSeek 余额不足，请充值');
-    if (res.status === 429) throw new Error('请求太频繁，稍后再试');
-    throw new Error(msg || `DeepSeek 返回 ${res.status}`);
-  }
-  return data.choices?.[0]?.message?.content || '';
+  throw lastError || new Error('百炼文字模型不可用');
 }
 
 function parseAIJson(text) {
@@ -4724,26 +4773,43 @@ async function aiSiteAdvice() {
 }
 
 function aiNeedKey() {
+  if (aiUseBailian()) {
+    openModal(`<div class="modal-head"><div><div class="modal-kicker">AI COACH</div><h2 class="modal-title">先配置百炼 API Key</h2><p class="modal-sub">文字分析和图片识别共用一个 Key。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
+    <div class="modal-body"><div class="answer-block accent"><div class="answer-label">在哪里填</div><p class="answer-text">设置 → AI 工具 → 图片识题 → 百炼 API Key。填完保存，再回来用 AI。</p></div><div class="note">同一个百炼 Key 同时用于：Qwen 文字分析、Qwen-VL 图片识别。</div></div>
+    <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-ghost" data-action="close-modal">取消</button><button class="btn btn-primary" data-ai-action="go-settings">去设置</button></div></div>`, false);
+    return;
+  }
   openModal(`<div class="modal-head"><div><div class="modal-kicker">AI COACH</div><h2 class="modal-title">先配置 DeepSeek API Key</h2><p class="modal-sub">只保存在这台设备，不会写进网页代码。</p></div><button class="icon-btn" data-action="close-modal" aria-label="关闭">${icon('x')}</button></div>
   <div class="modal-body">
     <div class="answer-block accent" style="margin-bottom:12px"><div class="answer-label">怎么获取</div><p class="answer-text">打开 platform.deepseek.com → 注册/登录 → API Keys → 创建 Key。按量计费，分析一道题通常几分钱。</p></div>
-    <div class="answer-block warn"><div class="answer-label">注意</div><p class="answer-text">图片题需要先在“编辑错题”里把题干补成文字；AI 不会直接识别图片。</p></div>
+    <div class="answer-block warn"><div class="answer-label">更省事</div><p class="answer-text">设置 → AI 错题教练 → 改用百炼 Key，一个 Key 同时管文字和图片。</p></div>
   </div>
   <div class="modal-foot"><span></span><div class="foot-right"><button class="btn btn-ghost" data-action="close-modal">取消</button><button class="btn btn-primary" data-ai-action="go-settings">去设置</button></div></div>`, false);
 }
 
 function aiCard() {
+  if (aiUseBailian()) {
+    const ready = Boolean(safeGet(BAILIAN_VISION_KEY));
+    return `<div class="card settings-card"><h3>${icon('spark')}AI 统一用百炼</h3><p>文字分析、AI 提示、相似题、图片识别，全部共用一个百炼 Key。</p>
+      <div class="sync-status"><span class="sync-dot ${ready ? 'on' : ''}"></span><strong>${ready ? '百炼 Key 已配置' : '还没有百炼 Key'}</strong><span>${ready ? '一个 Key 管文字 + 图片' : '请到下面“图片识题”里填写'}</span></div>
+      <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.6;margin:6px 0 12px"><input type="checkbox" id="aiHintToggle" ${aiHintMode ? 'checked' : ''} style="margin-top:3px"><span><strong>只给提示，不直接给答案</strong><br><span class="muted">默认开启。</span></span></label>
+      <div class="setting-actions"><button class="btn btn-primary" data-ai-action="advice">${icon('spark')}本周学习建议</button><button class="btn btn-ghost" data-ai-action="test-key">${icon('refresh')}测试文字 AI</button></div>
+      <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-ai-action="use-deepseek">切换回 DeepSeek</button></div>
+      <div class="sync-install-tip">文字模型：Qwen-Plus；图片模型：Qwen-VL。都从阿里云百炼按量计费。</div>
+    </div>`;
+  }
   if (!aiConfigured()) {
     return `<div class="card settings-card"><h3>${icon('spark')}AI 错题教练（可选）</h3><p>接 DeepSeek API：分析错题、出相似题、生成学习建议。Key 只保存在本机。</p>
       <div class="field"><label for="aiKeyInput">DeepSeek API Key</label><input class="input" id="aiKeyInput" type="password" autocomplete="off" placeholder="sk-..."></div>
       <div class="setting-actions"><button class="btn btn-primary" data-ai-action="save-key">${icon('check')}保存并测试</button><a class="btn btn-ghost" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">${icon('link')}获取 Key</a></div>
+      <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-ai-action="use-bailian">${icon('spark')}改用百炼 Key（一个 Key）</button></div>
       <div class="sync-install-tip">按量计费，不订阅；不填 Key 时，其他功能完全不受影响。</div>
     </div>`;
   }
   return `<div class="card settings-card"><h3>${icon('spark')}AI 错题教练</h3><p>DeepSeek 已配置。打开一道错题，详情页会出现“AI 分析”和“AI 相似题”。</p>
     <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.6;margin:6px 0 12px"><input type="checkbox" id="aiHintToggle" ${aiHintMode ? 'checked' : ''} style="margin-top:3px"><span><strong>只给提示，不直接给答案</strong><br><span class="muted">默认开启。先看提示自己走一步，需要时再点“看完整解析”。</span></span></label>
     <div class="setting-actions"><button class="btn btn-primary" data-ai-action="advice">${icon('spark')}本周学习建议</button><button class="btn btn-ghost" data-ai-action="site-advice">${icon('settings')}网站改进建议</button></div>
-    <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-ai-action="test-key">${icon('refresh')}测试连接</button><button class="btn btn-ghost btn-sm" data-ai-action="change-key">修改 Key</button></div>
+    <div class="setting-actions"><button class="btn btn-ghost btn-sm" data-ai-action="test-key">${icon('refresh')}测试连接</button><button class="btn btn-ghost btn-sm" data-ai-action="change-key">修改 Key</button><button class="btn btn-ghost btn-sm" data-ai-action="use-bailian">改用百炼 Key</button></div>
     <div class="sync-install-tip">Key 只保存在本机。调用会消耗 DeepSeek 余额；失败时先检查余额和 Key。</div>
   </div>`;
 }
@@ -4854,6 +4920,18 @@ document.addEventListener('click', (event) => {
   if (action === 'save-key') { event.preventDefault(); saveAIKey(); }
   if (action === 'test-key') { event.preventDefault(); testAIKey(); }
   if (action === 'change-key') { event.preventDefault(); aiKeyValue = ''; localStorage.removeItem(AI_KEY); render(); }
+  if (action === 'use-bailian') {
+    event.preventDefault();
+    safeSet(AI_PROVIDER_KEY, 'bailian');
+    render();
+    toast(safeGet(BAILIAN_VISION_KEY) ? '已改用百炼 Key：文字和图片共用一个 Key' : '已切换百炼模式，请到图片识题里填 Key');
+  }
+  if (action === 'use-deepseek') {
+    event.preventDefault();
+    safeSet(AI_PROVIDER_KEY, 'deepseek');
+    render();
+    toast('已切换回 DeepSeek');
+  }
   if (action === 'go-settings') { event.preventDefault(); closeModal(); navigate('settings'); }
   if (action === 'save-analysis') {
     event.preventDefault();
@@ -5238,7 +5316,7 @@ const VISION_URLS = [
   'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
   'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions'
 ];
-const VISION_MODELS = ['qwen-vl-plus', 'qwen-vl-max', 'qwen2.5-vl-72b-instruct', 'qwen-vl-ocr-latest'];
+const VISION_MODELS = ['qwen3.8-flash', 'qwen-vl-plus', 'qwen-vl-max', 'qwen2.5-vl-72b-instruct', 'qwen-vl-ocr', 'qwen-vl-ocr-2025-11-20', 'qwen-vl-ocr-latest'];
 const OCR_PROMPT = '请提取这张图片里的题目文字，保留题号、选项和数学公式（公式用 LaTeX），不要解答，不要解释，只输出题目原文。';
 
 let visionKeyValue = safeGet(VISION_KEY) || '';
@@ -5291,7 +5369,7 @@ async function callVisionGeneric(dataUrl, prompt) {
         lastError = error;
         const msg = String(error.message || '');
         // 模型下线 / 未开通 / 区域不匹配时自动换下一个
-        if (!/model.*not.*exist|model_not_found|invalid.*model|does not exist|not found|invalid.*endpoint|url|API Key|401/i.test(msg)) throw error;
+        if (!/model.*not.*exist|model_not_found|invalid.*model|does not exist|not found|invalid.*endpoint|url|API Key|401|access denied|forbidden|403/i.test(msg)) throw error;
       }
     }
   }
@@ -5980,7 +6058,7 @@ function renderDashboardLight() {
         <div class="dash-recent">${recent.length ? recent.map((q, i) => `<div class="dash-recent-row" data-action="detail" data-id="${esc(q.id)}" role="button" tabindex="0"><span class="dash-num">${String(i + 1).padStart(2, '0')}</span><div class="dash-recent-main"><div class="dash-recent-title">${esc(titleOf(q))}</div><div class="dash-recent-meta">${esc(q.subject)}${q.topic ? ' · ' + esc(q.topic) : ''}${q.item ? ' · ' + esc(q.item) : ''}</div></div><span class="dash-pill ${q.status}">${esc(STATUS[q.status]?.label || q.status)}</span></div>`).join('') : '<div class="empty-mini">还没有错题，先录一道吧。</div>'}</div>
       </div>
       <div class="card card-pad">
-        <div class="card-head"><div><h2 class="card-title">薄弱知识点</h2><p class="card-sub">未掌握和复习中的题，按知识点聚合。</p></div><button class="btn btn-ghost btn-sm" data-syllabus-action="mindmap">${icon('spark', 'icon-sm')}思维导图</button></div>
+        <div class="card-head"><div><h2 class="card-title">薄弱知识点</h2><p class="card-sub">未掌握和复习中的题，按知识点聚合。</p></div><button class="btn btn-ghost btn-sm" data-syllabus-action="browse">${icon('spark', 'icon-sm')}知识框架 / 导图</button></div>
         <div class="dash-weak">${weak.length ? weak.map(([n, v]) => `<div class="dash-weak-row"><div class="dash-weak-label"><span>${esc(n)}</span><strong>${v} 道</strong></div><div class="dash-weak-track"><span style="width:${Math.round(v / maxWeak * 100)}%"></span></div></div>`).join('') : '<div class="empty-mini">还没有未掌握的错题。</div>'}</div>
         <div class="dash-ai-strip"><span><strong>AI 建议：</strong>先补最上面的知识点，再开新题。</span><button class="btn btn-ghost btn-sm" data-ai-action="advice">让 AI 分析 ${icon('arrow', 'icon-sm')}</button></div>
       </div>
@@ -6889,7 +6967,7 @@ renderReview = function () {
         <div class="review-v2-tags">${subjectBadge(q.subject)}${q.chapter ? `<span class="q-tag">${esc(q.chapter)}</span>` : ''}${q.topic ? `<span class="q-tag">${esc(q.topic)}</span>` : ''}${q.item ? `<span class="q-tag" style="color:var(--accent);border-color:#efc8c2">${esc(q.item)}</span>` : ''}<span class="q-tag">${esc(q.type)}</span><span class="q-tag">${esc(q.reason)}</span></div>
         <h2 class="review-v2-title">${esc(q.item || q.topic || '错题复习')}</h2>
         <p class="review-v2-q">${esc(q.question || '（图片错题，请查看图片）')}</p>
-        ${q.images.length ? `<div class="review-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}">`).join('')}</div>` : ''}
+        ${q.images.length ? `<div class="review-images">${q.images.map((s, i) => `<img src="${esc(s)}" alt="题目图片 ${i + 1}" data-review-image="${i}">`).join('')}<span class="image-zoom-hint">点击图片放大查看</span></div>` : ''}
         ${reviewAnswerPhotoHTML(q)}
         ${reviewHintHTML(q)}
         ${!r.revealed ? `<button class="reveal-btn" data-action="reveal">${icon('eye')}先自己想，点击显示答案与解析</button><div class="review-v2-wait">先在心里完整讲一遍：这题考什么？第一步做什么？</div>` : `<div class="review-answer">
@@ -6951,7 +7029,29 @@ function pickReviewAnswerPhoto(camera = true) {
   input.click();
 }
 
+function openReviewImageViewer(src) {
+  const overlay = document.createElement('div');
+  overlay.className = 'review-image-viewer';
+  overlay.innerHTML = `<button type="button" class="review-image-close" aria-label="关闭">×</button><img src="${esc(src)}" alt="题目大图">`;
+  document.body.appendChild(overlay);
+  const close = () => overlay.remove();
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay || event.target.closest('.review-image-close')) close();
+  });
+  const onKey = (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      close();
+      document.removeEventListener('keydown', onKey, true);
+    }
+  };
+  document.addEventListener('keydown', onKey, true);
+}
+
 document.addEventListener('click', (event) => {
+  const image = event.target.closest('.review-v2 .review-images img');
+  if (image) { event.preventDefault(); openReviewImageViewer(image.src); return; }
   const action = event.target.closest('[data-review-action]')?.dataset.reviewAction;
   if (!action) return;
   if (action === 'answer-camera') { event.preventDefault(); pickReviewAnswerPhoto(true); return; }
