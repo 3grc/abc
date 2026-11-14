@@ -1,0 +1,46 @@
+错题拾遗 · Android WebView 壳工程
+
+用途
+----
+把现有网页（https://3grc.github.io/abc/）装进一个 Android App。
+特点：桌面图标、无浏览器地址栏、跟随系统旋转、启动不闪。
+
+文件
+----
+.github/workflows/build-apk.yml   GitHub Actions 自动打包
+android/                          Android 工程
+README-APK打包说明.txt            本文件
+
+上传
+----
+把 .github 和 android 两个文件夹，上传到 GitHub 仓库根目录：
+https://github.com/3grc/abc/upload/main
+
+注意：要上传文件夹本身，不是里面的单个文件。
+
+打包
+----
+1. 上传后打开仓库的 Actions 页
+2. 选择 Build Cuoti APK
+3. 点 Run workflow
+4. 等 2-5 分钟
+5. 在完成的运行页面底部，下载 cuoti-apk
+6. 解压得到 app-debug.apk
+7. 发到平板安装，允许未知来源
+
+安装后
+------
+- 桌面出现“错题拾遗”
+- 启动没有浏览器地址栏
+- 横竖屏跟随系统
+- 相机首次使用要允许权限
+- 相册选图使用系统文件选择器
+
+重要：数据是分开的
+------------------
+APK 里的 WebView 和华为浏览器/Edge 不是同一个存储。
+换到 APK 后，先在旧浏览器导出 JSON 备份；
+再在 APK 里导入，或连接同一个 Gist 同步。
+
+AI Key 也要在 APK 里重新填一次。
+APK 仍然需要联网加载网页和调用 AI。
